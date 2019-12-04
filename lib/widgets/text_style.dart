@@ -33,6 +33,17 @@ TextStyle customTextStyle(){
   );
 }
 
+TextStyle customTextFieldErrorStyle(){
+  return new TextStyle(
+      color: Colors.redAccent,
+      fontFamily: "Monserrat Regular",
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+      fontStyle: FontStyle.normal,
+      letterSpacing: 1
+  );
+}
+
 TextStyle customButtonTextStyle(){
   return new TextStyle(
       color: Colors.white,

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -9,8 +10,12 @@ class LoginUI extends StatefulWidget {
 
 class _LoginUIState extends State<LoginUI> {
   bool _isRemembered = false;
+  bool _username_validator = true;
+  bool _password_validator = true;
   Color _usernameIconColor = Colors.grey;
   Color _passwordIconColor = Colors.grey;
+  TextEditingController _username_controller = new TextEditingController();
+  TextEditingController _password_controller = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +106,7 @@ class _LoginUIState extends State<LoginUI> {
                             height: 36,
                           ),
                           new TextField(
-                            controller: null,
+                            controller: _username_controller,
                             obscureText: false,
                             cursorColor: Colors.black,
                             keyboardType: TextInputType.emailAddress,
@@ -118,6 +123,8 @@ class _LoginUIState extends State<LoginUI> {
                                 Icons.mail_outline,
                                 color: _usernameIconColor,
                               ),
+                              errorText: _username_validator ? null : "* Required",
+                              errorStyle: customTextFieldErrorStyle(),
                               labelText: "Username",
                               labelStyle: customTextStyle(),
                               hintText: "e.g. example@mail.com",
@@ -129,7 +136,7 @@ class _LoginUIState extends State<LoginUI> {
                             height: 16,
                           ),
                           new TextField(
-                            controller: null,
+                            controller: _password_controller,
                             obscureText: true,
                             cursorColor: Colors.black,
                             keyboardType: TextInputType.emailAddress,
@@ -146,6 +153,8 @@ class _LoginUIState extends State<LoginUI> {
                                 Icons.lock_outline,
                                 color: _passwordIconColor,
                               ),
+                              errorText: _password_validator ? null : "* Required",
+                              errorStyle: customTextFieldErrorStyle(),
                               labelText: "Password",
                               labelStyle: customTextStyle(),
                               hintText: "e.g. ******",
@@ -209,7 +218,12 @@ class _LoginUIState extends State<LoginUI> {
                                       style: customButtonTextStyle(),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      _username_validator = _username_controller.text.isNotEmpty;
+                                      _password_validator = _password_controller.text.isNotEmpty;
+                                    });
+                                  },
                                 ),
                                 alignment: Alignment.centerRight,
                               ),
@@ -225,8 +239,7 @@ class _LoginUIState extends State<LoginUI> {
                                   style: customInkWellTextStyle(),
                                 ),
                                 onTap: () {
-                                  setState(() {
-                                  });
+                                  setState(() {});
                                 },
                               ),
                             ),
