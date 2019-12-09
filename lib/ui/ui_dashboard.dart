@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/drawer/drawer_collapsing_nav.dart';
+import 'package:flutter_grate_app/drawer/drawer_theme.dart';
 
 class DashboardUI extends StatefulWidget {
   @override
@@ -6,17 +8,26 @@ class DashboardUI extends StatefulWidget {
 }
 
 class _DashboardUIState extends State<DashboardUI> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Row(
         children: <Widget>[
-//-------------------------------Left Navigator---------------------------------
+          CollapsingNavDrawer(
+          ),
           Expanded(
-            flex: 1,
-            child: new Column(
-              children: <Widget>[],
+            child: SafeArea(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Color(0xFFEBEBEB),
+              ),
             ),
           ),
         ],
