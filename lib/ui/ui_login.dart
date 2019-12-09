@@ -40,7 +40,7 @@ class _LoginUIState extends State<LoginUI> {
     setState(() {
       _isLoading = false;
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => new DashboardUI()));
+          context, MaterialPageRoute(builder: (context) => new Dashboard()));
     });
   }
 
