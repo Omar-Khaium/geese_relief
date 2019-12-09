@@ -13,7 +13,7 @@ TextStyle customWelcomeStyle(Color color){
 
 TextStyle customInkWellTextStyle(){
   return new TextStyle(
-      color: Colors.black,
+      color: Colors.blueGrey.shade800,
       fontFamily: "Monserrat Regular",
       fontWeight: FontWeight.bold,
       fontSize: 16,
@@ -24,7 +24,7 @@ TextStyle customInkWellTextStyle(){
 
 TextStyle customTextStyle(){
   return new TextStyle(
-      color: Colors.black,
+      color: Colors.blueGrey.shade800,
       fontFamily: "Monserrat Regular",
       fontWeight: FontWeight.w400,
       fontSize: 16,
@@ -48,8 +48,8 @@ TextStyle customButtonTextStyle(){
   return new TextStyle(
       color: Colors.white,
       fontFamily: "Monserrat Regular",
-      fontWeight: FontWeight.w400,
-      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
       fontStyle: FontStyle.normal,
       letterSpacing: 1
   );
