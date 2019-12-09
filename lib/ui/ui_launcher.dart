@@ -23,7 +23,7 @@ class _LauncherUIState extends State<LauncherUI> {
         setState(() {
           if (login.isAuthenticated) {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => new Dashboard()));
+                MaterialPageRoute(builder: (context) => new DashboardUI()));
           } else {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => new LoginUI()));
