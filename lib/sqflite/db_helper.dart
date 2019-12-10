@@ -46,18 +46,18 @@ class DBHelper {
       while (flag) {
         Login preLogin = await getAllFromLogin();
         if (preLogin != null) {
-          await delete(preLogin.id, DBInfo.TABLE_LOGIN);
+          await deleteByUsername(preLogin.username, DBInfo.TABLE_LOGIN);
         } else {
           flag = false;
         }
       }
+
+      login.id = await dbClient.insert(DBInfo.TABLE_LOGIN, login.toMap());
+      return login;
     } catch(error){
       print(error);
       return null;
     }
-
-    login.id = await dbClient.insert(DBInfo.TABLE_LOGIN, login.toMap());
-    return login;
   }
 
   Future<Login> getAllFromLogin() async{
@@ -74,8 +74,13 @@ class DBHelper {
     return login;
   }
   
-  Future<int> delete(int id, String table) async {
+  Future<int> deleteByID(int id, String table) async {
     var dbClient = await db;
     return await dbClient.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<int> deleteByUsername(String id, String table) async {
+    var dbClient = await db;
+    return await dbClient.delete(table, where: 'username = ?', whereArgs: [id]);
   }
 }

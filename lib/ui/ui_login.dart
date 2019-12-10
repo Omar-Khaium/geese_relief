@@ -33,12 +33,37 @@ class _LoginUIState extends State<LoginUI> {
   Login login;
 
   saveToDatabase() async {
-    await dbHelper.saveLogin(login);
+    Login log = await dbHelper.saveLogin(login);
 
     setState(() {
       _isLoading = false;
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => new DashboardUI()));
+      if (log == null) {
+        Flushbar(
+          flushbarPosition: FlushbarPosition.TOP,
+          flushbarStyle: FlushbarStyle.GROUNDED,
+          backgroundColor: Colors.redAccent,
+          icon: Icon(
+            Icons.error_outline,
+            size: 24.0,
+            color: Colors.white,
+          ),
+          duration: Duration(seconds: 4),
+          leftBarIndicatorColor: Colors.white70,
+          boxShadows: [
+            BoxShadow(
+              color: Colors.red[800],
+              offset: Offset(0.0, 2.0),
+              blurRadius: 3.0,
+            )
+          ],
+          title: "Offline Database ERROR!",
+          message: "Failed to save in offline-database.",
+          shouldIconPulse: false,
+        )..show(context);
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => new DashboardUI()));
+      }
     });
   }
 
@@ -56,6 +81,7 @@ class _LoginUIState extends State<LoginUI> {
     };
 
     var url = 'http://api.rmrcloud.com/token';
+    try{
     http.post(url, body: data).then((response) {
       if (response.statusCode == 200) {
         Map map = json.decode(response.body);
@@ -84,13 +110,40 @@ class _LoginUIState extends State<LoginUI> {
           title: "Authentication Error!",
           message: "Check your \'Username\' and \'Password\' again.",
           shouldIconPulse: false,
-        )..show(context);
+        )
+          ..show(context);
         login.isAuthenticated = false;
         setState(() {
           _isLoading = false;
         });
       }
+
     });
+    } catch(error){
+
+      Flushbar(
+        flushbarPosition: FlushbarPosition.TOP,
+        flushbarStyle: FlushbarStyle.GROUNDED,
+        backgroundColor: Colors.redAccent,
+        icon: Icon(
+          Icons.error_outline,
+          size: 24.0,
+          color: Colors.white,
+        ),
+        duration: Duration(seconds: 4),
+        leftBarIndicatorColor: Colors.white70,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.red[800],
+            offset: Offset(0.0, 2.0),
+            blurRadius: 3.0,
+          )
+        ],
+        title: "Authentication Error!",
+        message: "Timeout!",
+        shouldIconPulse: false,
+      )..show(context);
+    }
   }
 
   @override
