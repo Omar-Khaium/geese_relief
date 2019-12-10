@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_grate_app/ui/ui_launcher.dart';
-import 'package:flutter_grate_app/ui/ui_login.dart';
+import 'package:flutter_grate_app/ui/ui_dashboard.dart';
 
 void main() {
   runApp(
     new MaterialApp(
-      home: new LoginUI(),
+      home: new DashboardUI(),
       debugShowCheckedModeBanner: false,
     ),
   );
