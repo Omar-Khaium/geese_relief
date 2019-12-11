@@ -22,13 +22,28 @@ class _LauncherUIState extends State<LauncherUI> {
       if (login != null) {
         setState(() {
           if (login.isAuthenticated) {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => new DashboardUI()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => new DashboardUI(login),
+              ),
+            );
           } else {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => new LoginUI()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => new LogInUI(login),
+              ),
+            );
           }
         });
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => new LogInUI(login),
+          ),
+        );
       }
     });
   }

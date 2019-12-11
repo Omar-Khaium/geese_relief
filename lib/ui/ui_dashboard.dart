@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/drawer/collapsing_list_tile.dart';
 import 'package:flutter_grate_app/drawer/drawer_theme.dart';
 import 'package:flutter_grate_app/model/navigation_model.dart';
+import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/ui/fragment_add_customer.dart';
 import 'package:flutter_grate_app/ui/fragment_change_password.dart';
 import 'package:flutter_grate_app/ui/fragment_customer_list.dart';
 import 'package:flutter_grate_app/ui/fragment_logout.dart';
+import 'package:flutter_grate_app/widgets/text_style.dart';
 
 class DashboardUI extends StatefulWidget {
+  Login login;
+
+  DashboardUI(this.login);
+
   @override
   _DashboardUIState createState() => _DashboardUIState();
 }
@@ -19,10 +25,11 @@ class _DashboardUIState extends State<DashboardUI>
   double minWidth = 92;
   double minSize = 0;
   int currentSelectedIndex = 0;
-  bool isCollapsed = true;
+  bool isCollapsed = false;
   AnimationController _animationController;
   Animation<double> widthAnimation, sizedBoxAnimation;
   String username = "John Doe";
+  String fragmentTitle = "Dashboard";
   Widget fragment;
 
   @override
@@ -133,10 +140,29 @@ class _DashboardUIState extends State<DashboardUI>
           Expanded(
             child: SafeArea(
               child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Color(0xFFEBEBEB),
-                child: fragment,
+                color: Colors.grey.shade100,
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 80,
+                        child: Container(
+                          margin: EdgeInsets.only(left: 32),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              fragmentTitle,
+                              style: fragmentTitleStyle(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(height: MediaQuery.of(context).size.height-80-24,
+                            child: fragment
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -146,14 +172,26 @@ class _DashboardUIState extends State<DashboardUI>
   }
 
   Widget updateFragment() {
-    switch(currentSelectedIndex) {
+    switch (currentSelectedIndex) {
       case 0:
-        return CustomerListFragment();
+        setState(() {
+          fragmentTitle = "Dashboard";
+        });
+        return CustomerListFragment(widget.login);
       case 1:
+        setState(() {
+          fragmentTitle = "Add Customer";
+        });
         return AddCustomerFragment();
       case 2:
+        setState(() {
+          fragmentTitle = "Change Password";
+        });
         return ChangePasswordFragment();
       case 3:
+        setState(() {
+          fragmentTitle = "Logout";
+        });
         return LogoutFragment();
     }
   }

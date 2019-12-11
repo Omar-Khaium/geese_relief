@@ -28,7 +28,7 @@ class _addContact extends State<AddCustomerFragment> {
         setState(() {
           if (!login.isAuthenticated) {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => new LoginUI()));
+                MaterialPageRoute(builder: (context) => new LogInUI(login)));
           }
         });
       }

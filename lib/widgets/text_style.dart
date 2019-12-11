@@ -65,3 +65,14 @@ TextStyle customHintStyle(){
       letterSpacing: 1
   );
 }
+
+TextStyle fragmentTitleStyle(){
+  return new TextStyle(
+      color: Colors.black,
+      fontFamily: "Monserrat",
+      fontWeight: FontWeight.bold,
+      fontSize: 32,
+      fontStyle: FontStyle.normal,
+      letterSpacing: 1
+  );
+}

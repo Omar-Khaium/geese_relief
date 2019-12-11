@@ -13,12 +13,17 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'ui_dashboard.dart';
 
-class LoginUI extends StatefulWidget {
+class LogInUI extends StatefulWidget {
+
+  Login login;
+
+  LogInUI(this.login);
+
   @override
-  _LoginUIState createState() => _LoginUIState();
+  _LogInUIState createState() => _LogInUIState();
 }
 
-class _LoginUIState extends State<LoginUI> {
+class _LogInUIState extends State<LogInUI> {
   bool _isRemembered = false;
   bool _isLoading = false;
   bool _isObscureText = true;
@@ -62,7 +67,7 @@ class _LoginUIState extends State<LoginUI> {
         )..show(context);
       } else {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => new DashboardUI()));
+            MaterialPageRoute(builder: (context) => new DashboardUI(login)));
       }
     });
   }
@@ -71,6 +76,11 @@ class _LoginUIState extends State<LoginUI> {
   void initState() {
     super.initState();
     _isObscureText = true;
+    if(widget.login!=null && widget.login.isRemembered){
+      _usernameController.text = widget.login.username;
+      _passwordController.text = widget.login.password;
+      _isRemembered = widget.login.isRemembered;
+    }
   }
 
   Future<String> makeRequest() async {
@@ -85,7 +95,8 @@ class _LoginUIState extends State<LoginUI> {
     http.post(url, body: data).then((response) {
       if (response.statusCode == 200) {
         Map map = json.decode(response.body);
-        login.accessToken = map['access_token'];
+        login.accessToken = map['token_type'] + " " + map['access_token'];
+        login.validity = map['expires_in'];
         login.isAuthenticated = true;
         saveToDatabase();
       } else {

@@ -27,6 +27,8 @@ dependencies:
   path_provider: ^0.4.1
   flushbar: ^1.9.1
   material_design_icons_flutter: 3.4.4595
+  uuid: ^2.0.4
+  search_widget: ^1.0.0
 
 dev_dependencies:
   flutter_test:

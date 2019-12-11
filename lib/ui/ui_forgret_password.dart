@@ -33,7 +33,7 @@ class ForgetPasswordUIState extends State<ForgetPasswordUI> {
       setState(() {
         _isLoading = false;
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => new LoginUI()));
+            context, MaterialPageRoute(builder: (context) => new LogInUI(null)));
       });
     });
   }
@@ -211,7 +211,7 @@ class ForgetPasswordUIState extends State<ForgetPasswordUI> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        new LoginUI()));
+                                                        new LogInUI(null)));
                                           });
                                         },
                                       ),

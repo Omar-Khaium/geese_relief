@@ -40,9 +40,9 @@ class _CollapsingListTileState extends State<CollapsingListTile> {
           color: widget.isSelected ? selectedMenuColor : Colors.transparent,
           boxShadow: [
             BoxShadow(
-              color: widget.isSelected ? selectedMenuColor : Colors.transparent,
-              blurRadius: 4,
-              spreadRadius: 1,
+              color: widget.isSelected ? selectedMenuColor.withOpacity(.5) : Colors.transparent,
+              blurRadius: 2,
+              spreadRadius: 2,
               offset: Offset(
                 0,
                 0,
