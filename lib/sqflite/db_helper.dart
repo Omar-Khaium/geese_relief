@@ -38,6 +38,12 @@ class DBHelper {
     return entity;
   }
 
+  Future<dynamic> update(dynamic entity, String table) async{
+    var dbClient = await db;
+    entity.id = await dbClient.update(table, entity.toMap(), where: 'id = ?', whereArgs: [entity.id]);
+    return entity;
+  }
+
   Future<dynamic> saveLogin(Login login) async{
     var dbClient = await db;
 
