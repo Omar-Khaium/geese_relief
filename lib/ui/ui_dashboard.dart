@@ -141,27 +141,31 @@ class _DashboardUIState extends State<DashboardUI>
             child: SafeArea(
               child: Container(
                 color: Colors.grey.shade100,
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 80,
-                        child: Container(
-                          margin: EdgeInsets.only(left: 32),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              fragmentTitle,
-                              style: fragmentTitleStyle(),
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 80,
+                          child: Container(
+                            margin: EdgeInsets.only(left: 32),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                fragmentTitle,
+                                style: fragmentTitleStyle(),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      Container(height: MediaQuery.of(context).size.height-80-24,
-                            child: fragment
-                      ),
-                    ],
-                  ),
+                        Container(
+                            height:
+                                MediaQuery.of(context).size.height - 80 - 24,
+                            child: fragment),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

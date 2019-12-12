@@ -23,6 +23,7 @@ class Login{
     return map;
   }
 
+
   Login.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     username = map['username'];
