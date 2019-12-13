@@ -16,6 +16,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 class DashboardUI extends StatefulWidget {
   Login login;
 
+  static Widget fragment;
   DashboardUI(this.login);
 
   @override
@@ -78,7 +79,7 @@ class _DashboardUIState extends State<DashboardUI>
   @override
   void initState() {
     super.initState();
-    fragment = updateFragment();
+    DashboardUI.fragment = updateFragment();
     _animationController = new AnimationController(
         vsync: this, duration: Duration(milliseconds: 300));
     widthAnimation = Tween<double>(begin: maxWidth, end: minWidth)

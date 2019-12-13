@@ -7,7 +7,7 @@ import 'package:flutter_grate_app/ui/ui_login.dart';
 void main() {
   runApp(
     new MaterialApp(
-      home: new CustomerDetails(),
+      home: new LauncherUI(),
       debugShowCheckedModeBanner: false,
     ),
   );

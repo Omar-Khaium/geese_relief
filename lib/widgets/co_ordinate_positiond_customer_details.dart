@@ -1,6 +1,13 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/sqflite/model/customer.dart';
 
 class CustomerDetailsCard extends StatefulWidget {
+  Customer customer;
+  CustomerDetailsCard(this.customer);
+
+
   @override
   _customerDetailsCardState createState() => _customerDetailsCardState();
 }
@@ -50,35 +57,48 @@ class _customerDetailsCardState extends State<CustomerDetailsCard> {
                             style: new TextStyle(
                                 fontSize: 26, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 16,),
+                          SizedBox(
+                            height: 16,
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.email),
-                              SizedBox(width: 6,),
-                              Text("piistech@gmail.com",style: new TextStyle(
-                                  fontSize: 16),),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text(
+                                "piistech@gmail.com",
+                                style: new TextStyle(fontSize: 16),
+                              ),
                             ],
                           ),
-
-                          SizedBox(height: 8,),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.call),
-                              SizedBox(width: 6,),
-                              Text("537-55-9665",style: new TextStyle(
-                                  fontSize: 16)),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text("537-55-9665",
+                                  style: new TextStyle(fontSize: 16)),
                             ],
                           ),
-                          SizedBox(height: 8,),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(Icons.location_on),
-                              SizedBox(width: 6,),
-                              Text("Camden,OH 45311 \nAtlanta, GA 30303",style: new TextStyle(
-                                  fontSize: 16)),
+                              SizedBox(
+                                width: 6,
+                              ),
+                              Text("Camden,OH 45311 \nAtlanta, GA 30303",
+                                  style: new TextStyle(fontSize: 16)),
                             ],
                           ),
                         ],

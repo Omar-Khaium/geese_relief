@@ -6,6 +6,8 @@ import 'package:flutter_grate_app/model/customer.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/customer.dart';
+import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
+import 'package:flutter_grate_app/ui/ui_dashboard.dart';
 import 'package:http/http.dart' as http;
 
 class CustomerListFragment extends StatefulWidget {
@@ -108,83 +110,90 @@ class _CustomerListFragmentState extends State<CustomerListFragment> {
         itemCount: _Customers.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
+          return ListTile(
+            title: Padding(
+              padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.person),
+                                    Text(
+                                      _Customers[index].name,
+                                      style: new TextStyle(fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.call),
+                                    Text(
+                                      _Customers[index].contactNum,
+                                      style: new TextStyle(fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.email),
+                                    Text(
+                                      _Customers[index].email,
+                                      style: new TextStyle(fontSize: 16),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
+                      Expanded(
                         flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.person),
-                                  Text(
-                                    _Customers[index].name,
-                                    style: new TextStyle(fontSize: 16),
-                                  )
-                                ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Icon(Icons.location_on),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.call),
-                                  Text(
-                                    _Customers[index].contactNum,
-                                    style: new TextStyle(fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.email),
-                                  Text(
-                                    _Customers[index].email,
-                                    style: new TextStyle(fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        )),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Icon(Icons.location_on),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                _Customers[index].address,
-                                style: new TextStyle(fontSize: 16),
-                              ),
-                            )
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  _Customers[index].address,
+                                  style: new TextStyle(fontSize: 16),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                index != _Customers.length - 1 ? Divider() : Container(),
-              ],
+                    ],
+                  ),
+                  index != _Customers.length - 1 ? Divider() : Container(),
+                ],
+              ),
             ),
+            onTap: (){
+              setState(() {
+              DashboardUI.fragment=CustomerDetails(_Customers[index]);
+            });
+            },
           );
         },
       ),
