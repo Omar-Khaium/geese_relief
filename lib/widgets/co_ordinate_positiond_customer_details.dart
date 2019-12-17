@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CustomerDetailsCard extends StatefulWidget {
+class CustomerDetailsFragment extends StatefulWidget {
+
   @override
-  _customerDetailsCardState createState() => _customerDetailsCardState();
+  _CustomerDetailsFragmentState createState() => _CustomerDetailsFragmentState();
 }
 
-class _customerDetailsCardState extends State<CustomerDetailsCard> {
+class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

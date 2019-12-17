@@ -6,12 +6,22 @@ import 'package:flutter_grate_app/model/customer.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/customer.dart';
+import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
 
 class CustomerListFragment extends StatefulWidget {
   Login login;
+  ValueChanged<int> backToDashboard;
+  ValueChanged<int> goToCustomerDetails;
+  ValueChanged<bool> showLoading;
 
-  CustomerListFragment(this.login);
+  CustomerListFragment(
+      {Key key,
+      this.login,
+      this.backToDashboard,
+      this.goToCustomerDetails,
+      this.showLoading})
+      : super(key: key);
 
   @override
   _CustomerListFragmentState createState() => _CustomerListFragmentState();
@@ -34,8 +44,10 @@ class _CustomerListFragmentState extends State<CustomerListFragment> {
     try {
       http.get(url, headers: headers).then((response) {
         if (response.statusCode == 200) {
+          widget.showLoading(false);
           var map = json.decode(response.body);
           var _customersMap = map['CustomerList']['CustomerList'];
+
           _NetWorkCustomers = List.generate(_customersMap.length, (index) {
             return NetworkCustomer.fromMap(_customersMap[index]);
           });
@@ -45,6 +57,7 @@ class _CustomerListFragmentState extends State<CustomerListFragment> {
             });
           });
         } else {
+          widget.showLoading(false);
           Flushbar(
             flushbarPosition: FlushbarPosition.TOP,
             flushbarStyle: FlushbarStyle.GROUNDED,
@@ -70,6 +83,7 @@ class _CustomerListFragmentState extends State<CustomerListFragment> {
         }
       });
     } catch (error) {
+      widget.showLoading(false);
       Flushbar(
         flushbarPosition: FlushbarPosition.TOP,
         flushbarStyle: FlushbarStyle.GROUNDED,
@@ -103,91 +117,116 @@ class _CustomerListFragmentState extends State<CustomerListFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: _Customers.length,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(left: 32, right: 32, bottom: 16),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            margin: EdgeInsets.only(left: 32),
+            child: Text("Dashboard", style: fragmentTitleStyle()),
+          ),
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Container(
+          child: Divider(),
+          margin: EdgeInsets.only(left: 32, right: 32),
+        ),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _Customers.length,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () => widget.goToCustomerDetails(0),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 32, right: 32),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.person),
+                                        Text(
+                                          _Customers[index].name,
+                                          style: new TextStyle(fontSize: 16),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.call),
+                                        Text(
+                                          _Customers[index].contactNum,
+                                          style: new TextStyle(fontSize: 16),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Icon(Icons.email),
+                                        Text(
+                                          _Customers[index].email,
+                                          style: new TextStyle(fontSize: 16),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: <Widget>[
-                                  Icon(Icons.person),
-                                  Text(
-                                    _Customers[index].name,
-                                    style: new TextStyle(fontSize: 16),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Icon(Icons.location_on),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      _Customers[index].address,
+                                      style: new TextStyle(fontSize: 16),
+                                    ),
                                   )
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.call),
-                                  Text(
-                                    _Customers[index].contactNum,
-                                    style: new TextStyle(fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.email),
-                                  Text(
-                                    _Customers[index].email,
-                                    style: new TextStyle(fontSize: 16),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        )),
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Icon(Icons.location_on),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                _Customers[index].address,
-                                style: new TextStyle(fontSize: 16),
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      index != _Customers.length - 1 ? Divider() : Container(),
+                    ],
+                  ),
                 ),
-                index != _Customers.length - 1 ? Divider() : Container(),
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }
