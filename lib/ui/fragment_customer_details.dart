@@ -191,7 +191,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 24,),
+                              SizedBox(
+                                width: 24,
+                              ),
                               Expanded(
                                 child: RaisedButton(
                                   shape: RoundedRectangleBorder(
@@ -223,7 +225,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 24,),
+                              SizedBox(
+                                width: 24,
+                              ),
                               Expanded(
                                 child: RaisedButton(
                                   shape: RoundedRectangleBorder(
