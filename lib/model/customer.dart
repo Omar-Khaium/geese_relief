@@ -66,11 +66,11 @@ class NetworkCustomer{
   }
 
   String _CheckCity(bool flag){
-    return _validate(City) ? City + ", " + _CheckState(false) : (flag ? "\n" + _CheckState(true) : _CheckState(true));
+    return _validate(City) ? City + ", " + _CheckState(false) : (flag ? "\n" + _CheckState(false) : _CheckState(true));
   }
 
   String _CheckState(bool flag){
-    return _validate(State) ? State + " " + _CheckZip(false) : (flag ? ", " + _CheckZip(true) : _CheckZip(true));
+    return _validate(State) ? State + " " + _CheckZip(false) : (flag ? ", " + _CheckZip(false) : _CheckZip(true));
   }
 
   String _CheckZip(bool flag){

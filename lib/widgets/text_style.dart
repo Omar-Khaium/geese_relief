@@ -76,3 +76,21 @@ TextStyle fragmentTitleStyle(){
       letterSpacing: 1
   );
 }
+
+TextStyle cardTitleStyle(){
+  return new TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold,
+      fontSize: 24,
+      fontStyle: FontStyle.normal,
+      letterSpacing: 1
+  );
+}
+
+TextStyle listTextStyle(){
+  return new TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+      fontStyle: FontStyle.normal,
+  );
+}

@@ -1,7 +1,5 @@
-import 'package:flutter_grate_app/model/customer.dart';
-import 'package:flutter_grate_app/model/estimate.dart';
-
-class CustomerDetails{
+class Customer {
+  String customer_id;
   String Id;
   String CustomerId;
   String Title;
@@ -15,14 +13,26 @@ class CustomerDetails{
   String City;
   String State;
   String ZipCode;
-  String RecommendedLevel;
-  bool HasInspectionReport;
-  List<Estimate> estimates;
 
-  CustomerDetails(this.Id, this.CustomerId, this.Title, this.FirstName,
-      this.LastName, this.BusinessName, this.PrimaryPhone, this.SecondaryPhone,
-      this.EmailAddress, this.Street, this.City, this.State, this.ZipCode,
-      this.RecommendedLevel, this.estimates);
+  Customer(this.Id, this.CustomerId, this.Title, this.FirstName, this.LastName,
+      this.BusinessName, this.PrimaryPhone, this.SecondaryPhone,
+      this.EmailAddress, this.Street, this.City, this.State, this.ZipCode);
+
+  Customer.fromMap(Map<String, dynamic> map) {
+    Id = map['Id'].toString();
+    CustomerId = map['CustomerId'];
+    Title = map['Title'];
+    FirstName = map['FirstName'];
+    LastName = map['LastName'];
+    BusinessName = map['BusinessName'];
+    PrimaryPhone = map['PrimaryPhone'];
+    SecondaryPhone = map['SecondaryPhone'];
+    EmailAddress = map['EmailAddress'];
+    Street = map['Street'];
+    City = map['City'];
+    State = map['State'];
+    ZipCode = map['ZipCode'];
+  }
 
   String get Name {
     return _CheckNames().trim();
@@ -74,22 +84,5 @@ class CustomerDetails{
 
   String _CheckEmail(){
     return _validate(EmailAddress) ? EmailAddress : "-";
-  }
-
-  CustomerDetails.fromMap(Map<String, dynamic> map) {
-    Id = map['Id'].toString();
-    CustomerId = map['CustomerId'];
-    Title = map['Title'];
-    FirstName = map['FirstName'];
-    LastName = map['LastName'];
-    BusinessName = map['BusinessName'];
-    PrimaryPhone = map['PrimaryPhone'];
-    SecondaryPhone = map['SecondaryPhone'];
-    EmailAddress = map['EmailAddress'];
-    Street = map['Street'];
-    City = map['City'];
-    State = map['State'];
-    ZipCode = map['ZipCode'];
-    RecommendedLevel = map['RecommendedLevel'];
   }
 }

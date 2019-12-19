@@ -29,6 +29,8 @@ dependencies:
   material_design_icons_flutter: 3.4.4595
   uuid: ^2.0.4
   search_widget: ^1.0.0
+  smooth_star_rating: 1.0.3
+  shimmer: ^1.0.1
 
 dev_dependencies:
   flutter_test:
