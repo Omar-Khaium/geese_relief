@@ -10,12 +10,12 @@ class Estimate {
       this.CreatedDate);
 
   Estimate.fromMap(Map<String,dynamic> map){
-    Id=map['Id'];
-    InvoiceId=map['InvoiceId'];
-    Description=map['Description'];
-    Quantity=map['Quantity'];
-    Price=map['Price'];
-    CreatedDate=map['CreatedDate'];
+    Id=map['Id'].toString();
+    InvoiceId=map['InvoiceId'].toString();
+    Description=map['Description'].toString();
+    Quantity=map['EstimateEqpCount'].toString();
+    Price=map['TotalAmount'].toString();
+    CreatedDate=map['CreatedDate'].toString();
   }
 
 }

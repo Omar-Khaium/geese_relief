@@ -77,19 +77,27 @@ class CustomerDetails{
   }
 
   CustomerDetails.fromMap(Map<String, dynamic> map) {
-    Id = map['Id'].toString();
-    CustomerId = map['CustomerId'];
-    Title = map['Title'];
-    FirstName = map['FirstName'];
-    LastName = map['LastName'];
-    BusinessName = map['BusinessName'];
-    PrimaryPhone = map['PrimaryPhone'];
-    SecondaryPhone = map['SecondaryPhone'];
-    EmailAddress = map['EmailAddress'];
-    Street = map['Street'];
-    City = map['City'];
-    State = map['State'];
-    ZipCode = map['ZipCode'];
-    RecommendedLevel = map['RecommendedLevel'];
+    Id = map["CustomerDetails"]['Id'].toString();
+    CustomerId = map["CustomerDetails"]['CustomerId'];
+    Title = map["CustomerDetails"]['Title'];
+    FirstName = map["CustomerDetails"]['FirstName'];
+    LastName = map["CustomerDetails"]['LastName'];
+    BusinessName = map["CustomerDetails"]['BusinessName'];
+    PrimaryPhone = map["CustomerDetails"]['PrimaryPhone'];
+    SecondaryPhone = map["CustomerDetails"]['SecondaryPhone'];
+    EmailAddress = map["CustomerDetails"]['EmailAddress'];
+    Street = map["CustomerDetails"]['Street'];
+    City = map["CustomerDetails"]['City'];
+    State = map["CustomerDetails"]['State'];
+    ZipCode = map["CustomerDetails"]['ZipCode'];
+    RecommendedLevel = map["CustomerDetails"]['RecommendedLevel'];
+    var estimateMap = map['EstimateList']['EstimateList'];
+    if(estimateMap==null) {
+      estimates = [];
+    } else {
+      estimates = List.generate(estimateMap.length, (index) {
+        return Estimate.fromMap(estimateMap[index]);
+      });
+    }
   }
 }

@@ -13,7 +13,7 @@ class ListRowItem extends StatelessWidget {
       children: <Widget>[
         Icon(icon, color: Colors.grey,),
         SizedBox(width: 16,),
-        Text(text, style: listTextStyle(),),
+        Text(text, style: listTextStyle(),overflow: TextOverflow.ellipsis,),
       ],
     );
   }

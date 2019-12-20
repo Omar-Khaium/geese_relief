@@ -146,6 +146,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                       },
                     );
                   } catch(error){
+                    return Container();
                   }
                 } else {
                   return Container(

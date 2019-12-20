@@ -94,7 +94,7 @@ class _DashboardUIState extends State<DashboardUI>
   @override
   void initState() {
     super.initState();
-    fragment = new CustomerDetailsFragment(login: widget.login, backToDashboard: _backToDashboard, customerID: "3271", goToBasementReport: _goToBasementInspectionReport,);
+    fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails,);
   }
 
   @override
