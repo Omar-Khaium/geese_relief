@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
-import 'package:flutter_grate_app/model/estimate.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
@@ -16,10 +15,10 @@ import 'package:http/http.dart' as http;
 import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
-  Login login;
-  String customerID;
-  ValueChanged<int> backToDashboard;
-  ValueChanged<String> goToBasementReport;
+  final Login login;
+  final String customerID;
+  final ValueChanged<int> backToDashboard;
+  final ValueChanged<String> goToBasementReport;
 
   CustomerDetailsFragment(
       {Key key,

@@ -1,4 +1,3 @@
-import 'package:flutter_grate_app/model/customer.dart';
 import 'package:flutter_grate_app/model/estimate.dart';
 
 class CustomerDetails{

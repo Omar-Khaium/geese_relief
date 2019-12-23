@@ -69,7 +69,7 @@ class _DashboardUIState extends State<DashboardUI>
 
   _backToCustomerDetails(String customerID) {
     setState(() {
-      fragment = new CustomerDetailsFragment(login: widget.login, backToDashboard: _backToDashboard, customerID: "3271", goToBasementReport: _goToBasementInspectionReport,);
+      fragment = new CustomerDetailsFragment(login: widget.login, backToDashboard: _backToDashboard, customerID: customerID, goToBasementReport: _goToBasementInspectionReport,);
     });
   }
 
@@ -82,12 +82,9 @@ class _DashboardUIState extends State<DashboardUI>
     });
   }
 
-  _goToCustomerDetails(String id) {
+  _goToCustomerDetails(String customerID) {
     setState(() {
-      fragment = CustomerDetailsFragment(
-          backToDashboard: _backToDashboard,
-          login: widget.login,
-          customerID: id);
+      fragment = new CustomerDetailsFragment(login: widget.login, backToDashboard: _backToDashboard, customerID: customerID, goToBasementReport: _goToBasementInspectionReport,);
     });
   }
 
