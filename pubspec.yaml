@@ -31,6 +31,7 @@ dependencies:
   search_widget: ^1.0.0
   smooth_star_rating: 1.0.3
   shimmer: ^1.0.1
+  flutter_colorpicker: any
 
 dev_dependencies:
   flutter_test:
