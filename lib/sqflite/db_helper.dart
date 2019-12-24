@@ -7,6 +7,7 @@ import 'dart:io' as io;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'database_info.dart';
+import 'model/user.dart';
 
 class DBHelper {
 
@@ -30,6 +31,7 @@ class DBHelper {
   _onCreate(Database db, int version) async {
     await db.execute(DBInfo.CREATE_TABLE_LOGIN);
     await db.execute(DBInfo.CREATE_TABLE_CUSTOMER);
+    await db.execute(DBInfo.CREATE_TABLE_CURRENT_USER);
   }
 
   Future<dynamic> save(dynamic entity, String table) async{
@@ -80,9 +82,39 @@ class DBHelper {
     }
     return login;
   }
+
+  Future<LoggedInUser> getAllFromLoggedInUser() async{
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(DBInfo.TABLE_CURRENT_USER, columns: [DBInfo.CURRENT_USER_INT_ID, DBInfo.CURRENT_USER_GUID, DBInfo.CURRENT_USER_NAME, DBInfo.CURRENT_USER_PHOTO, DBInfo.CURRENT_USER_EMAIL, DBInfo.CURRENT_USER_COMPANY_ID, DBInfo.CURRENT_USER_COMPANY_GUID, DBInfo.CURRENT_USER_COMPANY_NAME, DBInfo.CURRENT_USER_COMPANY_LOGO], distinct: true);
+    Future<LoggedInUser> login;
+    try {
+      if (maps.length != 0) {
+        login = Future.value(LoggedInUser.fromDBMap(maps[0]));
+      }
+    } catch(error){
+      print(error);
+    }
+    return login;
+  }
+
+  Future<List<Map>> _getIds(String table) async{
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(table, columns: ['id']);
+    return maps;
+  }
   
   Future<int> delete(int id, String table) async {
     var dbClient = await db;
     return await dbClient.delete(table, where: 'id = ?', whereArgs: [id]);
   }
+
+  Future<int> deleteAll(String table) async {
+    List<Map> _ids = await _getIds(table);
+    var dbClient = await db;
+    for(Map map in _ids) {
+      await dbClient.delete(table, where: 'id = ?', whereArgs: [map['id']]);
+    }
+  }
+
+
 }

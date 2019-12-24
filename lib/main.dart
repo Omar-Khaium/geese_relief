@@ -6,6 +6,9 @@ void main() {
     new MaterialApp(
       home: new LauncherUI(),
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Colors.blueGrey.shade900
+      ),
     ),
   );
 }

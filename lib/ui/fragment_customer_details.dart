@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -74,11 +73,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                 try {
                   if (snapshot.hasData) {
                     var map = json.decode(snapshot.data.body);
-                    _customerDetails =
-                        CustomerDetails.fromMap(map);
+                    _customerDetails = CustomerDetails.fromMap(map);
                     _customerDetails.HasInspectionReport = map["Inspection"];
                     try {
-                      return Column(
+                      return Column (
                         children: <Widget>[
                           Stack(
                             children: <Widget>[
@@ -97,18 +95,18 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                   children: <Widget>[
                                     Row(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             ClipRRect(
-                                              borderRadius: new BorderRadius
-                                                  .all(
-                                                  Radius.circular(12)),
+                                              borderRadius:
+                                                  new BorderRadius.all(
+                                                      Radius.circular(12)),
                                               child: Image.network(
                                                   "https://i.ytimg.com/vi/g3t6YDnGXAc/hqdefault.jpg",
                                                   width: 100,
@@ -122,21 +120,21 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             Column(
                                               mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
                                                   _customerDetails.Name,
                                                   style: new TextStyle(
                                                       fontSize: 26,
                                                       fontWeight:
-                                                      FontWeight.bold),
+                                                          FontWeight.bold),
                                                 ),
                                                 SizedBox(
                                                   height: 16,
                                                 ),
                                                 Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Icon(Icons.email),
                                                     SizedBox(
@@ -154,7 +152,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 ),
                                                 Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Icon(Icons.call),
                                                     SizedBox(
@@ -172,14 +170,15 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 ),
                                                 Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Icon(Icons.location_on),
                                                     SizedBox(
                                                       width: 6,
                                                     ),
-                                                    Text(_customerDetails
-                                                        .Address,
+                                                    Text(
+                                                        _customerDetails
+                                                            .Address,
                                                         style: new TextStyle(
                                                             fontSize: 16)),
                                                   ],
@@ -193,14 +192,14 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               allowHalfRating: false,
                                               starCount: 6,
                                               rating: _customerDetails
-                                                  .RecommendedLevel ==
-                                                  null ||
-                                                  _customerDetails
-                                                      .RecommendedLevel
-                                                      .isEmpty
+                                                              .RecommendedLevel ==
+                                                          null ||
+                                                      _customerDetails
+                                                          .RecommendedLevel
+                                                          .isEmpty
                                                   ? 0
-                                                  : int.parse(_customerDetails
-                                                  .RecommendedLevel),
+                                                  : double.parse(_customerDetails
+                                                      .RecommendedLevel),
                                               size: 40,
                                               color: Colors.black,
                                               borderColor: Colors.grey.shade400,
@@ -217,7 +216,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             child: RaisedButton(
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10),
+                                                    BorderRadius.circular(10),
                                               ),
                                               elevation: 8,
                                               onPressed: () {
@@ -226,27 +225,27 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               },
                                               color: Colors.black,
                                               child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                    24),
+                                                padding:
+                                                    const EdgeInsets.all(24),
                                                 child: Center(
                                                   child: Column(
                                                     mainAxisSize:
-                                                    MainAxisSize.min,
+                                                        MainAxisSize.min,
                                                     children: <Widget>[
                                                       Icon(
-                                                        MdiIcons.plus,
+                                                        _customerDetails
+                                                                .HasInspectionReport
+                                                            ? MdiIcons.fileDocumentBoxMultiple
+                                                            : MdiIcons.plusBoxMultiple,
                                                         color: Colors.white,
                                                       ),
                                                       SizedBox(
                                                         height: 16,
                                                       ),
                                                       Text(
-                                                        "${_customerDetails
-                                                            .HasInspectionReport
-                                                            ? "View"
-                                                            : "Add"} Basement Report",
+                                                        "${_customerDetails.HasInspectionReport ? "View" : "Add"} Basement Report",
                                                         style:
-                                                        customButtonTextStyle(),
+                                                            customButtonTextStyle(),
                                                       )
                                                     ],
                                                   ),
@@ -261,29 +260,28 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             child: RaisedButton(
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10),
+                                                    BorderRadius.circular(10),
                                               ),
                                               elevation: 8,
                                               onPressed: () {},
                                               color: Colors.black,
                                               child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                    24),
+                                                padding:
+                                                    const EdgeInsets.all(24),
                                                 child: Center(
                                                   child: Column(
                                                     mainAxisSize:
-                                                    MainAxisSize.min,
+                                                        MainAxisSize.min,
                                                     children: <Widget>[
                                                       Icon(
-                                                        getRecommendedLevelIcon(
-                                                            _customerDetails
-                                                                .RecommendedLevel ==
-                                                                null ||
+                                                        getRecommendedLevelIcon(_customerDetails
+                                                                        .RecommendedLevel ==
+                                                                    null ||
                                                                 _customerDetails
                                                                     .RecommendedLevel
                                                                     .isEmpty
-                                                                ? 0
-                                                                : int.parse(
+                                                            ? 0
+                                                            : int.parse(
                                                                 _customerDetails
                                                                     .RecommendedLevel)),
                                                         color: Colors.white,
@@ -294,7 +292,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       Text(
                                                         "Recommended Level",
                                                         style:
-                                                        customButtonTextStyle(),
+                                                            customButtonTextStyle(),
                                                       )
                                                     ],
                                                   ),
@@ -309,18 +307,18 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             child: RaisedButton(
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10),
+                                                    BorderRadius.circular(10),
                                               ),
                                               elevation: 8,
                                               onPressed: () {},
                                               color: Colors.black,
                                               child: Padding(
-                                                padding: const EdgeInsets.all(
-                                                    24),
+                                                padding:
+                                                    const EdgeInsets.all(24),
                                                 child: Center(
                                                   child: Column(
                                                     mainAxisSize:
-                                                    MainAxisSize.min,
+                                                        MainAxisSize.min,
                                                     children: <Widget>[
                                                       Icon(
                                                         Icons.pie_chart,
@@ -332,7 +330,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       Text(
                                                         "Add Estimate",
                                                         style:
-                                                        customButtonTextStyle(),
+                                                            customButtonTextStyle(),
                                                       )
                                                     ],
                                                   ),
@@ -365,15 +363,15 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                     ),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Row(
                                               children: <Widget>[
@@ -403,8 +401,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       .estimates[index]
                                                       .Description,
                                                   style: listTextStyle(),
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 )
                                               ],
                                             ),
@@ -429,9 +427,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                         ),
                                         Column(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Row(
                                               children: <Widget>[
@@ -469,7 +467,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                           children: <Widget>[
                                             CircleAvatar(
                                               backgroundColor:
-                                              Colors.grey.shade300,
+                                                  Colors.grey.shade300,
                                               child: Icon(
                                                 Icons.email,
                                                 color: Colors.black,
@@ -481,11 +479,12 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ),
                                             CircleAvatar(
                                               backgroundColor:
-                                              Colors.grey.shade300,
+                                                  Colors.grey.shade300,
                                               child: Icon(
                                                 Icons.content_copy,
                                                 color: Colors.black,
                                                 size: 18,
+
                                               ),
                                             ),
                                             SizedBox(
@@ -493,7 +492,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ),
                                             CircleAvatar(
                                               backgroundColor:
-                                              Colors.grey.shade300,
+                                                  Colors.grey.shade300,
                                               child: Icon(
                                                 Icons.delete,
                                                 color: Colors.black,
@@ -527,7 +526,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                   } else {
                     return ShimmerCustomerDetailsFragment();
                   }
-                } catch(error) {
+                } catch (error) {
                   return Container();
                 }
               },

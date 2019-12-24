@@ -59,6 +59,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       new TextEditingController();
   TextEditingController _TestedForRadonInThePast2YearsCommentController =
       new TextEditingController();
+  
+
   var _CurrentOutsideConditionsOptions = ["Select One", "Sunny", "Dark"];
   var _HeatOptions = ["Select One", "Hot Water", "Cold Water"];
   var _AirOptions = ["Select One", "Central", "Outer", "One Side"];

@@ -77,8 +77,8 @@ class CustomerDetails{
 
   CustomerDetails.fromMap(Map<String, dynamic> map) {
     Id = map["CustomerDetails"]['Id'].toString();
-    CustomerId = map["CustomerDetails"]['CustomerId'];
-    Title = map["CustomerDetails"]['Title'];
+    CustomerId = map["CustomerDetails"]['CustomerId'].toString();
+    Title = map["CustomerDetails"]['Title'].toString();
     FirstName = map["CustomerDetails"]['FirstName'];
     LastName = map["CustomerDetails"]['LastName'];
     BusinessName = map["CustomerDetails"]['BusinessName'];
@@ -88,8 +88,8 @@ class CustomerDetails{
     Street = map["CustomerDetails"]['Street'];
     City = map["CustomerDetails"]['City'];
     State = map["CustomerDetails"]['State'];
-    ZipCode = map["CustomerDetails"]['ZipCode'];
-    RecommendedLevel = map["CustomerDetails"]['RecommendedLevel'];
+    ZipCode = map["CustomerDetails"]['ZipCode'].toString();
+    RecommendedLevel = map["CustomerDetails"]['RecommendedLevel'].toString();
     var estimateMap = map['EstimateList']['EstimateList'];
     if(estimateMap==null) {
       estimates = [];

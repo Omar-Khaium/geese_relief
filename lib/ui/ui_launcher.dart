@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_dashboard.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LauncherUI extends StatefulWidget {
   @override
@@ -12,20 +14,20 @@ class LauncherUI extends StatefulWidget {
 
 class _LauncherUIState extends State<LauncherUI> {
   DBHelper dbHelper = new DBHelper();
-  Future<Login> fromDBLogin;
   Login login;
+  LoggedInUser loggedInUser;
 
-  begin() {
-    fromDBLogin = dbHelper.getAllFromLogin();
-    fromDBLogin.then((result) {
+  Future begin() async {
+    return await dbHelper.getAllFromLogin().then((result) {
       login = result;
       if (login != null) {
-        setState(() {
+        setState(() async {
           if (login.isAuthenticated) {
+            await getLoggedInUser();
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => new DashboardUI(login),
+                builder: (context) => new DashboardUI(login, loggedInUser),
               ),
             );
           } else {
@@ -48,6 +50,12 @@ class _LauncherUIState extends State<LauncherUI> {
     });
   }
 
+  Future getLoggedInUser() async {
+    return await dbHelper.getAllFromLoggedInUser().then((result) {
+      loggedInUser = result;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,26 +64,13 @@ class _LauncherUIState extends State<LauncherUI> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold (
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: 144,
-              height: 144,
-              child: Image.asset("images/logo.png"),
-            ),
-            SizedBox(
-              height: 36,
-            ),
-            CupertinoActivityIndicator(
-              animating: true,
-              radius: 14,
-            )
-          ],
+        child:
+        CupertinoActivityIndicator(
+          animating: true,
+          radius: 14,
         ),
       ),
     );

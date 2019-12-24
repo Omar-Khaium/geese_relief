@@ -2,8 +2,10 @@ import 'dart:ui';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_forgret_password.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
@@ -11,10 +13,10 @@ import 'dart:convert';
 
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import '../utils.dart';
 import 'ui_dashboard.dart';
 
 class LogInUI extends StatefulWidget {
-
   Login login;
 
   LogInUI(this.login);
@@ -36,47 +38,39 @@ class _LogInUIState extends State<LogInUI> {
 
   DBHelper dbHelper = new DBHelper();
   Login login;
+  LoggedInUser loggedInUser;
 
   saveToDatabase() async {
     Login log = await dbHelper.saveLogin(login);
 
-    setState(() {
-      _isLoading = false;
-      if (log == null) {
-        Flushbar(
-          flushbarPosition: FlushbarPosition.TOP,
-          flushbarStyle: FlushbarStyle.GROUNDED,
-          backgroundColor: Colors.redAccent,
-          icon: Icon(
-            Icons.error_outline,
-            size: 24.0,
-            color: Colors.white,
-          ),
-          duration: Duration(seconds: 4),
-          leftBarIndicatorColor: Colors.white70,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.red[800],
-              offset: Offset(0.0, 2.0),
-              blurRadius: 3.0,
-            )
-          ],
-          title: "Offline Database ERROR!",
-          message: "Failed to save in offline-database.",
-          shouldIconPulse: false,
-        )..show(context);
-      } else {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => new DashboardUI(login)));
-      }
-    });
+    if (log == null) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      showMessage(
+          context,
+          "Offline Database ERROR!",
+          "Failed to save in offline-database.",
+          Colors.redAccent,
+          Icons.error_outline);
+    } else {
+      await getData(login);
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => new DashboardUI(login, loggedInUser)));
+    }
   }
 
   @override
   void initState() {
     super.initState();
     _isObscureText = true;
-    if(widget.login!=null && widget.login.isRemembered){
+    if (widget.login != null && widget.login.isRemembered) {
       _usernameController.text = widget.login.username;
       _passwordController.text = widget.login.password;
       _isRemembered = widget.login.isRemembered;
@@ -91,47 +85,44 @@ class _LogInUIState extends State<LogInUI> {
     };
 
     var url = 'http://api.rmrcloud.com/token';
-    try{
-    http.post(url, body: data).then((response) {
-      if (response.statusCode == 200) {
-        Map map = json.decode(response.body);
-        login.accessToken = map['token_type'] + " " + map['access_token'];
-        login.validity = map['expires_in'];
-        login.isAuthenticated = true;
-        saveToDatabase();
-      } else {
-        Flushbar(
-          flushbarPosition: FlushbarPosition.TOP,
-          flushbarStyle: FlushbarStyle.GROUNDED,
-          backgroundColor: Colors.redAccent,
-          icon: Icon(
-            Icons.error_outline,
-            size: 24.0,
-            color: Colors.white,
-          ),
-          duration: Duration(seconds: 4),
-          leftBarIndicatorColor: Colors.white70,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.red[800],
-              offset: Offset(0.0, 2.0),
-              blurRadius: 3.0,
-            )
-          ],
-          title: "Authentication Error!",
-          message: "Check your \'Username\' and \'Password\' again.",
-          shouldIconPulse: false,
-        )
-          ..show(context);
-        login.isAuthenticated = false;
-        setState(() {
-          _isLoading = false;
-        });
-      }
-
-    });
-    } catch(error){
-
+    try {
+      http.post(url, body: data).then((response) {
+        if (response.statusCode == 200) {
+          Map map = json.decode(response.body);
+          login.accessToken = map['token_type'] + " " + map['access_token'];
+          login.validity = map['expires_in'];
+          login.isAuthenticated = true;
+          saveToDatabase();
+        } else {
+          Flushbar(
+            flushbarPosition: FlushbarPosition.TOP,
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            backgroundColor: Colors.redAccent,
+            icon: Icon(
+              Icons.error_outline,
+              size: 24.0,
+              color: Colors.white,
+            ),
+            duration: Duration(seconds: 4),
+            leftBarIndicatorColor: Colors.white70,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.red[800],
+                offset: Offset(0.0, 2.0),
+                blurRadius: 3.0,
+              )
+            ],
+            title: "Authentication Error!",
+            message: "Check your \'Username\' and \'Password\' again.",
+            shouldIconPulse: false,
+          )..show(context);
+          login.isAuthenticated = false;
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    } catch (error) {
       Flushbar(
         flushbarPosition: FlushbarPosition.TOP,
         flushbarStyle: FlushbarStyle.GROUNDED,
@@ -470,5 +461,29 @@ class _LogInUIState extends State<LogInUI> {
         dismissible: false,
       ),
     );
+  }
+
+  getData(Login login) async {
+    Map<String, String> headers = {
+      'Authorization': login.accessToken,
+      'username': login.username
+    };
+
+    var url = "http://api.rmrcloud.com/GetUserByUserName";
+    var result = await http.get(url, headers: headers);
+    if (result.statusCode == 200) {
+      loggedInUser = LoggedInUser.fromMap(json.decode(result.body));
+      await saveLoggedInUserToDatabase(loggedInUser);
+      return loggedInUser;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return null;
+    }
+  }
+
+  saveLoggedInUserToDatabase(LoggedInUser loggedInUser) async {
+    await dbHelper.deleteAll(DBInfo.TABLE_CURRENT_USER);
+    await dbHelper.save(loggedInUser, DBInfo.TABLE_CURRENT_USER);
   }
 }

@@ -2,23 +2,25 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/drawer/side_nav.dart';
+import 'package:flutter_grate_app/sqflite/database_info.dart';
+import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/fragment_add_basement_report.dart';
 import 'package:flutter_grate_app/ui/fragment_add_customer.dart';
 import 'package:flutter_grate_app/ui/fragment_change_password.dart';
 import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
 import 'package:flutter_grate_app/ui/fragment_logout.dart';
-import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:http/http.dart' as http;
 
 import '../utils.dart';
 
 class DashboardUI extends StatefulWidget {
   Login login;
+  LoggedInUser loggedInUser;
 
-  DashboardUI(this.login);
+  DashboardUI(this.login, this.loggedInUser);
 
   @override
   _DashboardUIState createState() => _DashboardUIState();
@@ -27,15 +29,17 @@ class DashboardUI extends StatefulWidget {
 class _DashboardUIState extends State<DashboardUI>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
-  String username = "John Doe";
   Widget fragment;
   GlobalKey<SideNavUIState> _keySideNav = GlobalKey();
+  DBHelper dbHelper = new DBHelper();
+  LoggedInUser loggedInUser;
 
   _refresh(int index) {
     setState(() {
       switch (index) {
         case 0:
-          fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails);
+          fragment = new DashboardFragment(
+              login: widget.login, goToCustomerDetails: _goToCustomerDetails);
           break;
         case 1:
           fragment = AddCustomerFragment(
@@ -69,13 +73,17 @@ class _DashboardUIState extends State<DashboardUI>
   _backToDashboard(int value) {
     setState(() {
       _keySideNav.currentState.updateSelection(value);
-      fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails);
+      fragment = new DashboardFragment(
+          login: widget.login, goToCustomerDetails: _goToCustomerDetails);
     });
   }
 
   _backToCustomerDetails(String customerID) {
     setState(() {
-      fragment = new CustomerDetailsFragment(login: widget.login, backToDashboard: _backToDashboard, customerID: customerID, goToBasementReport: _goToBasementInspectionReport,);
+      fragment = new CustomerDetailsFragment(login: widget.login,
+        backToDashboard: _backToDashboard,
+        customerID: customerID,
+        goToBasementReport: _goToBasementInspectionReport,);
     });
   }
 
@@ -90,7 +98,10 @@ class _DashboardUIState extends State<DashboardUI>
 
   _goToCustomerDetails(String customerID) {
     setState(() {
-      fragment = new CustomerDetailsFragment(login: widget.login, backToDashboard: _backToDashboard, customerID: customerID, goToBasementReport: _goToBasementInspectionReport,);
+      fragment = new CustomerDetailsFragment(login: widget.login,
+        backToDashboard: _backToDashboard,
+        customerID: customerID,
+        goToBasementReport: _goToBasementInspectionReport,);
     });
   }
 
@@ -98,7 +109,6 @@ class _DashboardUIState extends State<DashboardUI>
   void initState() {
     super.initState();
     fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails,);
-    _setup();
   }
 
   @override
@@ -112,6 +122,8 @@ class _DashboardUIState extends State<DashboardUI>
               SideNavUI(
                 refreshEvent: _refresh,
                 key: _keySideNav,
+                login: widget.login,
+                loggedInUser: widget.loggedInUser,
               ),
               Expanded(
                 child: fragment,
@@ -129,46 +141,5 @@ class _DashboardUIState extends State<DashboardUI>
         dismissible: false,
       ),
     );
-  }
-
-  _setup() {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.blueGrey.shade900,
-          title: Text(
-            "Making your apps ready",
-            style: fragmentTitleStyle(),
-          ),
-          content: Text(
-            "Please wait...",
-            style: cardTitleStyle(),
-          ),
-        );
-      },
-    );
-
-    _dismissDialog(){
-      Navigator.of(context).pop();
-    }
-
-    Future getData() async {
-      Map<String, String> headers = {
-        'Authorization': widget.login.accessToken,
-        'Username': '1',
-        'PageSize': '10'
-      };
-
-      var url = "http://api.rmrcloud.com/GetUserByUserName";
-      var result = await http.get(url, headers: headers);
-      if (result.statusCode == 200) {
-        return result;
-      } else {
-        showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
-        return [];
-      }
-    }
   }
 }
