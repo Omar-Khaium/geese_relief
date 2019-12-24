@@ -1,10 +1,11 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_grate_app/ui/ui_launcher.dart';
+import 'package:flutter_grate_app/widgets/Drawboard.dart';
 
 void main() {
   runApp(
     new MaterialApp(
-      home: new LauncherUI(),
+      home: new ExamplePage(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.blueGrey.shade900
@@ -12,3 +13,4 @@ void main() {
     ),
   );
 }
+
