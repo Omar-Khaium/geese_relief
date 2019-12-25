@@ -22,4 +22,5 @@ class Estimate {
     CreatedDate= formatDate(map['CreatedDate']);
   }
 
+
 }

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
+import 'package:flutter_grate_app/model/estimate.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -18,13 +20,15 @@ class CustomerDetailsFragment extends StatefulWidget {
   final String customerID;
   final ValueChanged<int> backToDashboard;
   final ValueChanged<String> goToBasementReport;
+  LoggedInUser loggedInUser;
 
   CustomerDetailsFragment(
       {Key key,
       this.login,
       this.customerID,
       this.backToDashboard,
-      this.goToBasementReport})
+      this.goToBasementReport,
+        this.loggedInUser})
       : super(key: key);
 
   @override
@@ -460,10 +464,18 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             CircleAvatar(
                                               backgroundColor:
                                                   Colors.grey.shade300,
-                                              child: Icon(
-                                                Icons.content_copy,
-                                                color: Colors.black,
-                                                size: 18,
+                                              child: InkWell(
+                                                child: Icon(
+                                                  Icons.content_copy,
+                                                  color: Colors.black,
+                                                  size: 18,
+
+                                                ),
+                                                onTap: (){
+                                                  setState(() {
+                                                    getDuplicateEstimate(index);
+                                                  });
+                                                },
                                               ),
                                             ),
                                             SizedBox(
@@ -537,6 +549,26 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
       return {};
+    }
+  }
+  Estimate estimate;
+
+  Future getDuplicateEstimate(int index) async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'EstimateId': _customerDetails.estimates[index].Id,
+      'CompanyId': widget.loggedInUser.CompanyID,
+    };
+    var url = "http://api.rmrcloud.com/EstimateDuplicate";
+    var result = await http.post(url, headers: headers);
+    if (result.statusCode == 200){
+      setState(() {
+        _customerDetails.estimates.add(_customerDetails.estimates[index]);
+      });
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
+      return [];
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -14,7 +15,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class AddCustomerFragment extends StatefulWidget {
   ValueChanged<int> backToDashboard;
   Login login;
-  AddCustomerFragment({Key key, this.backToDashboard, this.login}) : super(key: key);
+  ValueChanged<bool> isLoading;
+  LoggedInUser loggedInUser;
+  AddCustomerFragment({Key key, this.backToDashboard, this.login,this.loggedInUser,this.isLoading}) : super(key: key);
 
   @override
   _AddCustomerState createState() => _AddCustomerState();
@@ -22,14 +25,12 @@ class AddCustomerFragment extends StatefulWidget {
 
 class _AddCustomerState extends State<AddCustomerFragment> {
   DBHelper dbHelper = new DBHelper();
-  Future<Login> fromDBLogin;
-  Login login;
 
   @override
   void initState() {
     super.initState();
     if(!widget.login.isAuthenticated) {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>LogInUI(login)));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>LogInUI(widget.login)));
     }
   }
 
@@ -53,52 +54,60 @@ class _AddCustomerState extends State<AddCustomerFragment> {
 
   // ignore: missing_return
   Future<String> makeRequest() async {
-    Map data = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'authorization': 'bearer ' + login.accessToken,
-      'FirstName': '${_firstNameController.text}',
-      'LastName': '${_lastNameController.text}',
-      'BusinessName': '${_businessTypeController.text}',
-      'Type': 'Test',
-      'PrimaryPhone': '${_primaryPhoneController.text}',
-      'SecondaryPhone': '${_secondaryPhoneController.text}',
-      'CellNo': '${_cellPhoneController.text}',
-      'email': '${_emailController.text}',
-      'Street': '${_streetController.text}',
-      'City': '${_cityController.text}',
-      'State': '${_stateController.text}',
-      'ZipCode': '${_zipController.text}',
-      'CompanyId': 'B32817BB-B35D-44DC-9C12-ACC4D0D8A34C',
-    };
-    http.post(url, headers: data).then((response) {
-      if (response.statusCode == 200) {
-        Map map = json.decode(response.body);
-      } else {
-        Flushbar(
-          flushbarPosition: FlushbarPosition.TOP,
-          flushbarStyle: FlushbarStyle.GROUNDED,
-          backgroundColor: Colors.redAccent,
-          icon: Icon(
-            Icons.error_outline,
-            size: 24.0,
-            color: Colors.white,
-          ),
-          duration: Duration(seconds: 4),
-          leftBarIndicatorColor: Colors.white70,
-          boxShadows: [
-            BoxShadow(
-              color: Colors.red[800],
-              offset: Offset(0.0, 2.0),
-              blurRadius: 3.0,
-            )
-          ],
-          title: "Authentication Error!",
-          message: "Check your \'Username\' and \'Password\' again.",
-          shouldIconPulse: false,
-        )..show(context);
-        login.isAuthenticated = false;
-      }
-    });
+    widget.isLoading(true);
+    try{
+      Map <String, String> data = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'authorization': widget.login.accessToken,
+        'FirstName': '${_firstNameController.text}',
+        'LastName': '${_lastNameController.text}',
+        'BusinessName': '${_businessTypeController.text}',
+        'Type': 'Commercial',
+        'PrimaryPhone': '${_primaryPhoneController.text}',
+        'SecondaryPhone': '${_secondaryPhoneController.text}',
+        'CellNo': '${_cellPhoneController.text}',
+        'email': '${_emailController.text}',
+        'Street': '${_streetController.text}',
+        'City': '${_cityController.text}',
+        'State': '${_stateController.text}',
+        'ZipCode': '${_zipController.text}',
+        'CompanyId': widget.loggedInUser.CompanyGUID,
+      };
+      http.post(url, headers: data).then((response) {
+        widget.isLoading(false);
+        if (response.statusCode == 200) {
+          Map map = json.decode(response.body);
+        } else {
+          Flushbar(
+            flushbarPosition: FlushbarPosition.TOP,
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            backgroundColor: Colors.redAccent,
+            icon: Icon(
+              Icons.error_outline,
+              size: 24.0,
+              color: Colors.white,
+            ),
+            duration: Duration(seconds: 4),
+            leftBarIndicatorColor: Colors.white70,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.red[800],
+                offset: Offset(0.0, 2.0),
+                blurRadius: 3.0,
+              )
+            ],
+            title: response.toString(),
+            message: "",
+            shouldIconPulse: false,
+          )..show(context);
+          widget.login.isAuthenticated = false;
+        }
+      });
+    }
+    catch (error) {
+     error.toString();
+    }
+
   }
 
   @override
