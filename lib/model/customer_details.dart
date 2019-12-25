@@ -14,7 +14,7 @@ class CustomerDetails{
   String City;
   String State;
   String ZipCode;
-  String RecommendedLevel;
+  double RecommendedLevel;
   bool HasInspectionReport;
   List<Estimate> estimates;
 
@@ -89,7 +89,8 @@ class CustomerDetails{
     City = map["CustomerDetails"]['City'];
     State = map["CustomerDetails"]['State'];
     ZipCode = map["CustomerDetails"]['ZipCode'].toString();
-    RecommendedLevel = map["CustomerDetails"]['RecommendedLevel'].toString();
+    RecommendedLevel = getRecommendedLevel(map["CustomerDetails"]['RecommendedLevel'].toString());
+    HasInspectionReport = getInspectionLevel(map["Inspection"].toString());
     var estimateMap = map['EstimateList']['EstimateList'];
     if(estimateMap==null) {
       estimates = [];
@@ -97,6 +98,22 @@ class CustomerDetails{
       estimates = List.generate(estimateMap.length, (index) {
         return Estimate.fromMap(estimateMap[index]);
       });
+    }
+  }
+
+  double getRecommendedLevel(String level) {
+    try {
+      return double.parse(level);
+    } catch(error) {
+      return 0.0;
+    }
+  }
+
+  bool getInspectionLevel(String level) {
+    try {
+      return bool.fromEnvironment(level);
+    } catch(error) {
+      return false;
     }
   }
 }

@@ -34,7 +34,7 @@ class CustomerDetailsFragment extends StatefulWidget {
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   CustomerDetails _customerDetails = new CustomerDetails(
-      "", "", "", "", "", "", "", "", "", "", "", "", "", "", []);
+      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
 
   @override
   void initState() {
@@ -74,9 +74,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                   if (snapshot.hasData) {
                     var map = json.decode(snapshot.data.body);
                     _customerDetails = CustomerDetails.fromMap(map);
-                    _customerDetails.HasInspectionReport = map["Inspection"];
                     try {
-                      return Column (
+                      return Column(
                         children: <Widget>[
                           Stack(
                             children: <Widget>[
@@ -177,34 +176,16 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       width: 6,
                                                     ),
                                                     Text(
-                                                        _customerDetails
-                                                            .Address,
-                                                        style: new TextStyle(
-                                                            fontSize: 16)),
+                                                      _customerDetails.Address,
+                                                      style: listTextStyle(),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
                                                   ],
                                                 ),
                                               ],
                                             )
                                           ],
-                                        ),
-                                        Tooltip(
-                                          child: SmoothStarRating(
-                                              allowHalfRating: false,
-                                              starCount: 6,
-                                              rating: _customerDetails
-                                                              .RecommendedLevel ==
-                                                          null ||
-                                                      _customerDetails
-                                                          .RecommendedLevel
-                                                          .isEmpty
-                                                  ? 0
-                                                  : double.parse(_customerDetails
-                                                      .RecommendedLevel),
-                                              size: 40,
-                                              color: Colors.black,
-                                              borderColor: Colors.grey.shade400,
-                                              spacing: 0.0),
-                                          message: "Recommended Level",
                                         ),
                                       ],
                                     ),
@@ -235,8 +216,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       Icon(
                                                         _customerDetails
                                                                 .HasInspectionReport
-                                                            ? MdiIcons.fileDocumentBoxMultiple
-                                                            : MdiIcons.plusBoxMultiple,
+                                                            ? MdiIcons
+                                                                .fileDocumentBoxMultiple
+                                                            : MdiIcons
+                                                                .plusBoxMultiple,
                                                         color: Colors.white,
                                                       ),
                                                       SizedBox(
@@ -273,19 +256,16 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: <Widget>[
-                                                      Icon(
-                                                        getRecommendedLevelIcon(_customerDetails
-                                                                        .RecommendedLevel ==
-                                                                    null ||
-                                                                _customerDetails
-                                                                    .RecommendedLevel
-                                                                    .isEmpty
-                                                            ? 0
-                                                            : int.parse(
-                                                                _customerDetails
-                                                                    .RecommendedLevel)),
-                                                        color: Colors.white,
-                                                      ),
+                                                      SmoothStarRating(
+                                                          allowHalfRating:
+                                                              false,
+                                                          starCount: 6,
+                                                          rating: _customerDetails
+                                                              .RecommendedLevel,
+                                                          size: 24,
+                                                          color: Colors.white,
+                                                          borderColor: Colors
+                                                              .white),
                                                       SizedBox(
                                                         height: 16,
                                                       ),
@@ -484,7 +464,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 Icons.content_copy,
                                                 color: Colors.black,
                                                 size: 18,
-
                                               ),
                                             ),
                                             SizedBox(
@@ -527,7 +506,12 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                     return ShimmerCustomerDetailsFragment();
                   }
                 } catch (error) {
-                  return Container();
+                  return Center(
+                    child: Text(
+                      "Something went wrong...",
+                      style: listTextStyle(),
+                    ),
+                  );
                 }
               },
             ),
