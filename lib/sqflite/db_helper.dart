@@ -10,11 +10,10 @@ import 'database_info.dart';
 import 'model/user.dart';
 
 class DBHelper {
-
   static Database _db;
-  
+
   Future<Database> get db async {
-    if(_db != null) {
+    if (_db != null) {
       return _db;
     }
     _db = await initDB();
@@ -34,19 +33,20 @@ class DBHelper {
     await db.execute(DBInfo.CREATE_TABLE_CURRENT_USER);
   }
 
-  Future<dynamic> save(dynamic entity, String table) async{
+  Future<dynamic> save(dynamic entity, String table) async {
     var dbClient = await db;
     entity.id = await dbClient.insert(table, entity.toMap());
     return entity;
   }
 
-  Future<dynamic> update(dynamic entity, String table) async{
+  Future<dynamic> update(dynamic entity, String table) async {
     var dbClient = await db;
-    entity.id = await dbClient.update(table, entity.toMap(), where: 'id = ?', whereArgs: [entity.id]);
+    entity.id = await dbClient
+        .update(table, entity.toMap(), where: 'id = ?', whereArgs: [entity.id]);
     return entity;
   }
 
-  Future<dynamic> saveLogin(Login login) async{
+  Future<dynamic> saveLogin(Login login) async {
     var dbClient = await db;
 
     try {
@@ -63,46 +63,75 @@ class DBHelper {
 
       login.id = await dbClient.insert(DBInfo.TABLE_LOGIN, login.toMap());
       return login;
-    } catch(error){
+    } catch (error) {
       print(error);
       return null;
     }
   }
 
-  Future<Login> getAllFromLogin() async{
+  Future<Login> getAllFromLogin() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(DBInfo.TABLE_LOGIN, columns: [DBInfo.LOGIN_ID,DBInfo.LOGIN_USERNAME,DBInfo.LOGIN_PASSWORD,DBInfo.LOGIN_IS_REMEMBERED,DBInfo.LOGIN_IS_AUTHENTICATED,DBInfo.LOGIN_ACCESS_TOKEN,DBInfo.LOGIN_VALIDITY], distinct: true);
+    List<Map> maps = await dbClient.query(DBInfo.TABLE_LOGIN,
+        columns: [
+          DBInfo.LOGIN_ID,
+          DBInfo.LOGIN_USERNAME,
+          DBInfo.LOGIN_PASSWORD,
+          DBInfo.LOGIN_IS_REMEMBERED,
+          DBInfo.LOGIN_IS_AUTHENTICATED,
+          DBInfo.LOGIN_ACCESS_TOKEN,
+          DBInfo.LOGIN_VALIDITY
+        ],
+        distinct: true);
     Future<Login> login;
     try {
       if (maps.length != 0) {
         login = Future.value(Login.fromMap(maps[0]));
       }
-    } catch(error){
+    } catch (error) {
       print(error);
     }
     return login;
   }
 
-  Future<LoggedInUser> getAllFromLoggedInUser() async{
+  Future<LoggedInUser> getAllFromLoggedInUser() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(DBInfo.TABLE_CURRENT_USER, columns: [DBInfo.CURRENT_USER_INT_ID, DBInfo.CURRENT_USER_GUID, DBInfo.CURRENT_USER_NAME, DBInfo.CURRENT_USER_PHOTO, DBInfo.CURRENT_USER_EMAIL, DBInfo.CURRENT_USER_COMPANY_ID, DBInfo.CURRENT_USER_COMPANY_GUID, DBInfo.CURRENT_USER_COMPANY_NAME, DBInfo.CURRENT_USER_COMPANY_LOGO], distinct: true);
+    List<Map> maps = await dbClient.query(DBInfo.TABLE_CURRENT_USER,
+        columns: [
+          DBInfo.CURRENT_USER_INT_ID,
+          DBInfo.CURRENT_USER_GUID,
+          DBInfo.CURRENT_USER_NAME,
+          DBInfo.CURRENT_USER_PHOTO,
+          DBInfo.CURRENT_USER_EMAIL,
+          DBInfo.CURRENT_USER_COMPANY_ID,
+          DBInfo.CURRENT_USER_COMPANY_GUID,
+          DBInfo.CURRENT_USER_COMPANY_NAME,
+          DBInfo.CURRENT_USER_COMPANY_LOGO,
+          DBInfo.CURRENT_USER_COMPANY_EMAIL,
+          DBInfo.CURRENT_USER_COMPANY_PHONE,
+          DBInfo.CURRENT_USER_COMPANY_FAX,
+          DBInfo.CURRENT_USER_COMPANY_STREET,
+          DBInfo.CURRENT_USER_COMPANY_CITY,
+          DBInfo.CURRENT_USER_COMPANY_STATE,
+          DBInfo.CURRENT_USER_COMPANY_ZIPCODE
+        ],
+        distinct: true);
     Future<LoggedInUser> login;
     try {
       if (maps.length != 0) {
         login = Future.value(LoggedInUser.fromDBMap(maps[0]));
       }
-    } catch(error){
+    } catch (error) {
       print(error);
     }
     return login;
   }
 
-  Future<List<Map>> _getIds(String table) async{
+  Future<List<Map>> _getIds(String table) async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(table, columns: ['id']);
     return maps;
   }
-  
+
   Future<int> delete(int id, String table) async {
     var dbClient = await db;
     return await dbClient.delete(table, where: 'id = ?', whereArgs: [id]);
@@ -111,10 +140,8 @@ class DBHelper {
   Future<int> deleteAll(String table) async {
     List<Map> _ids = await _getIds(table);
     var dbClient = await db;
-    for(Map map in _ids) {
+    for (Map map in _ids) {
       await dbClient.delete(table, where: 'id = ?', whereArgs: [map['id']]);
     }
   }
-
-
 }

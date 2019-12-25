@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/drawer/side_nav.dart';
+import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
@@ -87,12 +88,13 @@ class _DashboardUIState extends State<DashboardUI>
     });
   }
 
-  _goToBasementInspectionReport(String id) {
+  _goToBasementInspectionReport(CustomerDetails customer) {
     setState(() {
       fragment = AddBasementReportFragment(
           login: widget.login,
+          loggedInUser: widget.loggedInUser,
           backToCustomerDetails: _backToCustomerDetails,
-          customerID: id);
+          customer: customer);
     });
   }
 

@@ -14,10 +14,12 @@ import 'package:http/http.dart' as http;
 import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
+  CustomerDetails customerDetails = new CustomerDetails(
+      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
   final Login login;
   final String customerID;
   final ValueChanged<int> backToDashboard;
-  final ValueChanged<String> goToBasementReport;
+  final ValueChanged<CustomerDetails> goToBasementReport;
 
   CustomerDetailsFragment(
       {Key key,
@@ -33,9 +35,6 @@ class CustomerDetailsFragment extends StatefulWidget {
 }
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
-  CustomerDetails _customerDetails = new CustomerDetails(
-      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
-
   @override
   void initState() {
     super.initState();
@@ -73,7 +72,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                 try {
                   if (snapshot.hasData) {
                     var map = json.decode(snapshot.data.body);
-                    _customerDetails = CustomerDetails.fromMap(map);
+                    widget.customerDetails = CustomerDetails.fromMap(map);
                     try {
                       return Column(
                         children: <Widget>[
@@ -122,7 +121,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
-                                                  _customerDetails.Name,
+                                                  widget.customerDetails.Name,
                                                   style: new TextStyle(
                                                       fontSize: 26,
                                                       fontWeight:
@@ -140,7 +139,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       width: 6,
                                                     ),
                                                     Text(
-                                                      _customerDetails.Email,
+                                                      widget.customerDetails
+                                                          .Email,
                                                       style: new TextStyle(
                                                           fontSize: 16),
                                                     ),
@@ -158,7 +158,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       width: 6,
                                                     ),
                                                     Text(
-                                                        _customerDetails
+                                                        widget.customerDetails
                                                             .ContactNum,
                                                         style: new TextStyle(
                                                             fontSize: 16)),
@@ -176,7 +176,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       width: 6,
                                                     ),
                                                     Text(
-                                                      _customerDetails.Address,
+                                                      widget.customerDetails
+                                                          .Address,
                                                       style: listTextStyle(),
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -202,7 +203,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               elevation: 8,
                                               onPressed: () {
                                                 widget.goToBasementReport(
-                                                    widget.customerID);
+                                                    widget.customerDetails);
                                               },
                                               color: Colors.black,
                                               child: Padding(
@@ -214,7 +215,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                         MainAxisSize.min,
                                                     children: <Widget>[
                                                       Icon(
-                                                        _customerDetails
+                                                        widget.customerDetails
                                                                 .HasInspectionReport
                                                             ? MdiIcons
                                                                 .fileDocumentBoxMultiple
@@ -226,7 +227,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                         height: 16,
                                                       ),
                                                       Text(
-                                                        "${_customerDetails.HasInspectionReport ? "View" : "Add"} Basement Report",
+                                                        "${widget.customerDetails.HasInspectionReport ? "View" : "Add"} Basement Report",
                                                         style:
                                                             customButtonTextStyle(),
                                                       )
@@ -260,12 +261,13 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                           allowHalfRating:
                                                               false,
                                                           starCount: 6,
-                                                          rating: _customerDetails
+                                                          rating: widget
+                                                              .customerDetails
                                                               .RecommendedLevel,
                                                           size: 24,
                                                           color: Colors.white,
-                                                          borderColor: Colors
-                                                              .white),
+                                                          borderColor:
+                                                              Colors.white),
                                                       SizedBox(
                                                         height: 16,
                                                       ),
@@ -360,7 +362,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   width: 16,
                                                 ),
                                                 Text(
-                                                  _customerDetails
+                                                  widget
+                                                      .customerDetails
                                                       .estimates[index]
                                                       .InvoiceId,
                                                   style: listTextStyle(),
@@ -377,7 +380,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   width: 16,
                                                 ),
                                                 Text(
-                                                  _customerDetails
+                                                  widget
+                                                      .customerDetails
                                                       .estimates[index]
                                                       .Description,
                                                   style: listTextStyle(),
@@ -396,7 +400,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   width: 16,
                                                 ),
                                                 Text(
-                                                  _customerDetails
+                                                  widget
+                                                      .customerDetails
                                                       .estimates[index]
                                                       .CreatedDate,
                                                   style: listTextStyle(),
@@ -418,7 +423,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   width: 16,
                                                 ),
                                                 Text(
-                                                  _customerDetails
+                                                  widget
+                                                      .customerDetails
                                                       .estimates[index]
                                                       .Quantity,
                                                   style: listTextStyle(),
@@ -435,7 +441,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   width: 16,
                                                 ),
                                                 Text(
-                                                  _customerDetails
+                                                  widget.customerDetails
                                                       .estimates[index].Price,
                                                   style: listTextStyle(),
                                                 )
@@ -489,7 +495,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                   ],
                                 );
                               },
-                              itemCount: _customerDetails.estimates.length,
+                              itemCount:
+                                  widget.customerDetails.estimates.length,
                             ),
                           ),
                         ],

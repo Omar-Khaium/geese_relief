@@ -2,11 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/drawer/drawer_theme.dart';
+import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/widgets/Drawboard.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_grate_app/widgets/widget_signature.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -15,11 +20,16 @@ import '../utils.dart';
 
 class AddBasementReportFragment extends StatefulWidget {
   Login login;
-  String customerID;
+  LoggedInUser loggedInUser;
+  CustomerDetails customer;
   ValueChanged<String> backToCustomerDetails;
 
   AddBasementReportFragment(
-      {Key key, this.login, this.customerID, this.backToCustomerDetails})
+      {Key key,
+      this.login,
+      this.loggedInUser,
+      this.customer,
+      this.backToCustomerDetails})
       : super(key: key);
 
   @override
@@ -64,6 +74,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       new TextEditingController();
   TextEditingController _TestedForRadonInThePast2YearsCommentController =
       new TextEditingController();
+  TextEditingController _NotesController = new TextEditingController();
 
   List<DropDownSingleItem> CurrentOutsideConditionsArray = [],
       HeatArray = [],
@@ -132,7 +143,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
             child: Row(
               children: <Widget>[
                 CustomBackButton(
-                  onTap: () => widget.backToCustomerDetails(widget.customerID),
+                  onTap: () => widget.backToCustomerDetails(widget.customer.Id),
                 ),
                 SizedBox(
                   width: 16,
@@ -150,8 +161,23 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
               shrinkWrap: true,
               children: <Widget>[
 /*--------------------_Customer and Company's Information---------------------*/
-                Card(
-                  elevation: 2,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        spreadRadius: 2,
+                        offset: Offset(
+                          0,
+                          0,
+                        ),
+                      )
+                    ],
+                  ),
+                  margin: EdgeInsets.all(4),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
@@ -159,13 +185,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Image.network(
-                              "https://i.ytimg.com/vi/g3t6YDnGXAc/hqdefault.jpg",
-                              width: 128,
-                              height: 128,
+                            Icon(
+                              Icons.store,
+                              color: Colors.grey.shade200,
+                              size: 128,
                             ),
                             SizedBox(
-                              width: 16,
+                              width: 8,
                             ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -174,19 +200,20 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               children: <Widget>[
                                 ListRowItem(
                                   icon: Icons.pin_drop,
-                                  text: "address line\ncity, state zip",
+                                  text: widget.loggedInUser.CompanyAddress,
                                 ),
                                 ListRowItem(
                                   icon: Icons.email,
-                                  text: "example@mail.com",
+                                  text: widget.loggedInUser.CompanyEmailAddress,
                                 ),
                                 ListRowItem(
                                   icon: Icons.phone,
-                                  text: "018XXXXXXXX",
+                                  text:
+                                      widget.loggedInUser.CompanyContactNumber,
                                 ),
                                 ListRowItem(
                                   icon: MdiIcons.fax,
-                                  text: "XXXX XXXX",
+                                  text: widget.loggedInUser.CompanyFaxNumber,
                                 ),
                               ],
                             ),
@@ -199,26 +226,27 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                           children: <Widget>[
                             ListRowItem(
                               icon: Icons.event,
-                              text: "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                              text:
+                                  "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                             ),
                             SizedBox(
                               height: 16,
                             ),
                             ListRowItem(
                               icon: Icons.person,
-                              text: "Name",
+                              text: widget.customer.Name,
                             ),
                             ListRowItem(
                               icon: Icons.pin_drop,
-                              text: "address line\ncity, state zip",
+                              text: widget.customer.Address,
                             ),
                             ListRowItem(
                               icon: Icons.phone,
-                              text: "018XXXXXXXX",
+                              text: widget.customer.ContactNum,
                             ),
                             ListRowItem(
                               icon: Icons.email,
-                              text: "example@mail.com",
+                              text: widget.customer.Email,
                             ),
                           ],
                         ),
@@ -277,8 +305,24 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                       return Column(
                         children: <Widget>[
 /*------------------RELATIVE HUMIDITY / TEMPERATURE READINGS------------------*/
-                          Card(
-                            elevation: 2,
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  spreadRadius: 2,
+                                  offset: Offset(
+                                    0,
+                                    0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.all(4),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: Column(
@@ -536,7 +580,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             style: customTextStyle(),
                                             decoration: new InputDecoration(
                                                 labelText:
-                                                    "Basement Relative Humidity *",
+                                                    "Basement Relative Humidity",
                                                 labelStyle: customTextStyle(),
                                                 hintText: "e.g. hint",
                                                 hintStyle: customHintStyle(),
@@ -664,8 +708,24 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             height: 8,
                           ),
 /*------------------VISUAL BASEMENT INSPECTION------------------*/
-                          Card(
-                            elevation: 2,
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  spreadRadius: 2,
+                                  offset: Offset(
+                                    0,
+                                    0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.all(4),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: Column(
@@ -1158,8 +1218,24 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             height: 8,
                           ),
 /*------------------CUSTOMER BASEMENT EVALUATION------------------*/
-                          Card(
-                            elevation: 2,
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  spreadRadius: 2,
+                                  offset: Offset(
+                                    0,
+                                    0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.all(4),
                             child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: Column(
@@ -1984,6 +2060,240 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                           ),
                           SizedBox(
                             height: 8,
+                          ),
+/*------------------BASEMENT DRAWING------------------*/
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  spreadRadius: 2,
+                                  offset: Offset(
+                                    0,
+                                    0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.all(4),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "Basement Drawing",
+                                    style: cardTitleStyle(),
+                                  ),
+                                  Container(
+                                    width: 200,
+                                    margin: EdgeInsets.only(top: 8, bottom: 8),
+                                    child: Divider(
+                                      color: Colors.grey,
+                                      thickness: .5,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height -
+                                        200,
+                                    color: Colors.grey.shade100,
+                                    child: Center(
+                                      child: OutlineButton(
+                                        child: Text(
+                                          "Add Drawing",
+                                          style: defaultTextStyle,
+                                        ),
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+/*------------------Agreement DRAWING------------------*/
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  spreadRadius: 2,
+                                  offset: Offset(
+                                    0,
+                                    0,
+                                  ),
+                                )
+                              ],
+                            ),
+                            margin: EdgeInsets.all(4),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    "Agreement",
+                                    style: cardTitleStyle(),
+                                  ),
+                                  Container(
+                                    width: 200,
+                                    margin: EdgeInsets.only(top: 8, bottom: 8),
+                                    child: Divider(
+                                      color: Colors.grey,
+                                      thickness: .5,
+                                    ),
+                                  ),
+                                  new TextField(
+                                    controller: _NotesController,
+                                    obscureText: false,
+                                    cursorColor: Colors.black,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    minLines: 3,
+                                    style: customTextStyle(),
+                                    decoration: new InputDecoration(
+                                        labelText: "Notes",
+                                        labelStyle: customTextStyle(),
+                                        hintText: "e.g. hint",
+                                        hintStyle: customHintStyle(),
+                                        alignLabelWithHint: false,
+                                        isDense: true),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 256,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                  new MaterialPageRoute<Null>(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return new SignatureDialog();
+                                                      },
+                                                      fullscreenDialog: true));
+                                            },
+                                            child: Container(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Container(
+                                                      color:
+                                                          Colors.grey.shade200,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Center(
+                                                    child: Container(
+                                                      color:
+                                                          Colors.grey.shade100,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: ListRowItem(
+                                                          icon: Icons.event,
+                                                          text:
+                                                              "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 48,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Container(
+                                                    color: Colors.grey.shade200,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Container(
+                                                  color: Colors.grey.shade100,
+                                                  child: Center(
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: ListRowItem(
+                                                        icon: Icons.event,
+                                                        text:
+                                                            "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Center(
+                            child: MaterialButton(
+                              color: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(36.0),
+                                side: BorderSide(color: Colors.transparent),
+                              ),
+                              textColor: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 32, right: 32, top: 16, bottom: 16),
+                                child: new Text(
+                                  "Login",
+                                  style: customButtonTextStyle(),
+                                ),
+                              ),
+                              onPressed: () {},
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
                           ),
                         ],
                       );
