@@ -59,7 +59,6 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       new TextEditingController();
   TextEditingController _TestedForRadonInThePast2YearsCommentController =
       new TextEditingController();
-  
 
   var _CurrentOutsideConditionsOptions = ["Select One", "Sunny", "Dark"];
   var _HeatOptions = ["Select One", "Hot Water", "Cold Water"];
@@ -1760,29 +1759,25 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             Expanded(
                               child: DropdownButtonFormField(
                                 decoration: new InputDecoration(
-                                    errorText:
-                                        _LosePowerSelection ==
-                                                0
-                                            ? "Select another value"
-                                            : null,
+                                    errorText: _LosePowerSelection == 0
+                                        ? "Select another value"
+                                        : null,
                                     errorStyle: customTextFieldErrorStyle(),
-                                    labelText:
-                                        "15. Do you lose power? *",
+                                    labelText: "15. Do you lose power? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items:
-                                    List.generate(_YesNoOptions.length, (index) {
+                                items: List.generate(_YesNoOptions.length,
+                                    (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child: Text(_YesNoOptions[index]));
                                 }),
                                 onChanged: (index) {
                                   setState(() {
-                                    _LosePowerSelection =
-                                        index;
+                                    _LosePowerSelection = index;
                                   });
                                 },
                                 value: _LosePowerSelection,
@@ -1794,29 +1789,25 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             Expanded(
                               child: DropdownButtonFormField(
                                 decoration: new InputDecoration(
-                                    errorText:
-                                    _LosePowerHowOftenSelection ==
-                                                0
-                                            ? "Select another value"
-                                            : null,
+                                    errorText: _LosePowerHowOftenSelection == 0
+                                        ? "Select another value"
+                                        : null,
                                     errorStyle: customTextFieldErrorStyle(),
-                                    labelText:
-                                        "If so how often? *",
+                                    labelText: "If so how often? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items:
-                                    List.generate(_LosePowerOption.length, (index) {
+                                items: List.generate(_LosePowerOption.length,
+                                    (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child: Text(_LosePowerOption[index]));
                                 }),
                                 onChanged: (index) {
                                   setState(() {
-                                    _LosePowerHowOftenSelection =
-                                        index;
+                                    _LosePowerHowOftenSelection = index;
                                   });
                                 },
                                 value: _LosePowerHowOftenSelection,
