@@ -1,3 +1,7 @@
+import 'package:intl/intl.dart';
+
+import '../utils.dart';
+
 class Estimate {
   String Id;
   String InvoiceId;
@@ -15,7 +19,7 @@ class Estimate {
     Description=map['Description'].toString();
     Quantity=map['EstimateEqpCount'].toString();
     Price=map['TotalAmount'].toString();
-    CreatedDate=map['CreatedDate'].toString();
+    CreatedDate= formatDate(map['CreatedDate']);
   }
 
 }

@@ -1,5 +1,6 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void showMessage(BuildContext context, String title, String message, Color color, IconData icon) {
   Flushbar(
@@ -24,4 +25,11 @@ void showMessage(BuildContext context, String title, String message, Color color
     message: message,
     shouldIconPulse: false,
   )..show(context);
+}
+
+String formatDate(String date) {
+  DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'hh:mm:ss.ZZZ");
+  DateTime dateTime = inputFormat.parse(date);
+  DateFormat outputFormat = DateFormat("MM/dd/yyyy", );
+  return outputFormat.format(dateTime);
 }
