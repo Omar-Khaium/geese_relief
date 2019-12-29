@@ -105,7 +105,8 @@ class _DashboardUIState extends State<DashboardUI>
       fragment = new CustomerDetailsFragment(login: widget.login,
         backToDashboard: _backToDashboard,
         customerID: customerID,
-        goToBasementReport: _goToBasementInspectionReport,);
+        goToBasementReport: _goToBasementInspectionReport,
+      loggedInUser: widget.loggedInUser,);
     });
   }
 

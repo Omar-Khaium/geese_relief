@@ -560,22 +560,28 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   Estimate estimate;
 
   Future getDuplicateEstimate(int index) async {
-    Map<String, String> headers = {
-      'Authorization': widget.login.accessToken,
-      'EstimateId': widget.customerDetails.estimates[index].Id,
-      'CompanyId': widget.loggedInUser.CompanyID,
-    };
-    var url = "http://api.rmrcloud.com/EstimateDuplicate";
-    var result = await http.post(url, headers: headers);
-    if (result.statusCode == 200){
-      setState(() {
-        widget.customerDetails.estimates.add(widget.customerDetails.estimates[index]);
-      });
-      return result;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
-      return [];
+    try{
+      Map<String, String> headers = {
+        'Authorization': widget.login.accessToken,
+        'EstimateId': widget.customerDetails.estimates[index].Id,
+        'CompanyId': widget.loggedInUser.CompanyGUID,
+      };
+      var url = "http://api.rmrcloud.com/EstimateDuplicate";
+      var result = await http.post(url, headers: headers);
+      if (result.statusCode == 200){
+        setState(() {
+          widget.customerDetails.estimates.add(widget.customerDetails.estimates[index]);
+        });
+        return result;
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
+        return [];
+      }
     }
+    catch(error){
+      error.toString();
+    }
+
   }
 
   IconData getRecommendedLevelIcon(int level) {
