@@ -8,6 +8,7 @@ import 'package:flutter_grate_app/widgets/customer_list_shimmer.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DashboardFragment extends StatefulWidget {
   ValueChanged<String> goToCustomerDetails;
@@ -21,6 +22,7 @@ class DashboardFragment extends StatefulWidget {
 
 class _DashboardFragmentState extends State<DashboardFragment> {
   List<Customer> arrayList = [];
+  Customer customer;
 
   Future getData() async {
     Map<String, String> headers = {
@@ -76,7 +78,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                     return ListView.builder(
                       itemCount: arrayList.length,
                       itemBuilder: (context, index) {
-                        Customer customer = arrayList[index];
+                        customer = arrayList[index];
                         return InkWell(
                           onTap: () {
                             widget.goToCustomerDetails(
@@ -89,6 +91,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                 height: 8,
                               ),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Expanded(
                                     child: Column(
@@ -130,6 +133,30 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                       ],
                                     ),
                                   ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      CircleAvatar(
+                                        backgroundColor: Colors.grey.shade100,
+                                        child: IconButton(
+                                          icon: new Icon(Icons.edit,size: 18,color: Colors.grey.shade700,),
+                                          onPressed: (){},
+                                        ),
+                                      ),
+                                      SizedBox(width: 16,),
+                                      CircleAvatar(
+                                        backgroundColor: Colors.grey.shade100,
+                                        child: IconButton(
+                                          icon: new Icon(MdiIcons.deleteForever,size: 18,color: Colors.redAccent.shade200,),
+                                          onPressed: (){
+                                            deleteCustomer(index);
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -161,5 +188,24 @@ class _DashboardFragmentState extends State<DashboardFragment> {
         ],
       ),
     );
+  }
+
+  Future deleteCustomer(int index) async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'customerid':arrayList[index].Id,
+    };
+
+    var url = "http://api.rmrcloud.com/DeleteCustomer";
+    var result = await http.delete(url, headers: headers);
+    if (result.statusCode == 200) {
+      arrayList.removeAt(index);
+      setState(() {});
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return [];
+    }
   }
 }
