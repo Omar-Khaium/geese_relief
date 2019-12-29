@@ -6,14 +6,12 @@ import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/estimate.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
-import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:http/http.dart' as http;
-
 import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
@@ -583,19 +581,44 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   IconData getRecommendedLevelIcon(int level) {
     switch (level) {
       case 0:
-        return Icons.exposure_zero;
+        {
+          return Icons.exposure_zero;
+        }
+        break;
       case 1:
-        return Icons.looks_one;
+        {
+          return Icons.looks_one;
+        }
+        break;
       case 2:
-        return Icons.looks_two;
+        {
+          return Icons.looks_two;
+        }
+        break;
       case 3:
-        return Icons.looks_3;
+        {
+          return Icons.looks_3;
+        }
+        break;
       case 4:
-        return Icons.looks_4;
+        {
+          return Icons.looks_4;
+        }
+        break;
       case 5:
-        return Icons.looks_5;
+        {
+          return Icons.looks_5;
+        }
+        break;
       case 6:
-        return Icons.looks_6;
+        {
+          return Icons.looks_6;
+        }
+        break;
+      default:
+        {
+          return Icons.exposure_zero;
+        }
     }
   }
 }

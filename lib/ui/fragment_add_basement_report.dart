@@ -1,20 +1,24 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_grate_app/drawer/drawer_theme.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
-import 'package:flutter_grate_app/widgets/Drawboard.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
+import 'package:flutter_grate_app/widgets/drawing_placeholder.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
+import 'package:flutter_grate_app/widgets/place_image.dart';
+import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_grate_app/widgets/widget_drawing.dart';
 import 'package:flutter_grate_app/widgets/widget_signature.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:painter/painter.dart';
 
 import '../utils.dart';
 
@@ -74,8 +78,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       new TextEditingController();
   TextEditingController _TestedForRadonInThePast2YearsCommentController =
       new TextEditingController();
+  TextEditingController _BasementEvaluationOtherController = new TextEditingController();
   TextEditingController _NotesController = new TextEditingController();
 
+  Widget _PMSignature = Container();
+  Widget _HOSignature = Container();
+  Widget _Drawing = Container();
+  var progress = 0.0;
   List<DropDownSingleItem> CurrentOutsideConditionsArray = [],
       HeatArray = [],
       AirArray = [],
@@ -125,9 +134,41 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       LosePowerSelection = 0,
       LosePowerHowOftenSelection = 0;
 
+  String base64Drawing = "";
+  String base64PMSignature = "";
+  String base64HOSignature = "";
+  String _alertMessage = "Preparing inputs...";
+  var base64 = const Base64Codec();
+
+  Map<String, String> headers = <String,String>{};
+
+  _generateDrawingPicture(PictureDetails picture) {
+    _Drawing = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64Drawing = base64.encode(val);
+    });
+  }
+
+  _generatePMSignaturePicture(PictureDetails picture) {
+    _PMSignature = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64PMSignature = base64.encode(val);
+    });
+  }
+
+  _generateHOSignaturePicture(PictureDetails picture) {
+    _HOSignature = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64HOSignature = base64.encode(val);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _PMSignature = SignaturePlaceholder();
+    _HOSignature = SignaturePlaceholder();
+    _Drawing = DrawingPlaceholder();
   }
 
   @override
@@ -227,7 +268,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             ListRowItem(
                               icon: Icons.event,
                               text:
-                                  "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                                  "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
                             ),
                             SizedBox(
                               height: 16,
@@ -2053,6 +2094,28 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  new TextField(
+                                    controller:
+                                    _BasementEvaluationOtherController,
+                                    obscureText: false,
+                                    onChanged: (val) {
+                                      setState(() {});
+                                    },
+                                    cursorColor: Colors.black,
+                                    keyboardType: TextInputType.text,
+                                    maxLines: 1,
+                                    style: customTextStyle(),
+                                    decoration: new InputDecoration(
+                                        labelText: "16. Other",
+                                        labelStyle: customTextStyle(),
+                                        hintText: "e.g. hint",
+                                        hintStyle: customHintStyle(),
+                                        alignLabelWithHint: false,
+                                        isDense: true),
                                   )
                                 ],
                               ),
@@ -2102,14 +2165,20 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     height: MediaQuery.of(context).size.height -
                                         200,
                                     color: Colors.grey.shade100,
-                                    child: Center(
-                                      child: OutlineButton(
-                                        child: Text(
-                                          "Add Drawing",
-                                          style: defaultTextStyle,
-                                        ),
-                                        onPressed: () {},
-                                      ),
+                                    child: InkWell(
+                                      child: _Drawing,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return DrawingDialog(
+                                                  picture:
+                                                      _generateDrawingPicture);
+                                            },
+                                          ),
+                                        );
+                                      },
                                     ),
                                   )
                                 ],
@@ -2186,23 +2255,23 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
-                                              Navigator.of(context).push(
-                                                  new MaterialPageRoute<Null>(
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return new SignatureDialog();
-                                                      },
-                                                      fullscreenDialog: true));
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return SignatureDialog(
+                                                        picture:
+                                                            _generatePMSignaturePicture);
+                                                  },
+                                                ),
+                                              );
                                             },
                                             child: Container(
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: <Widget>[
                                                   Expanded(
-                                                    child: Container(
-                                                      color:
-                                                          Colors.grey.shade200,
-                                                    ),
+                                                    child: _PMSignature,
                                                   ),
                                                   SizedBox(
                                                     height: 8,
@@ -2215,10 +2284,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(8.0),
-                                                        child: ListRowItem(
-                                                          icon: Icons.event,
-                                                          text:
-                                                              "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                                                        child: Center(
+                                                          child: ListRowItem(
+                                                            icon: Icons.event,
+                                                            text:
+                                                                "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -2232,34 +2303,49 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                           width: 48,
                                         ),
                                         Expanded(
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Container(
-                                                    color: Colors.grey.shade200,
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return SignatureDialog(
+                                                        picture:
+                                                            _generateHOSignaturePicture);
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: _HOSignature,
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Container(
-                                                  color: Colors.grey.shade100,
-                                                  child: Center(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: ListRowItem(
-                                                        icon: Icons.event,
-                                                        text:
-                                                            "${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Center(
+                                                    child: Container(
+                                                      color:
+                                                          Colors.grey.shade100,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Center(
+                                                          child: ListRowItem(
+                                                            icon: Icons.event,
+                                                            text:
+                                                                "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -2271,29 +2357,40 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             ),
                           ),
                           SizedBox(
-                            height: 16,
+                            height: 32,
                           ),
-                          Center(
-                            child: MaterialButton(
-                              color: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(36.0),
-                                side: BorderSide(color: Colors.transparent),
-                              ),
-                              textColor: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 32, right: 32, top: 16, bottom: 16),
-                                child: new Text(
-                                  "Login",
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: InkWell(
+                              onTap: () {
+                                showAlertDialog();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(36)),
+                                  color: Colors.black,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black38,
+                                      blurRadius: 4,
+                                      spreadRadius: 4,
+                                      offset: Offset(
+                                        0,
+                                        0,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                padding: EdgeInsets.only(
+                                    left: 48, right: 48, top: 18, bottom: 18),
+                                margin: EdgeInsets.only(right: 16, bottom: 16),
+                                child: Text(
+                                  "Submit",
                                   style: customButtonTextStyle(),
                                 ),
                               ),
-                              onPressed: () {},
                             ),
-                          ),
-                          SizedBox(
-                            height: 16,
                           ),
                         ],
                       );
@@ -2328,5 +2425,236 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
           Colors.redAccent, Icons.warning);
       return [];
     }
+  }
+
+  showAlertDialog() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, mState) {
+              return SimpleDialog(
+                contentPadding: EdgeInsets.all(20),
+                title: Text(
+                  _alertMessage,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                children: <Widget>[
+                  Container(
+                    height: 3,
+                    child: LinearProgressIndicator(
+                      backgroundColor:
+                      Colors.black12,
+                      value: progress,
+                      valueColor:
+                      AlwaysStoppedAnimation(
+                          Colors.red),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 5),
+                    child: Text(
+                        "${(progress).toInt()}%"),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+
+    setState(() {
+      _alertMessage = "Uploading Drawing...";
+    });
+
+    if(base64Drawing.isNotEmpty) {
+      uploadDrawingImage(base64Drawing);
+    } else {
+      headers['Drawing'] = "";
+      setState(() {
+        progress = 33;
+        _alertMessage = "Uploading PM Signature...";
+      });
+      uploadPMSignatureImage(base64PMSignature);
+    }
+  }
+
+  Future uploadDrawingImage(String base64String) async {
+    var url = "http://api.rmrcloud.com/UploadImageFile";
+    Map<String, String> headers = <String, String>{
+      "Authorization" : widget.login.accessToken
+    };
+    Map<String, String> body = <String, String>{
+      "filename" : "file-from-omar.png",
+      "filepath" : base64String
+    };
+
+
+    http.post(url, headers: headers, body: body).then((response) {
+      try{
+        if(response.statusCode==200) {
+          Map map = json.decode(response.body);
+          headers['Drawing'] = map['filePath'];
+          setState(() {
+            progress = 33;
+            _alertMessage = "Uploading PM Signature...";
+          });
+          if(base64PMSignature.isNotEmpty) {
+            uploadPMSignatureImage(base64PMSignature);
+          }  else {
+            headers['PMSignature'] = "";
+            setState(() {
+              progress = 48;
+              _alertMessage = "Uploading Homeowner's Signature...";
+            });
+            uploadHOSignatureImage(base64HOSignature);
+          }
+        }
+      } catch(error) {
+      }
+    });
+  }
+
+  Future uploadPMSignatureImage(String base64String) async {
+    var url = "http://api.rmrcloud.com/UploadImageFile";
+    Map<String, String> headers = <String, String>{
+      "Authorization" : widget.login.accessToken
+    };
+    Map<String, String> body = <String, String>{
+      "filename" : "file-from-omar.png",
+      "filepath" : base64String
+    };
+
+
+    http.post(url, headers: headers, body: body).then((response) {
+      try{
+        if(response.statusCode==200) {
+          Map map = json.decode(response.body);
+          headers['PMSignature'] = map['filePath'];
+          setState(() {
+            progress = 48;
+            _alertMessage = "Uploading Homeowner's Signature...";
+          });
+          if(base64PMSignature.isNotEmpty) {
+            uploadHOSignatureImage(base64HOSignature);
+          }  else {
+            headers['HomeOwnerSignature'] = "";
+            setState(() {
+              progress = 60;
+              _alertMessage = "Saving Inspection Report...";
+            });
+            saveInspectionReport();
+          }
+        }
+      } catch(error) {
+      }
+    });
+  }
+
+  Future uploadHOSignatureImage(String base64String) async {
+    var url = "http://api.rmrcloud.com/UploadImageFile";
+    Map<String, String> headers = <String, String>{
+      "Authorization" : widget.login.accessToken
+    };
+    Map<String, String> body = <String, String>{
+      "filename" : "file-from-omar.png",
+      "filepath" : base64String
+    };
+
+
+    http.post(url, headers: headers, body: body).then((response) {
+      try{
+        if(response.statusCode==200) {
+          Map map = json.decode(response.body);
+          headers['HomeOwnerSignature'] = map['filePath'];
+          setState(() {
+            progress = 60;
+            _alertMessage = "Saving Inspection Report...";
+          });
+          saveInspectionReport();
+        }
+      } catch(error) {
+      }
+    });
+  }
+
+  Future saveInspectionReport() async {
+    var url = "http://api.rmrcloud.com/SaveCustomerInspection";
+
+    headers['Authorization'] = widget.login.accessToken;
+    headers['CurrentOutsideConditions'] = CurrentOutsideConditionsArray[CurrentOutsideConditionsSelection].DataValue;
+    headers['RelativeOther1'] = _Other1Controller.text;
+    headers['RelativeOther2'] = _Other2Controller.text;
+    headers['Heat'] = HeatArray[HeatSelection].DataValue;
+    headers['Air'] = AirArray[AirSelection].DataValue;
+    headers['BasementDehumidifier'] = BasementDehumidifierArray[BasementDehumidifierSelection].DataValue;
+    headers['GroundWater'] = YesNoArray[GroundWaterSelection].DataValue;
+    headers['IronBacteria'] = YesNoArray[IronBacteriaSelection].DataValue;
+    headers['Condensation'] = YesNoArray[CondensationSelection].DataValue;
+    headers['WallCracks'] = YesNoArray[WallCracksSelection].DataValue;
+    headers['FloorCracks'] = YesNoArray[FloorCracksSelection].DataValue;
+    headers['ExistingSumpPump'] = YesNoArray[ExistingSumpPumpSelection].DataValue;
+    headers['ExistingDrainageSystem'] = YesNoArray[ExistingDrainageSystemSelection].DataValue;
+    headers['ExistingRadonSystem'] = YesNoArray[ExistingRadonSystemSelection].DataValue;
+    headers['DryerVentToCode'] = YesNoArray[DryerVentToCodeSelection].DataValue;
+    headers['FoundationType'] = FoundationTypeArray[FoundationTypeSelection].DataValue;
+    headers['Bulkhead'] = YesNoArray[BulkheadSelection].DataValue;
+    headers['VisualBasementOther'] = _VisualBasementInspectionOtherController.text;
+    headers['NoticedSmellsOrOdors'] = YesNoArray[NoticedSmellsOrOdorsSelection].DataValue;
+    headers['NoticedSmellsOrOdorsComment'] = _NoticedSmellsCommentController.text;
+    headers['NoticedMoldOrMildew'] = YesNoArray[NoticedMoldOrMildewSelection].DataValue;
+    headers['NoticedMoldOrMildewComment'] = _NoticedMoldsCommentController.text;
+    headers['BasementGoDown'] = YesNoArray[BasementGoDownSelection].DataValue;
+    headers['HomeSufferForRespiratory'] = YesNoArray[HomeSufferForRespiratoryProblemsSelection].DataValue;
+    headers['HomeSufferForrespiratoryComment'] = _SufferFromRespiratoryCommentController.text;
+    headers['ChildrenPlayInBasement'] = YesNoArray[ChildrenPlayInBasementSelection].DataValue;
+    headers['ChildrenPlayInBasementComment'] = _ChildrenPlayInTheBasementCommentController.text;
+    headers['PetsGoInBasement'] = YesNoArray[PetsGoInBasementSelection].DataValue;
+    headers['PetsGoInBasementComment'] = _HavePetsCommentController.text;
+    headers['NoticedBugsOrRodents'] = YesNoArray[NoticedBugsOrRodentsSelection].DataValue;
+    headers['NoticedBugsOrRodentsComment'] = _NoticedBugsCommentController.text;
+    headers['GetWater'] = YesNoArray[GetWaterSelection].DataValue;
+    headers['GetWaterComment'] = _GetWaterCommentController.text;
+    headers['RemoveWater'] = RemoveWaterArray[RemoveWaterSelection].DataValue;
+    headers['SeeCondensationPipesDripping'] = YesNoArray[SeeCondensationPipesDrippingSelection].DataValue;
+    headers['SeeCondensationPipesDrippingComment'] = _EverSeePipesDrippingCommentController.text;
+    headers['RepairsProblems'] = YesNoArray[RepairsTryAndFixSelection].DataValue;
+    headers['RepairsProblemsComment'] = _AnyRepairsToTryAndFixCommentController.text;
+    headers['LivingPlan'] = YesNoArray[LivingPlanSelection].DataValue;
+    headers['SellPlaning'] = YesNoArray[SellPlaningSelection].DataValue;
+    headers['PlansForBasementOnce'] = YesNoArray[PlansForBasementOnceSelection].DataValue;
+    headers['HomeTestForPastRadon'] = YesNoArray[HomeTestedForRadonSelection].DataValue;
+    headers['HomeTestForPastRadonComment'] = _TestedForRadonInThePast2YearsCommentController.text;
+    headers['LosePower'] = LosePowerArray[LosePowerSelection].DataValue;
+    headers['LosePowerHowOften'] = LosePowerHowOftenArray[LosePowerHowOftenSelection].DataValue;
+    headers['CustomerBasementOther'] = _BasementEvaluationOtherController.text;
+    headers['Notes'] = _NotesController.text;
+    headers['OutsideRelativeHumidity'] = _OutsideRelativeHumidityController.text;
+    headers['OutsideTemperature'] = _OutsideTemperatureController.text;
+    headers['FirstFloorRelativeHumidity'] = _1stFloorRelativeHumidityController.text;
+    headers['FirstFloorTemperature'] = _1stFloorTemperatureController.text;
+    headers['GroundWaterRating'] = RatingArray[GroundWaterRatingSelection].DataValue;
+    headers['IronBacteriaRating'] = RatingArray[IronBacteriaRatingSelection].DataValue;
+    headers['CondensationRating'] = RatingArray[CondensationRatingSelection].DataValue;
+    headers['WallCracksRating'] = RatingArray[WallCracksRatingSelection].DataValue;
+    headers['FloorCracksRating'] = RatingArray[FloorCracksRatingSelection].DataValue;
+    headers['Id'] = "";
+    headers['CustomerId'] = widget.customer.CustomerId;
+    headers['companyId'] = widget.loggedInUser.CompanyGUID;
+    headers['InspectionPhoto'] = "";
+
+    http.post(url, headers: headers).then((response) {
+      try{
+        if(response.statusCode==200) {
+          Map map = json.decode(response.body);
+          Navigator.of(context).pop();
+        } else {
+
+        }
+      } catch(error) {
+      }
+    });
   }
 }

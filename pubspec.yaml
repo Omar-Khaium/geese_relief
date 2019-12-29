@@ -33,6 +33,8 @@ dependencies:
   shimmer: ^1.0.1
   flutter_colorpicker: any
   intl: ^0.16.0
+  painter: ^0.3.2
+  popup_menu: ^1.0.4
 
 dev_dependencies:
   flutter_test:

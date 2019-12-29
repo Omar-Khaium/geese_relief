@@ -10,6 +10,7 @@ class ListRowItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Icon(icon, color: Colors.grey,),
         SizedBox(width: 16,),
