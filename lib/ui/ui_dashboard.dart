@@ -46,6 +46,8 @@ class _DashboardUIState extends State<DashboardUI>
           fragment = AddCustomerFragment(
             backToDashboard: _backToDashboard,
             login: widget.login,
+            isLoading: _showLoading,
+            loggedInUser: widget.loggedInUser,
           );
           break;
         case 2:

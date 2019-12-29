@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 
+import 'package:http/http.dart' as http;
 class ChangePasswordFragment extends StatefulWidget {
   ValueChanged<int> backToDashboard;
   Login login;
@@ -13,6 +17,91 @@ class ChangePasswordFragment extends StatefulWidget {
 }
 
 class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
+
+
+  TextEditingController _oldPaswordController = new TextEditingController();
+  TextEditingController _newPaswordController = new TextEditingController();
+  TextEditingController _confirmPaswordController = new TextEditingController();
+
+
+  Future getPasswordChanged() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'UserName': '${widget.login.username}',
+      'Password': '${_oldPaswordController.text}',
+      'NewPassword': '${_newPaswordController.text}',
+    };
+    var url = "http://api.rmrcloud.com/ChangePassword";
+    var result = await http.post(url, headers: headers);
+    if (result.statusCode == 200){
+      if(widget.login.password==_oldPaswordController.text){
+        if(_newPaswordController==_confirmPaswordController){
+
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.blueGrey.shade900,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    RaisedButton(
+                      highlightElevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(36.0),
+                          side: BorderSide(color: Colors.white12)),
+                      disabledColor: Colors.black,
+                      color: Colors.black,
+                      elevation: 2,
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        "Confirm",
+                        style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: "Roboto"),
+                      ),
+                      onPressed: () {
+                      },
+                    ),
+                    RaisedButton(
+                      highlightElevation: 2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(36.0),
+                          side: BorderSide(color: Colors.white12)),
+                      disabledColor: Colors.black,
+                      color: Colors.black,
+                      elevation: 2,
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        "Cancel",
+                        style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: "Roboto"),
+                      ),
+                      onPressed: () {
+                      },
+                    ),
+                  ],
+                )
+              );
+            },
+          );
+        }
+      }
+
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -42,6 +131,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
               children: <Widget>[
                 new TextField(
                   cursorColor: Colors.black87,
+                  controller: _oldPaswordController,
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
                   decoration: new InputDecoration(
@@ -70,6 +160,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                 ),
                 new TextField(
                   cursorColor: Colors.black87,
+                  controller: _newPaswordController,
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
                   decoration: new InputDecoration(
@@ -98,6 +189,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                 ),
                 new TextField(
                   cursorColor: Colors.black87,
+                  controller: _confirmPaswordController,
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
                   decoration: new InputDecoration(
@@ -136,6 +228,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                           borderRadius: new BorderRadius.circular(36.0),
                           side: BorderSide(color: Colors.white12)),
                       disabledColor: Colors.black,
+                      color: Colors.black,
                       elevation: 5,
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
@@ -144,7 +237,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                         style: new TextStyle(
                             color: Colors.white, fontSize: 22, fontFamily: "Roboto"),
                       ),
-                      onPressed: null,
+                      onPressed: getPasswordChanged,
                     ),
                   ),
                 ),

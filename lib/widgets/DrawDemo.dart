@@ -118,7 +118,6 @@ class _PathHistory {
 
     }
   }
-
   void clear() {
     if (!_inDrag) {
       _paths.clear();
@@ -163,15 +162,20 @@ class PictureDetails {
 
   const PictureDetails(this.picture, this.width, this.height);
 
-  Image toImage(){
-    return /*picture.toImage(width, height)*/ null;
+  Future<Image> toImage(){
+    var image=picture.toImage(width, height);
+    return image;
   }
 
   Future<Uint8List> toPNG() async {
-    return (await toImage().toByteData(format: ImageByteFormat.png))
+
+    var image;
+    await toImage().then((val){
+      image=val;
+    });
+    return (image.toByteData(format: ImageByteFormat.png))
         .buffer
         .asUint8List();
-
   }
 }
 
