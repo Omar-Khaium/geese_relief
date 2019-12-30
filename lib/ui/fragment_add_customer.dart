@@ -263,7 +263,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             ),
                             isDense: true,
                             errorText:
-                            _lastNameController
+                            _businessTypeController
                                 .text.isNotEmpty
                                 ? null
                                 : "* Required",
@@ -330,7 +330,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     color: Colors.grey,
                                   ),
                                   errorText:
-                                  _lastNameController
+                                  _primaryPhoneController
                                       .text.isNotEmpty
                                       ? null
                                       : "* Required",
@@ -643,7 +643,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
 
     );
   }
-
   Future getData() async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
@@ -660,4 +659,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       return [];
     }
   }
+
+
 }

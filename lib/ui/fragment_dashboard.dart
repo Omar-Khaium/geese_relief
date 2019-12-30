@@ -14,7 +14,8 @@ class DashboardFragment extends StatefulWidget {
   ValueChanged<String> goToCustomerDetails;
   Login login;
 
-  DashboardFragment({Key key, this.login, this.goToCustomerDetails  }) : super(key: key);
+  DashboardFragment({Key key, this.login, this.goToCustomerDetails})
+      : super(key: key);
 
   @override
   _DashboardFragmentState createState() => _DashboardFragmentState();
@@ -36,7 +37,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     if (result.statusCode == 200) {
       return result;
     } else {
-      showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
       return [];
     }
   }
@@ -81,8 +83,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                         customer = arrayList[index];
                         return InkWell(
                           onTap: () {
-                            widget.goToCustomerDetails(
-                                arrayList[index].Id);
+                            widget.goToCustomerDetails(arrayList[index].Id);
                           },
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -91,13 +92,14 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                 height: 8,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Expanded(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         ListRowItem(
                                           icon: Icons.person,
@@ -124,7 +126,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         ListRowItem(
                                           icon: Icons.pin_drop,
@@ -136,21 +138,31 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       CircleAvatar(
                                         backgroundColor: Colors.grey.shade100,
                                         child: IconButton(
-                                          icon: new Icon(Icons.edit,size: 18,color: Colors.grey.shade700,),
-                                          onPressed: (){},
+                                          icon: new Icon(
+                                            Icons.edit,
+                                            size: 18,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                          onPressed: () {},
                                         ),
                                       ),
-                                      SizedBox(width: 16,),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
                                       CircleAvatar(
                                         backgroundColor: Colors.grey.shade100,
                                         child: IconButton(
-                                          icon: new Icon(MdiIcons.deleteForever,size: 18,color: Colors.redAccent.shade200,),
-                                          onPressed: (){
+                                          icon: new Icon(
+                                            MdiIcons.deleteForever,
+                                            size: 18,
+                                            color: Colors.redAccent.shade200,
+                                          ),
+                                          onPressed: () {
                                             deleteCustomer(index);
                                           },
                                         ),
@@ -165,14 +177,14 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                               arrayList.length - 1 == index
                                   ? Container()
                                   : Container(
-                                child: Divider(),
-                              ),
+                                      child: Divider(),
+                                    ),
                             ],
                           ),
                         );
                       },
                     );
-                  } catch(error){
+                  } catch (error) {
                     return Container();
                   }
                 } else {
@@ -193,7 +205,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   Future deleteCustomer(int index) async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
-      'customerid':arrayList[index].Id,
+      'customerid': arrayList[index].Id,
     };
 
     var url = "http://api.rmrcloud.com/DeleteCustomer";

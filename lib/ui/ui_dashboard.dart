@@ -9,6 +9,7 @@ import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/fragment_add_basement_report.dart';
 import 'package:flutter_grate_app/ui/fragment_add_customer.dart';
+import 'package:flutter_grate_app/ui/fragment_add_estimate.dart';
 import 'package:flutter_grate_app/ui/fragment_change_password.dart';
 import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
@@ -99,6 +100,15 @@ class _DashboardUIState extends State<DashboardUI>
           customer: customer);
     });
   }
+  _goToAddEstimate(CustomerDetails customer) {
+    setState(() {
+      fragment = AddEstimateFragment(
+          login: widget.login,
+          loggedInUser: widget.loggedInUser,
+          backToCustomerDetails: _backToCustomerDetails,
+          customer: customer);
+    });
+  }
 
   _goToCustomerDetails(String customerID) {
     setState(() {
@@ -106,6 +116,7 @@ class _DashboardUIState extends State<DashboardUI>
         backToDashboard: _backToDashboard,
         customerID: customerID,
         goToBasementReport: _goToBasementInspectionReport,
+        goToAddEstimate: _goToAddEstimate,
       loggedInUser: widget.loggedInUser,);
     });
   }

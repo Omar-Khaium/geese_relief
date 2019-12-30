@@ -9,9 +9,10 @@ import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:http/http.dart' as http;
+
 import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
@@ -21,6 +22,7 @@ class CustomerDetailsFragment extends StatefulWidget {
   final String customerID;
   final ValueChanged<int> backToDashboard;
   final ValueChanged<CustomerDetails> goToBasementReport;
+  final ValueChanged<CustomerDetails> goToAddEstimate;
   LoggedInUser loggedInUser;
 
   CustomerDetailsFragment(
@@ -29,7 +31,8 @@ class CustomerDetailsFragment extends StatefulWidget {
       this.customerID,
       this.backToDashboard,
       this.goToBasementReport,
-        this.loggedInUser})
+      this.goToAddEstimate,
+      this.loggedInUser})
       : super(key: key);
 
   @override
@@ -295,7 +298,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     BorderRadius.circular(10),
                                               ),
                                               elevation: 8,
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                widget.goToAddEstimate(widget.customerDetails);
+                                              },
                                               color: Colors.black,
                                               child: Padding(
                                                 padding:
@@ -474,9 +479,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                   Icons.content_copy,
                                                   color: Colors.black,
                                                   size: 18,
-
                                                 ),
-                                                onTap: (){
+                                                onTap: () {
                                                   setState(() {
                                                     getDuplicateEstimate(index);
                                                   });
@@ -557,10 +561,11 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       return {};
     }
   }
+
   Estimate estimate;
 
   Future getDuplicateEstimate(int index) async {
-    try{
+    try {
       Map<String, String> headers = {
         'Authorization': widget.login.accessToken,
         'EstimateId': widget.customerDetails.estimates[index].Id,
@@ -568,20 +573,20 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       };
       var url = "http://api.rmrcloud.com/EstimateDuplicate";
       var result = await http.post(url, headers: headers);
-      if (result.statusCode == 200){
+      if (result.statusCode == 200) {
         setState(() {
-          widget.customerDetails.estimates.add(widget.customerDetails.estimates[index]);
+          widget.customerDetails.estimates
+              .add(widget.customerDetails.estimates[index]);
         });
         return result;
       } else {
-        showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
         return [];
       }
-    }
-    catch(error){
+    } catch (error) {
       error.toString();
     }
-
   }
 
   IconData getRecommendedLevelIcon(int level) {
