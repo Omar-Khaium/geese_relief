@@ -299,7 +299,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               elevation: 8,
                                               onPressed: () {
-                                                widget.goToAddEstimate(widget.customerDetails);
+                                                widget.goToAddEstimate(
+                                                    widget.customerDetails);
                                               },
                                               color: Colors.black,
                                               child: Padding(

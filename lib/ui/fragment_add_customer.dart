@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
@@ -9,8 +10,10 @@ import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
 import 'package:flutter_grate_app/ui/ui_dashboard.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
+import 'package:flutter_grate_app/widgets/UsFormatter.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_grate_app/widgets/UsFormatter.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -59,6 +62,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
 
   static String ACCESS_TOKEN = "";
 
+  final _UsNumberTextInputFormatter = UsNumberTextInputFormatter();
   // ignore: missing_return
   Future<String> makeRequest() async {
     widget.isLoading(true);
@@ -319,6 +323,10 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 cursorColor: Colors.black87,
                                 keyboardType: TextInputType.number,
                                 maxLines: 1,
+                                inputFormatters: <TextInputFormatter>[
+                                  WhitelistingTextInputFormatter.digitsOnly,
+                                  _UsNumberTextInputFormatter,
+                                ],
                                 decoration: new InputDecoration(
                                   labelText: "Primary Phone",
                                   focusedBorder: UnderlineInputBorder(
@@ -354,6 +362,10 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 keyboardType: TextInputType.number,
                                 maxLines: 1,
                                 style: customTextStyle(),
+                                inputFormatters: <TextInputFormatter>[
+                                  WhitelistingTextInputFormatter.digitsOnly,
+                                  _UsNumberTextInputFormatter,
+                                ],
                                 decoration: new InputDecoration(
                                   labelText: "Secondary Phone",
                                   focusedBorder: UnderlineInputBorder(
@@ -389,6 +401,10 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             setState(() {
                             });
                           },
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            _UsNumberTextInputFormatter,
+                          ],
                           decoration: new InputDecoration(
                             labelText: "Cell Phone",
                             focusedBorder: UnderlineInputBorder(

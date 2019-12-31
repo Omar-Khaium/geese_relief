@@ -1,11 +1,20 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
+import 'package:flutter_grate_app/widgets/place_image.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_grate_app/widgets/widget_drawing.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:painter/painter.dart';
+
+import '../utils.dart';
 
 class AddEstimateFragment extends StatefulWidget {
   Login login;
@@ -27,6 +36,20 @@ class AddEstimateFragment extends StatefulWidget {
 
 class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   String dollar = "\$";
+  TextEditingController _productNameController = new TextEditingController();
+
+  Widget _Drawing = Container();
+
+  String base64Drawing = "";
+  var _days = ['After 15 days','After 30 days','After 60 days'];
+  var _currentValueSelected = "After 15 days";
+
+  _generateDrawingPicture(PictureDetails picture) {
+    _Drawing = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64Drawing = base64.encode(val);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,25 +166,35 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Container(
-                                  width: 220,
-                                  decoration: new BoxDecoration(
-                                      color: Colors.grey.shade200,
-                                      shape: BoxShape.rectangle,
-                                      border: Border.all(
-                                          width: 1.0, color: Colors.black26),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0))),
-                                  padding: EdgeInsets.all(8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(Icons.keyboard_arrow_down),
-                                      Text("After 15 days"),
-                                    ],
-                                  ),
+                                    width: 220,
+                                    height: 43,
+                                    decoration: new BoxDecoration(
+                                        color: Colors.grey.shade200,
+                                        shape: BoxShape.rectangle,
+                                        border: Border.all(
+                                            width: 1.0, color: Colors.black26),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0))),
+                                    padding: EdgeInsets.all(8),
+                                    child:DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        items: _days.map((String dropDownStringItem) {
+                                          return DropdownMenuItem<String>(
+                                            value: dropDownStringItem,
+                                            child: Text(dropDownStringItem),
+                                          );
+                                        }).toList(),
+                                        onChanged: (String newValueSelected) {
+                                          setState(() {
+                                            this._currentValueSelected =
+                                                newValueSelected;
+                                          });
+                                        },
+
+                                        value: _currentValueSelected,
+                                      ),
+                                    ),
+
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(left: 5),
@@ -249,28 +282,191 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemBuilder: (context, index) {}),
+                    itemBuilder: (context, index) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(MdiIcons.identifier),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(
+                                        ("1"),
+                                        style: listTextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(MdiIcons.text),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(
+                                        ("1"),
+                                        style: listTextStyle(),
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(MdiIcons.calendarClock),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(
+                                        ("1"),
+                                        style: listTextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(MdiIcons.layers),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(
+                                        ("1"),
+                                        style: listTextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Icon(MdiIcons.cashUsdOutline),
+                                      SizedBox(
+                                        width: 16,
+                                      ),
+                                      Text(
+                                        ("1"),
+                                        style: listTextStyle(),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  CircleAvatar(
+                                    backgroundColor: Colors.grey.shade300,
+                                    child: Icon(
+                                      Icons.email,
+                                      color: Colors.black,
+                                      size: 18,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.grey.shade300,
+                                    child: InkWell(
+                                      child: Icon(
+                                        Icons.content_copy,
+                                        color: Colors.black,
+                                        size: 18,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          //getDuplicateEstimate(index);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundColor: Colors.grey.shade300,
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.black,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Divider(),
+                        ],
+                      );
+                    }),
               ),
               Row(
                 children: <Widget>[
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Container(
-                      width: 200,
-                      height: 150,
-                      decoration: new BoxDecoration(
-                          color: Colors.grey.shade200,
-                          shape: BoxShape.rectangle,
-                          border: Border.all(width: 1.0, color: Colors.black26),
-                          borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.add),
-                          Text("Add Drawing"),
-                        ],
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return DrawingDialog(
+                                  picture: _generateDrawingPicture);
+                            },
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 200,
+                        height: 150,
+                        decoration: new BoxDecoration(
+                            color: Colors.grey.shade200,
+                            shape: BoxShape.rectangle,
+                            border:
+                                Border.all(width: 1.0, color: Colors.black26),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(5.0))),
+                        padding: EdgeInsets.all(8),
+                        child: InkWell(
+                          child: _Drawing,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return DrawingDialog(
+                                      picture: _generateDrawingPicture);
+                                },
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -538,7 +734,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
             title: Container(
                 color: Colors.white,
                 child: Container(
-                  width: 500,
+                  width: 600,
                   child: Column(
                     children: <Widget>[
                       Align(
@@ -548,6 +744,9 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                           style:
                               new TextStyle(fontSize: 24, color: Colors.black),
                         ),
+                      ),
+                      SizedBox(
+                        height: 8,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -566,80 +765,164 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0))),
                                   padding: EdgeInsets.all(8),
-                                  child: TextField(
-                                    style: customTextStyle(),
-                                    cursorColor: Colors.black87,
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: new InputDecoration(
-                                      border: InputBorder.none,
-                                      hintText: "Product Name",
-                                      icon: Icon(MdiIcons.cube),
-                                      hintStyle: customHintStyle(),
-                                      isDense: true,
+                                  child: GestureDetector(
+                                    child: TextField(
+                                      style: customTextStyle(),
+                                      controller: _productNameController,
+                                      cursorColor: Colors.black87,
+                                      keyboardType: TextInputType.emailAddress,
+                                      onChanged: (val) {
+                                        getData();
+                                      },
+                                      decoration: new InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: "Product Name",
+                                        icon: Icon(MdiIcons.cube),
+                                        hintStyle: customHintStyle(),
+                                        isDense: true,
+                                      ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 8,),
+                                SizedBox(
+                                  height: 8,
+                                ),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
                                     Expanded(
                                       flex: 2,
                                       child: Container(
+                                        height: 165,
                                         decoration: new BoxDecoration(
                                             color: Colors.grey.shade200,
                                             shape: BoxShape.rectangle,
                                             border: Border.all(
-                                                width: 1.0, color: Colors.black26),
+                                                width: 1.0,
+                                                color: Colors.black26),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(5.0))),
                                         padding: EdgeInsets.all(8),
                                         child: TextField(
                                           style: customTextStyle(),
                                           cursorColor: Colors.black87,
-                                          keyboardType: TextInputType.emailAddress,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
                                           decoration: new InputDecoration(
                                             border: InputBorder.none,
-                                            hintText: "Product Name",
-                                            icon: Icon(MdiIcons.cube),
+                                            hintText: "Product Description",
+                                            icon: Icon(Icons.description),
                                             hintStyle: customHintStyle(),
                                             isDense: true,
                                           ),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 3,),
+                                    SizedBox(
+                                      width: 3,
+                                    ),
                                     Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        decoration: new BoxDecoration(
-                                            color: Colors.grey.shade200,
-                                            shape: BoxShape.rectangle,
-                                            border: Border.all(
-                                                width: 1.0, color: Colors.black26),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0))),
-                                        padding: EdgeInsets.all(8),
-                                        child: TextField(
-                                          style: customTextStyle(),
-                                          cursorColor: Colors.black87,
-                                          keyboardType: TextInputType.emailAddress,
-                                          decoration: new InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: "Product Name",
-                                            icon: Icon(MdiIcons.cube),
-                                            hintStyle: customHintStyle(),
-                                            isDense: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                        flex: 2,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              decoration: new BoxDecoration(
+                                                  color: Colors.grey.shade200,
+                                                  shape: BoxShape.rectangle,
+                                                  border: Border.all(
+                                                      width: 1.0,
+                                                      color: Colors.black26),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
+                                              padding: EdgeInsets.all(8),
+                                              child: TextField(
+                                                style: customTextStyle(),
+                                                cursorColor: Colors.black87,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                decoration: new InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: "Rate",
+                                                  icon:
+                                                      Icon(Icons.attach_money),
+                                                  hintStyle: customHintStyle(),
+                                                  isDense: true,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Container(
+                                              decoration: new BoxDecoration(
+                                                  color: Colors.grey.shade200,
+                                                  shape: BoxShape.rectangle,
+                                                  border: Border.all(
+                                                      width: 1.0,
+                                                      color: Colors.black26),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
+                                              padding: EdgeInsets.all(8),
+                                              child: TextField(
+                                                style: customTextStyle(),
+                                                cursorColor: Colors.black87,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                decoration: new InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: "Rate",
+                                                  icon:
+                                                      Icon(Icons.attach_money),
+                                                  hintStyle: customHintStyle(),
+                                                  isDense: true,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Container(
+                                              decoration: new BoxDecoration(
+                                                  color: Colors.grey.shade200,
+                                                  shape: BoxShape.rectangle,
+                                                  border: Border.all(
+                                                      width: 1.0,
+                                                      color: Colors.black26),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
+                                              padding: EdgeInsets.all(8),
+                                              child: TextField(
+                                                style: customTextStyle(),
+                                                cursorColor: Colors.black87,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                decoration: new InputDecoration(
+                                                  border: InputBorder.none,
+                                                  hintText: "Rate",
+                                                  icon:
+                                                      Icon(Icons.attach_money),
+                                                  hintStyle: customHintStyle(),
+                                                  isDense: true,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                                   ],
                                 )
-
                               ],
                             ),
                           ),
-                          SizedBox(width: 8,),
+                          SizedBox(
+                            width: 8,
+                          ),
                           Expanded(
                             flex: 1,
                             child: Align(
@@ -668,16 +951,127 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       ),
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Container(
+                                    height: 170,
+                                    width: 200,
+                                    decoration: new BoxDecoration(
+                                        color: Colors.grey.shade200,
+                                        shape: BoxShape.rectangle,
+                                        border: Border.all(
+                                            width: 1.0, color: Colors.black26),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0))),
+                                    padding: EdgeInsets.all(8),
+                                    child: Center(
+                                        child: Text(
+                                      "Add Image",
+                                      style: new TextStyle(
+                                          color: Colors.black26, fontSize: 22),
+                                    )),
+                                  ),
                                 ],
                               ),
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: 128,
+                              child: OutlineButton(
+                                highlightElevation: 2,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(36.0),
+                                    side: BorderSide(color: Colors.white12)),
+                                color: Colors.black,
+                                textColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Cancel",
+                                  style: new TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 22,
+                                      fontFamily: "Roboto"),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Container(
+                              width: 128,
+                              child: RaisedButton(
+                                highlightElevation: 2,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(36.0),
+                                    side: BorderSide(color: Colors.white12)),
+                                disabledColor: Colors.black,
+                                color: Colors.black,
+                                elevation: 2,
+                                textColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Add",
+                                  style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontFamily: "Roboto"),
+                                ),
+                                onPressed: () {
+                                  if (widget.login.isRemembered) {
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    Center(
+                                      child: Text(
+                                        "Save your password first",
+                                        style: new TextStyle(
+                                            color: Colors.white, fontSize: 36),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 )));
       },
     );
+  }
+
+  Future getData() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'Key': _productNameController.text.trim()
+    };
+
+    var url = "http://api.rmrcloud.com/GetEquipmentListByKey";
+    var result = await http.get(url, headers: headers);
+    if (result.statusCode == 200) {
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return [];
+    }
   }
 }
