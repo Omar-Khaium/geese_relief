@@ -25,6 +25,8 @@ dependencies:
   painter: ^0.3.2
   popup_menu: ^1.0.4
   flutter_typeahead: ^1.7.0
+  video_player:
+
 
 dev_dependencies:
   flutter_test:
@@ -34,10 +36,9 @@ flutter:
 
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - images/
-    # fonts:
+
   fonts:
     - family: Monserrat
       fonts:
@@ -47,10 +48,3 @@ flutter:
       fonts:
         - asset: fonts/font_regular.ttf
           weight: 700
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
