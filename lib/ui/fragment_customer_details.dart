@@ -18,17 +18,19 @@ import '../utils.dart';
 class CustomerDetailsFragment extends StatefulWidget {
   CustomerDetails customerDetails = new CustomerDetails(
       "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
-  final Login login;
-  final String customerID;
-  final ValueChanged<int> backToDashboard;
-  final ValueChanged<CustomerDetails> goToBasementReport;
-  final ValueChanged<CustomerDetails> goToAddEstimate;
+  Login login;
+  String customerID;
+  CustomerDetails customer;
+  ValueChanged<int> backToDashboard;
+  ValueChanged<CustomerDetails> goToBasementReport;
+  ValueChanged<CustomerDetails> goToAddEstimate;
   LoggedInUser loggedInUser;
 
   CustomerDetailsFragment(
       {Key key,
       this.login,
       this.customerID,
+      this.customer,
       this.backToDashboard,
       this.goToBasementReport,
       this.goToAddEstimate,

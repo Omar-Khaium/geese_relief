@@ -94,3 +94,11 @@ TextStyle listTextStyle(){
       fontStyle: FontStyle.normal,
   );
 }
+
+TextStyle estimateTextStyle(){
+  return new TextStyle(
+      color: Colors.black,
+      fontSize: 14,
+      fontStyle: FontStyle.normal,
+  );
+}
