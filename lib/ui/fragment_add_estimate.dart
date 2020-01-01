@@ -9,6 +9,7 @@ import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/place_image.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -37,11 +38,15 @@ class AddEstimateFragment extends StatefulWidget {
 class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   String dollar = "\$";
   TextEditingController _productNameController = new TextEditingController();
+  TextEditingController _descriptionController = new TextEditingController();
+  TextEditingController _priceController = new TextEditingController();
+  TextEditingController _quantityController = new TextEditingController();
+  TextEditingController _discountController = new TextEditingController();
 
   Widget _Drawing = Container();
 
   String base64Drawing = "";
-  var _days = ['After 15 days','After 30 days','After 60 days'];
+  var _days = ['After 15 days', 'After 30 days', 'After 60 days'];
   var _currentValueSelected = "After 15 days";
 
   _generateDrawingPicture(PictureDetails picture) {
@@ -166,35 +171,34 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Container(
-                                    width: 220,
-                                    height: 43,
-                                    decoration: new BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        shape: BoxShape.rectangle,
-                                        border: Border.all(
-                                            width: 1.0, color: Colors.black26),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0))),
-                                    padding: EdgeInsets.all(8),
-                                    child:DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        items: _days.map((String dropDownStringItem) {
-                                          return DropdownMenuItem<String>(
-                                            value: dropDownStringItem,
-                                            child: Text(dropDownStringItem),
-                                          );
-                                        }).toList(),
-                                        onChanged: (String newValueSelected) {
-                                          setState(() {
-                                            this._currentValueSelected =
-                                                newValueSelected;
-                                          });
-                                        },
-
-                                        value: _currentValueSelected,
-                                      ),
+                                  width: 220,
+                                  height: 43,
+                                  decoration: new BoxDecoration(
+                                      color: Colors.grey.shade200,
+                                      shape: BoxShape.rectangle,
+                                      border: Border.all(
+                                          width: 1.0, color: Colors.black26),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0))),
+                                  padding: EdgeInsets.all(8),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      items: _days
+                                          .map((String dropDownStringItem) {
+                                        return DropdownMenuItem<String>(
+                                          value: dropDownStringItem,
+                                          child: Text(dropDownStringItem),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String newValueSelected) {
+                                        setState(() {
+                                          this._currentValueSelected =
+                                              newValueSelected;
+                                        });
+                                      },
+                                      value: _currentValueSelected,
                                     ),
-
+                                  ),
                                 ),
                                 Container(
                                   margin: EdgeInsets.only(left: 5),
@@ -730,344 +734,347 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Container(
-                color: Colors.white,
-                child: Container(
-                  width: 600,
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Add Product/Service",
-                          style:
-                              new TextStyle(fontSize: 24, color: Colors.black),
+          backgroundColor: Colors.white,
+          content: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Add Product/Service",
+                  style: new TextStyle(fontSize: 24, color: Colors.black),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: new BoxDecoration(
+                              color: Colors.grey.shade200,
+                              shape: BoxShape.rectangle,
+                              border:
+                                  Border.all(width: 1.0, color: Colors.black26),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0))),
+                          padding: EdgeInsets.all(8),
+                          child: GestureDetector(
+                            child:
+                                TypeAheadField(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                autofocus: true,
+                                decoration: new InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Product Name",
+                                  icon: Icon(MdiIcons.cube),
+                                  hintStyle: customHintStyle(),
+                                  isDense: true,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return await getData(pattern);
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  leading: Icon(MdiIcons.package),
+                                  title: Text(suggestion['EquipmentName']),
+                                  subtitle: Text(suggestion['EquipmentType']),
+                                  trailing:
+                                      Text('\$ ${suggestion['RetailPrice']}'),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                _productNameController.text =
+                                    suggestion['EquipmentName'];
+                                _descriptionController.text =
+                                    suggestion['EquipmentName'];
+                                _quantityController.text =
+                                    suggestion['QuantityAvailable'];
+                                _priceController.text =
+                                    suggestion['RetailPrice'];
+                                setState(() {});
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  decoration: new BoxDecoration(
-                                      color: Colors.grey.shade200,
-                                      shape: BoxShape.rectangle,
-                                      border: Border.all(
-                                          width: 1.0, color: Colors.black26),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0))),
-                                  padding: EdgeInsets.all(8),
-                                  child: GestureDetector(
-                                    child: TextField(
-                                      style: customTextStyle(),
-                                      controller: _productNameController,
-                                      cursorColor: Colors.black87,
-                                      keyboardType: TextInputType.emailAddress,
-                                      onChanged: (val) {
-                                        getData();
-                                      },
-                                      decoration: new InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Product Name",
-                                        icon: Icon(MdiIcons.cube),
-                                        hintStyle: customHintStyle(),
-                                        isDense: true,
-                                      ),
-                                    ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                height: 165,
+                                decoration: new BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    shape: BoxShape.rectangle,
+                                    border: Border.all(
+                                        width: 1.0, color: Colors.black26),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5.0))),
+                                padding: EdgeInsets.all(8),
+                                child: TextField(
+                                  style: customTextStyle(),
+                                  cursorColor: Colors.black87,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: new InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "Product Description",
+                                    icon: Icon(Icons.description),
+                                    hintStyle: customHintStyle(),
+                                    isDense: true,
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 3,
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Column(
                                   children: <Widget>[
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        height: 165,
-                                        decoration: new BoxDecoration(
-                                            color: Colors.grey.shade200,
-                                            shape: BoxShape.rectangle,
-                                            border: Border.all(
-                                                width: 1.0,
-                                                color: Colors.black26),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0))),
-                                        padding: EdgeInsets.all(8),
-                                        child: TextField(
-                                          style: customTextStyle(),
-                                          cursorColor: Colors.black87,
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                          decoration: new InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: "Product Description",
-                                            icon: Icon(Icons.description),
-                                            hintStyle: customHintStyle(),
-                                            isDense: true,
-                                          ),
+                                    Container(
+                                      decoration: new BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(
+                                              width: 1.0,
+                                              color: Colors.black26),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0))),
+                                      padding: EdgeInsets.all(8),
+                                      child: TextField(
+                                        style: customTextStyle(),
+                                        cursorColor: Colors.black87,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: new InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: "Rate",
+                                          icon: Icon(Icons.attach_money),
+                                          hintStyle: customHintStyle(),
+                                          isDense: true,
                                         ),
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 3,
+                                      height: 4,
                                     ),
-                                    Expanded(
-                                        flex: 2,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              decoration: new BoxDecoration(
-                                                  color: Colors.grey.shade200,
-                                                  shape: BoxShape.rectangle,
-                                                  border: Border.all(
-                                                      width: 1.0,
-                                                      color: Colors.black26),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
-                                              padding: EdgeInsets.all(8),
-                                              child: TextField(
-                                                style: customTextStyle(),
-                                                cursorColor: Colors.black87,
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                decoration: new InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: "Rate",
-                                                  icon:
-                                                      Icon(Icons.attach_money),
-                                                  hintStyle: customHintStyle(),
-                                                  isDense: true,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            Container(
-                                              decoration: new BoxDecoration(
-                                                  color: Colors.grey.shade200,
-                                                  shape: BoxShape.rectangle,
-                                                  border: Border.all(
-                                                      width: 1.0,
-                                                      color: Colors.black26),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
-                                              padding: EdgeInsets.all(8),
-                                              child: TextField(
-                                                style: customTextStyle(),
-                                                cursorColor: Colors.black87,
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                decoration: new InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: "Rate",
-                                                  icon:
-                                                      Icon(Icons.attach_money),
-                                                  hintStyle: customHintStyle(),
-                                                  isDense: true,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            Container(
-                                              decoration: new BoxDecoration(
-                                                  color: Colors.grey.shade200,
-                                                  shape: BoxShape.rectangle,
-                                                  border: Border.all(
-                                                      width: 1.0,
-                                                      color: Colors.black26),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
-                                              padding: EdgeInsets.all(8),
-                                              child: TextField(
-                                                style: customTextStyle(),
-                                                cursorColor: Colors.black87,
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                decoration: new InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText: "Rate",
-                                                  icon:
-                                                      Icon(Icons.attach_money),
-                                                  hintStyle: customHintStyle(),
-                                                  isDense: true,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )),
+                                    Container(
+                                      decoration: new BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(
+                                              width: 1.0,
+                                              color: Colors.black26),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0))),
+                                      padding: EdgeInsets.all(8),
+                                      child: TextField(
+                                        style: customTextStyle(),
+                                        cursorColor: Colors.black87,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: new InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: "Rate",
+                                          icon: Icon(Icons.attach_money),
+                                          hintStyle: customHintStyle(),
+                                          isDense: true,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Container(
+                                      decoration: new BoxDecoration(
+                                          color: Colors.grey.shade200,
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(
+                                              width: 1.0,
+                                              color: Colors.black26),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5.0))),
+                                      padding: EdgeInsets.all(8),
+                                      child: TextField(
+                                        style: customTextStyle(),
+                                        cursorColor: Colors.black87,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                        decoration: new InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: "Rate",
+                                          icon: Icon(Icons.attach_money),
+                                          hintStyle: customHintStyle(),
+                                          isDense: true,
+                                        ),
+                                      ),
+                                    ),
                                   ],
-                                )
-                              ],
+                                )),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            decoration: new BoxDecoration(
+                                color: Colors.grey.shade200,
+                                shape: BoxShape.rectangle,
+                                border: Border.all(
+                                    width: 1.0, color: Colors.black26),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0))),
+                            padding: EdgeInsets.all(8),
+                            child: TextField(
+                              style: customTextStyle(),
+                              cursorColor: Colors.black87,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: new InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Quantity",
+                                icon: Icon(Icons.clear),
+                                hintStyle: customHintStyle(),
+                                isDense: true,
+                              ),
                             ),
                           ),
                           SizedBox(
-                            width: 8,
+                            height: 5,
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    decoration: new BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        shape: BoxShape.rectangle,
-                                        border: Border.all(
-                                            width: 1.0, color: Colors.black26),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0))),
-                                    padding: EdgeInsets.all(8),
-                                    child: TextField(
-                                      style: customTextStyle(),
-                                      cursorColor: Colors.black87,
-                                      keyboardType: TextInputType.emailAddress,
-                                      decoration: new InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Quantity",
-                                        icon: Icon(Icons.clear),
-                                        hintStyle: customHintStyle(),
-                                        isDense: true,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Container(
-                                    height: 170,
-                                    width: 200,
-                                    decoration: new BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        shape: BoxShape.rectangle,
-                                        border: Border.all(
-                                            width: 1.0, color: Colors.black26),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5.0))),
-                                    padding: EdgeInsets.all(8),
-                                    child: Center(
-                                        child: Text(
-                                      "Add Image",
-                                      style: new TextStyle(
-                                          color: Colors.black26, fontSize: 22),
-                                    )),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          Container(
+                            height: 170,
+                            width: 200,
+                            decoration: new BoxDecoration(
+                                color: Colors.grey.shade200,
+                                shape: BoxShape.rectangle,
+                                border: Border.all(
+                                    width: 1.0, color: Colors.black26),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0))),
+                            padding: EdgeInsets.all(8),
+                            child: Center(
+                                child: Text(
+                              "Add Image",
+                              style: new TextStyle(
+                                  color: Colors.black26, fontSize: 22),
+                            )),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              width: 128,
-                              child: OutlineButton(
-                                highlightElevation: 2,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(36.0),
-                                    side: BorderSide(color: Colors.white12)),
-                                color: Colors.black,
-                                textColor: Colors.white,
-                                padding: EdgeInsets.all(12.0),
-                                child: Text(
-                                  "Cancel",
-                                  style: new TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 22,
-                                      fontFamily: "Roboto"),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Container(
-                              width: 128,
-                              child: RaisedButton(
-                                highlightElevation: 2,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(36.0),
-                                    side: BorderSide(color: Colors.white12)),
-                                disabledColor: Colors.black,
-                                color: Colors.black,
-                                elevation: 2,
-                                textColor: Colors.white,
-                                padding: EdgeInsets.all(12.0),
-                                child: Text(
-                                  "Add",
-                                  style: new TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontFamily: "Roboto"),
-                                ),
-                                onPressed: () {
-                                  if (widget.login.isRemembered) {
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    Center(
-                                      child: Text(
-                                        "Save your password first",
-                                        style: new TextStyle(
-                                            color: Colors.white, fontSize: 36),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                )));
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: 128,
+                      child: OutlineButton(
+                        highlightElevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(36.0),
+                            side: BorderSide(color: Colors.white12)),
+                        color: Colors.black,
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Cancel",
+                          style: new TextStyle(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontFamily: "Roboto"),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Container(
+                      width: 128,
+                      child: RaisedButton(
+                        highlightElevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(36.0),
+                            side: BorderSide(color: Colors.white12)),
+                        disabledColor: Colors.black,
+                        color: Colors.black,
+                        elevation: 2,
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Add",
+                          style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontFamily: "Roboto"),
+                        ),
+                        onPressed: () {
+                          if (widget.login.isRemembered) {
+                            Navigator.of(context).pop();
+                          } else {
+                            Center(
+                              child: Text(
+                                "Save your password first",
+                                style: new TextStyle(
+                                    color: Colors.white, fontSize: 36),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        );
       },
     );
   }
 
-  Future getData() async {
+  Future getData(String pattern) async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
-      'Key': _productNameController.text.trim()
+      'Key': pattern.trim()
     };
 
     var url = "http://api.rmrcloud.com/GetEquipmentListByKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
-      return result;
+      return json.decode(result.body)['EquipmentList'];
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
