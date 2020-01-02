@@ -102,3 +102,11 @@ TextStyle estimateTextStyle(){
       fontStyle: FontStyle.normal,
   );
 }
+
+TextStyle errorTitleTextStyle(){
+  return new TextStyle(
+      color: Colors.red,
+      fontSize: 12,
+      fontStyle: FontStyle.normal,
+  );
+}

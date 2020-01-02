@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Product {
   int id;
   String guid;
@@ -13,32 +15,45 @@ class Product {
   Product(this.id, this.guid, this.name, this.description, this.quantity,
       this.rate, this.discount, this.discountAsPercentage, this.price, this.date);
 
+  String get Name {
+    return name==null ? "-" : name;
+  }
+
+  String get Description {
+    return description==null ? "-" : description;
+  }
+
+  String get Quantity {
+    return quantity==null || quantity==0 ? "1" : quantity.toStringAsFixed(2);
+  }
+
+  String get Discount {
+    return discount==null ? "0.0" : discount.toStringAsFixed(2);
+  }
+
+  String get Rate {
+    return rate==null ? "0.0" : rate.toStringAsFixed(2);
+  }
+
+  String get Date {
+    return date==null ? DateFormat('MM/dd/yyyy').format(DateTime.now()) : date;
+  }
 
   Product.fromMap(Map<String, dynamic> map) {
-    id = map['key'];
-    guid = map['key'];
-    name = map['key'];
-    description = map['key'];
-    quantity = map['key'];
-    rate = map['key'];
-    discount = map['key'];
-    discountAsPercentage = map['key'];
-    price = map['key'];
-    date = map['key'];
+    guid = map['EquipmentId'];
+    name = map['EquipmentName'];
+    description = map['EquipmentType'];
+    quantity = map['QuantityAvailable'];
+    rate = map['RetailPrice'];
   }
 
   Map<String, String> toMap() {
     return <String, String> {
-      'id' : id.toString(),
-      'guid' : guid,
-      'name' : name,
-      'description' : description,
-      'quantity' : quantity.toString(),
-      'rate' : rate.toString(),
-      'discount' : discount.toString(),
-      'discountAsPercentage' : discountAsPercentage.toString(),
-      'price' : price.toString(),
-      'date' : date,
+      'EquipmentId' : guid,
+      'EquipName' : name,
+      'EquipDetail' : description,
+      'Quantity' : quantity.toString(),
+      'UnitPrice' : rate.toString(),
     };
   }
 }
