@@ -1589,7 +1589,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
 
   Future estimateTotalCalculation() async {
     setState(() {
-      double discount = _EstimateDiscountController.text.isEmpty
+      double discount = _EstimateDiscountController.text==null || _EstimateDiscountController.text.isEmpty
           ? 0
           : double.parse(_EstimateDiscountController.text);
       estimateBaseSubTotal = getCurrentBaseSubtotal();
@@ -1623,7 +1623,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     var url = "http://api.rmrcloud.com/GenerateEstimate";
     var result = await http.post(url, headers: headers);
     if (result.statusCode == 200) {
-      return json.decode(result.body)['Invoice']['InvoiceId'];
+      estimateId = json.decode(result.body)['Invoice']['InvoiceId'];
+      return estimateId;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
@@ -1641,7 +1642,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       'Tax': estimateTaxTotal.toStringAsFixed(2),
       'DueDate': nextDate,
       'CreatedDate': formattedDate,
-      'CustomerId': widget.loggedInUser.UserGUID,
+      'CustomerId': widget.customer.CustomerId,
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
 
@@ -1659,9 +1660,9 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       showMessage(context, "Estimate saved successfully", json.decode(result.body),
           Colors.green, Icons.check);
     } else {
+      Navigator.of(context).pop();
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
-      Navigator.of(context).pop();
     }
   }
 }
