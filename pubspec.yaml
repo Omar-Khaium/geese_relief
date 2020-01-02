@@ -25,6 +25,8 @@ dependencies:
   painter: ^0.3.2
   popup_menu: ^1.0.4
   flutter_typeahead: ^1.7.0
+  video_player:
+
 
 dev_dependencies:
   flutter_test:
