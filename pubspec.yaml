@@ -26,6 +26,7 @@ dependencies:
   popup_menu: ^1.0.4
   flutter_typeahead: ^1.7.0
   video_player:
+  image_picker: ^0.6.2+3
 
 
 dev_dependencies:

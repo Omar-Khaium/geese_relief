@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
+
+
   VideoPlayerScreen({Key key}) : super(key: key);
 
   @override
@@ -15,9 +17,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   void initState() {
-    // Create and store the VideoPlayerController. The VideoPlayerController
-    // offers several different constructors to play videos from assets, files,
-    // or the internet.
     _controller = VideoPlayerController.asset(
       'images/video.mp4',
     );

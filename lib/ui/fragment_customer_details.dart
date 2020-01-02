@@ -18,12 +18,13 @@ import '../utils.dart';
 class CustomerDetailsFragment extends StatefulWidget {
   CustomerDetails customerDetails = new CustomerDetails(
       "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
-  Login login;
-  String customerID;
+  final Login login;
+  final String customerID;
+  final ValueChanged<int> backToDashboard;
+  final ValueChanged<CustomerDetails> goToBasementReport;
+  final ValueChanged<CustomerDetails> goToAddEstimate;
+  final ValueChanged<CustomerDetails> goToRecommendedLevel;
   CustomerDetails customer;
-  ValueChanged<int> backToDashboard;
-  ValueChanged<CustomerDetails> goToBasementReport;
-  ValueChanged<CustomerDetails> goToAddEstimate;
   LoggedInUser loggedInUser;
 
   CustomerDetailsFragment(
@@ -34,6 +35,7 @@ class CustomerDetailsFragment extends StatefulWidget {
       this.backToDashboard,
       this.goToBasementReport,
       this.goToAddEstimate,
+      this.goToRecommendedLevel,
       this.loggedInUser})
       : super(key: key);
 
@@ -255,7 +257,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     BorderRadius.circular(10),
                                               ),
                                               elevation: 8,
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                widget.goToRecommendedLevel(widget.customerDetails);
+                                              },
                                               color: Colors.black,
                                               child: Padding(
                                                 padding:

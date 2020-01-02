@@ -1,18 +1,38 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_grate_app/widgets/MediaPlayer.dart';
-import 'data.dart';
+import 'package:flutter_grate_app/model/customer_details.dart';
+import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
+import 'package:flutter_grate_app/widgets/data.dart';
 
-class MyApp extends StatefulWidget {
+import 'package:flutter/widgets.dart';
+
+class RecommendedLevel extends StatefulWidget {
+  Login login;
+  LoggedInUser loggedInUser;
+  CustomerDetails customer;
+  ValueChanged<String> backToCustomerDetails;
+  ValueChanged<RecommendedLevel> goToRecommendedLevelDetails;
+
+  RecommendedLevel(
+      {Key key,
+        this.login,
+        this.loggedInUser,
+        this.customer,
+        this.goToRecommendedLevelDetails,
+        this.backToCustomerDetails})
+      : super(key: key);
+
   @override
-  _MyAppState createState() => new _MyAppState();
+  _RecommendedLevelState createState() => new _RecommendedLevelState();
 }
 
 var cardAspectRatio = 12.0 / 16.0;
 var widgetAspectRatio = cardAspectRatio * 1.2;
 
-class _MyAppState extends State<MyApp> {
+class _RecommendedLevelState extends State<RecommendedLevel> {
   var currentPage = images.length - 1.0;
 
   @override
@@ -35,7 +55,6 @@ class _MyAppState extends State<MyApp> {
               end: Alignment.topCenter,
               tileMode: TileMode.clamp)),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
         body: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -68,12 +87,19 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class CardScrollWidget extends StatelessWidget {
+class CardScrollWidget extends StatefulWidget {
   var currentPage;
-  var padding = 20.0;
-  var verticalInset = 20.0;
 
   CardScrollWidget(this.currentPage);
+
+  @override
+  _CardScrollWidgetState createState() => _CardScrollWidgetState();
+}
+
+class _CardScrollWidgetState extends State<CardScrollWidget> {
+  var padding = 20.0;
+
+  var verticalInset = 20.0;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +121,7 @@ class CardScrollWidget extends StatelessWidget {
         List<Widget> cardList = new List();
 
         for (var i = 0; i < images.length; i++) {
-          var delta = i - currentPage;
+          var delta = i - widget.currentPage;
           bool isOnRight = delta > 0;
 
           var start = padding +
@@ -128,14 +154,8 @@ class CardScrollWidget extends StatelessWidget {
                           alignment: Alignment.bottomCenter,
                           child: Padding(
                             padding:
-                                const EdgeInsets.only(left: 12.0, bottom: 12.0),
+                            const EdgeInsets.only(left: 12.0, bottom: 12.0),
                             child: InkWell(
-                              onTap: (){
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => new VideoPlayerScreen(),
-                                ));
-
-                              },
                               child: Container(
                                 height: 44,
                                 width: 126,
@@ -145,11 +165,16 @@ class CardScrollWidget extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: Colors.blueAccent,
                                     borderRadius: BorderRadius.circular(20.0)),
-                                child: Text("View Details",
-                                    style: TextStyle(color: Colors.white)),
+                                child: Text("View Details",style: new TextStyle(color: Colors.white),),
                               ),
+                              onTap: (){
+                                setState(() {
+                                  Navigator.push(context, MaterialPageRoute(
+                                    builder: (context) => new RecommendedLevelDetails(),
+                                  ));
+                                });
+                              },
                             ),
-
                           ))
                     ],
                   ),

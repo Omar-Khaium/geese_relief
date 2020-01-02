@@ -13,7 +13,12 @@ import 'package:flutter_grate_app/ui/fragment_change_password.dart';
 import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
 import 'package:flutter_grate_app/ui/fragment_logout.dart';
+import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
+import 'package:flutter_grate_app/widgets/MediaPlayer.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
+import '../utils.dart';
+import 'fragment_recommended_level.dart';
 
 class DashboardUI extends StatefulWidget {
   Login login;
@@ -88,7 +93,15 @@ class _DashboardUIState extends State<DashboardUI>
         goToBasementReport: _goToBasementInspectionReport,);
     });
   }
-
+  _goToAddEstimate(CustomerDetails customer) {
+    setState(() {
+      fragment = AddEstimateFragment(
+          login: widget.login,
+          loggedInUser: widget.loggedInUser,
+          backToCustomerDetailsFromEstimate: _backToCustomerDetailsFromEstimate,
+          customer: customer);
+    });
+  }
   _backToCustomerDetailsFromEstimate(CustomerDetails customer) {
     setState(() {
       fragment = new CustomerDetailsFragment(login: widget.login,
@@ -109,13 +122,24 @@ class _DashboardUIState extends State<DashboardUI>
           customer: customer);
     });
   }
-  _goToAddEstimate(CustomerDetails customer) {
+
+  _goToAddRecommendedLevel(CustomerDetails customer) {
     setState(() {
-      fragment = AddEstimateFragment(
+      fragment = RecommendedLevel(
           login: widget.login,
           loggedInUser: widget.loggedInUser,
-          backToCustomerDetailsFromEstimate: _backToCustomerDetailsFromEstimate,
+          goToRecommendedLevelDetails: _goToAddRecommendedLevelDetails(2),
+          backToCustomerDetails: _backToCustomerDetails,
           customer: customer);
+    });
+  }
+  _goToAddRecommendedLevelDetails(int index) {
+    setState(() {
+      fragment = RecommendedLevelDetails(
+          login: widget.login,
+          loggedInUser: widget.loggedInUser,
+          backToRecommendedLevel: _backToCustomerDetails,
+          index : index);
     });
   }
 
@@ -126,6 +150,7 @@ class _DashboardUIState extends State<DashboardUI>
         customerID: customerID,
         goToBasementReport: _goToBasementInspectionReport,
         goToAddEstimate: _goToAddEstimate,
+        goToRecommendedLevel: _goToAddRecommendedLevel,
       loggedInUser: widget.loggedInUser,);
     });
   }
