@@ -1532,7 +1532,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
           filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
           child: AlertDialog(
             title: Text(
-              "Saving !",
+              "Saving Estimate",
               style: estimateTextStyle(),
             ),
             content: Text(message),
@@ -1650,17 +1650,18 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     for (Product product in _productList) {
       map.add(product.toMap());
     }
-    body['ListEstimate'] = body.toString();
+    body['ListEstimate'] = map.toString();
 
     var url = "http://api.rmrcloud.com/CreateEstimate";
-    var result = await http.post(url, headers: headers);
+    var result = await http.post(url, headers: headers, body: body);
     if (result.statusCode == 200) {
-      estimateId = json.decode(result.body)['Invoice']['InvoiceId'];
-      return estimateId;
+      Navigator.of(context).pop();
+      showMessage(context, "Estimate saved successfully", json.decode(result.body),
+          Colors.green, Icons.check);
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
-      return "";
+      Navigator.of(context).pop();
     }
   }
 }
