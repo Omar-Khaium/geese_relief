@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,7 @@ import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
 import 'package:flutter_grate_app/widgets/widget_signature.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -85,6 +87,9 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
   Widget _HOSignature = Container();
   Widget _Drawing = Container();
   var progress = 0.0;
+
+
+
   List<DropDownSingleItem> CurrentOutsideConditionsArray = [],
       HeatArray = [],
       AirArray = [],
@@ -163,6 +168,75 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     });
   }
 
+  //-------------Image---------------
+  File _imageFile;
+  _openGallery(BuildContext context) async{
+    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.gallery));
+    setState(() {
+      _imageFile=pickFromGallery;
+    });
+    Navigator.of(context).pop();
+
+  }
+  _openCamera(BuildContext context) async{
+    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.camera));
+    setState(() {
+      _imageFile=pickFromGallery;
+    });
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _showDialog(BuildContext context){
+    return showDialog(context:context,builder: (BuildContext context){
+
+      return AlertDialog(
+        title: Text("Make A choice"),
+        content: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: ListBody(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: GestureDetector(
+                    child: Text("Gallery"),
+                    onTap: (){
+                      _openGallery(context);
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: GestureDetector(
+                    child: Text("Camera"),
+                    onTap: (){
+                      _openCamera(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+  Widget _decideImageView(){
+    if(_imageFile == null){
+      return GestureDetector(
+        child: Icon(Icons.person,size: 100,),
+        onTap: (){
+          _showDialog(context);
+        },
+      );
+    }
+    else{
+      return Image.file(_imageFile,width: 128,height: 128,fit: BoxFit.cover,);
+    }
+  }
+  //-------------Image---------------
+
   @override
   void initState() {
     super.initState();
@@ -226,10 +300,27 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Icon(
-                              Icons.store,
-                              color: Colors.grey.shade200,
-                              size: 128,
+                            Stack(
+                              children: <Widget>[
+                                ClipRRect(
+                                    borderRadius:
+                                    new BorderRadius.all(
+                                        Radius.circular(12)),
+                                    child:_decideImageView()
+                                ),
+                                Padding(
+                                  padding:EdgeInsets.all(4),
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: GestureDetector(
+                                      child: Icon(MdiIcons.circleEditOutline,color: Colors.white,),
+                                      onTap: (){
+                                        _showDialog(context);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(
                               width: 8,
@@ -299,7 +390,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                   height: 8,
                 ),
                 FutureBuilder(
-                  future: getData(),
+                  future: getDropDownData(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       var map = json.decode(snapshot.data.body)['datalist'];
@@ -2409,7 +2500,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     );
   }
 
-  Future getData() async {
+  Future getDropDownData() async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Key':
@@ -2419,6 +2510,24 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     var url = "http://api.rmrcloud.com/GetLookupbyKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return [];
+    }
+  }
+  Future getData() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'CustomerId': widget.customer.CustomerId,
+    };
+
+    var url = "http://api.rmrcloud.com/GetCustomerInspectionByCustomerId";
+    var result = await http.get(url, headers: headers);
+    if (result.statusCode == 200) {
+
+
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

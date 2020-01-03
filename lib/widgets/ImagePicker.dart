@@ -17,18 +17,20 @@ class _CameraState  extends State<CameraClass>{
 
 
   File _imageFile;
-  _openGallery() async{
+  _openGallery(BuildContext context) async{
     File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
       _imageFile=pickFromGallery;
     });
+    Navigator.of(context).pop();
 
   }
-  _openCamera() async{
+  _openCamera(BuildContext context) async{
     File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
       _imageFile=pickFromGallery;
     });
+    Navigator.of(context).pop();
   }
 
   Future<void> _showDialog(BuildContext context){
@@ -46,7 +48,7 @@ class _CameraState  extends State<CameraClass>{
                 child: GestureDetector(
                   child: Text("Gallery"),
                   onTap: (){
-                    _openGallery();
+                    _openGallery(context);
                   },
                 ),
               ),
@@ -56,7 +58,7 @@ class _CameraState  extends State<CameraClass>{
                 child: GestureDetector(
                   child: Text("Camera"),
                   onTap: (){
-                    _openCamera();
+                    _openCamera(context);
                   },
                 ),
               ),
@@ -68,6 +70,14 @@ class _CameraState  extends State<CameraClass>{
     });
   }
 
+  Widget _decideImageView(){
+    if(_imageFile == null){
+      return Text("No image selected ");
+    }
+    else{
+      return Image.file(_imageFile,width: 400,height: 400,);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -76,7 +86,7 @@ class _CameraState  extends State<CameraClass>{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Text("No Image Selected"),
+          _decideImageView(),
           RaisedButton(
             onPressed: (){_showDialog(context);},
             child: Text("Select Image"),
@@ -85,7 +95,5 @@ class _CameraState  extends State<CameraClass>{
       ),
     );
   }
-
-
 }
 

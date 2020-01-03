@@ -6,7 +6,7 @@ import 'package:flutter_grate_app/widgets/ImagePicker.dart';
 void main() {
   runApp(
     new MaterialApp(
-      home: new CameraClass(),
+      home: new LauncherUI(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.blueGrey.shade900

@@ -47,6 +47,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   TextEditingController _priceController = new TextEditingController();
   TextEditingController _quantityController = new TextEditingController();
   TextEditingController _discountController = new TextEditingController();
+  TextEditingController _noteController = new TextEditingController();
   TextEditingController _EstimateDiscountController =
       new TextEditingController();
   bool _discountModeIsPercentage = true;
@@ -516,7 +517,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         Text(
                                           _productList[index]
                                               .Quantity
-                                              .toString(),
+                                              .toString()
+                                          ,
                                           style: listTextStyle(),
                                         )
                                       ],
@@ -655,6 +657,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       child: TextField(
                                         style: customTextStyle(),
                                         cursorColor: Colors.black87,
+                                        controller: _noteController,
                                         keyboardType:
                                         TextInputType.emailAddress,
                                         decoration: new InputDecoration(
@@ -1636,10 +1639,13 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'EstimateId': estimateId,
-      'DiscountAmount': estimateDiscountTotal.toStringAsFixed(2),
+      'DiscountAmount': estimateDiscountTotal.toStringAsFixed(2),//cash
       'TotalAmount': estimateTotalAmount.toStringAsFixed(2),
       'Amount': estimateMainSubtotal.toStringAsFixed(2),
       'Tax': estimateTaxTotal.toStringAsFixed(2),
+      'Note': _noteController.text,
+      'DiscountPercent': "",//percentage
+      'DiscountType':'amount',//dropdown
       'DueDate': nextDate,
       'CreatedDate': formattedDate,
       'CustomerId': widget.customer.CustomerId,
