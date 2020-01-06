@@ -14,6 +14,7 @@ class CustomerDetails{
   String City;
   String State;
   String ZipCode;
+  String _ProfileImage;
   double RecommendedLevel;
   bool HasInspectionReport;
   List<Estimate> estimates;
@@ -21,15 +22,23 @@ class CustomerDetails{
   CustomerDetails(this.Id, this.CustomerId, this.Title, this.FirstName,
       this.LastName, this.BusinessName, this.PrimaryPhone, this.SecondaryPhone,
       this.EmailAddress, this.Street, this.City, this.State, this.ZipCode,
-      this.RecommendedLevel, this.estimates);
+      this.RecommendedLevel, this.estimates,this._ProfileImage);
 
   String get Name {
     return _CheckNames().trim();
   }
 
+
+  String get ProfileImage => _ProfileImage;
+
+  set ProfileImage(String value) {
+    _ProfileImage = value;
+  }
+
   String get Email {
     return _CheckEmail().trim();
   }
+
 
   String get Address {
     return _CheckStreet().trim();
@@ -88,6 +97,7 @@ class CustomerDetails{
     Street = map["CustomerDetails"]['Street'];
     City = map["CustomerDetails"]['City'];
     State = map["CustomerDetails"]['State'];
+    ProfileImage = map["CustomerDetails"]['ProfileImage'];
     ZipCode = map["CustomerDetails"]['ZipCode'].toString();
     RecommendedLevel = getRecommendedLevel(map["CustomerDetails"]['RecommendedLevel'].toString());
     HasInspectionReport = getInspectionLevel(map["Inspection"].toString());

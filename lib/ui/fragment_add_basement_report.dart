@@ -44,6 +44,8 @@ class AddBasementReportFragment extends StatefulWidget {
 }
 
 class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
+
+
   TextEditingController _OutsideRelativeHumidityController =
       new TextEditingController();
   TextEditingController _OutsideTemperatureController =
@@ -89,6 +91,81 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
   var progress = 0.0;
 
 
+//-------------Image---------------
+  File _imageFile;
+  _openGallery(BuildContext context) async{
+    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.gallery));
+    setState(() {
+      _imageFile=pickFromGallery;
+    });
+    Navigator.of(context).pop();
+
+  }
+  _openCamera(BuildContext context) async{
+    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.camera));
+    setState(() {
+      _imageFile=pickFromGallery;
+    });
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _showDialog(BuildContext context){
+    return showDialog(context:context,builder: (BuildContext context){
+
+      return AlertDialog(
+        title: Text("Make A choice"),
+        content: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: ListBody(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: GestureDetector(
+                    child: Text("Gallery"),
+                    onTap: (){
+                      _openGallery(context);
+                    },
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: GestureDetector(
+                    child: Text("Camera"),
+                    onTap: (){
+                      _openCamera(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  Widget _decideImageView(){
+    if(widget.customer.ProfileImage != null && widget.customer.ProfileImage.isNotEmpty){
+      return GestureDetector(
+        child: Image.network(widget.customer.ProfileImage,height: 140,width: 150,fit: BoxFit.cover,),
+        onTap: (){
+          _showDialog(context);
+        },
+
+      );
+    }
+    else {
+      if(_imageFile!=null){
+      return Image.file(_imageFile,width: 150,height: 140,fit: BoxFit.cover,);
+    }
+    else{
+      return Icon(Icons.person,size: 150,);
+      }
+    }
+  }
+  //-------------Image---------------
 
   List<DropDownSingleItem> CurrentOutsideConditionsArray = [],
       HeatArray = [],
@@ -168,76 +245,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     });
   }
 
-  //-------------Image---------------
-  File _imageFile;
-  _openGallery(BuildContext context) async{
-    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile=pickFromGallery;
-    });
-    Navigator.of(context).pop();
 
-  }
-  _openCamera(BuildContext context) async{
-    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.camera));
-    setState(() {
-      _imageFile=pickFromGallery;
-    });
-    Navigator.of(context).pop();
-  }
-
-  Future<void> _showDialog(BuildContext context){
-    return showDialog(context:context,builder: (BuildContext context){
-
-      return AlertDialog(
-        title: Text("Make A choice"),
-        content: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: ListBody(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: GestureDetector(
-                    child: Text("Gallery"),
-                    onTap: (){
-                      _openGallery(context);
-                    },
-                  ),
-                ),
-
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: GestureDetector(
-                    child: Text("Camera"),
-                    onTap: (){
-                      _openCamera(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
-  }
-  Widget _decideImageView(){
-    if(_imageFile == null){
-      return GestureDetector(
-        child: Icon(Icons.person,size: 100,),
-        onTap: (){
-          _showDialog(context);
-        },
-      );
-    }
-    else{
-      return Image.file(_imageFile,width: 128,height: 128,fit: BoxFit.cover,);
-    }
-  }
-  //-------------Image---------------
-
-  @override
   void initState() {
     super.initState();
     _PMSignature = SignaturePlaceholder();
@@ -2501,6 +2509,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
   }
 
   Future getDropDownData() async {
+
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Key':
@@ -2526,8 +2535,6 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     var url = "http://api.rmrcloud.com/GetCustomerInspectionByCustomerId";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
-
-
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

@@ -15,12 +15,11 @@ import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-
 import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
   CustomerDetails customerDetails = new CustomerDetails(
-      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
+      "", "", "", "", "", "", "", "", "", "", "", "", "",0.0, [],"");
   final Login login;
   final String customerID;
   final ValueChanged<int> backToDashboard;
@@ -29,6 +28,7 @@ class CustomerDetailsFragment extends StatefulWidget {
   final ValueChanged<CustomerDetails> goToRecommendedLevel;
   CustomerDetails customer;
   LoggedInUser loggedInUser;
+
 
   CustomerDetailsFragment(
       {Key key,
@@ -48,7 +48,7 @@ class CustomerDetailsFragment extends StatefulWidget {
 }
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
-
+  var _future;
   //-------------Image---------------
   File _imageFile;
   _openGallery(BuildContext context) async{
@@ -68,6 +68,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   }
   @override
   void initState() {
+    _future=getData();
     super.initState();
   }
   Future<void> _showDialog(BuildContext context){
@@ -106,17 +107,27 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       );
     });
   }
+
+
   Widget _decideImageView(){
-    if(_imageFile == null){
+    widget.customerDetails.ProfileImage==null;
+    if(widget.customerDetails.ProfileImage != null){
+      return Image.network(widget.customerDetails.ProfileImage,height: 140,width: 150,fit: BoxFit.cover,);
+    }
+
+
+    else if(_imageFile!=null){
       return GestureDetector(
-        child: Icon(Icons.person,size: 100,),
+        child: Image.file(_imageFile,width: 150,height: 140,fit: BoxFit.cover,),
         onTap: (){
           _showDialog(context);
         },
       );
+
     }
     else{
-      return Image.file(_imageFile,width: 150,height: 140,fit: BoxFit.cover,);
+      return Icon(Icons.person,size: 150,);
+
     }
   }
   //-------------Image---------------
@@ -148,7 +159,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: getData(),
+              future: _future,
               builder: (context, snapshot) {
                 try {
                   if (snapshot.hasData) {
