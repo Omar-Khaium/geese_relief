@@ -18,6 +18,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:painter/painter.dart';
+import 'package:serializer/codecs.dart';
 
 import '../utils.dart';
 
@@ -55,6 +56,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   Widget _Drawing = Container();
   List<Product> _productList = [];
   Product selectedProduct;
+  int estimateIntId = 0;
 
   String formattedDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
 
@@ -74,6 +76,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   double estimateTaxTotal = 0.0;
   double estimateTotalAmount = 0.0;
 
+  var _future;
+
   _generateDrawingPicture(PictureDetails picture) {
     _Drawing = PlaceImageFromPicture(picture);
     picture.toPNG().then((val) {
@@ -83,6 +87,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
 
   @override
   void initState() {
+    _future = getGeneratedEstimate();
     _Drawing = DrawingPlaceholder();
     nextDate =
         DateFormat('MM/dd/yyyy').format(DateTime.now().add(Duration(days: 15)));
@@ -94,7 +99,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     return Container(
       margin: EdgeInsets.only(top: 16, left: 32, right: 32),
       child: FutureBuilder(
-        future: getGeneratedEstimate(),
+        future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -118,7 +123,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                     CustomBackButton(
                                       onTap: () => widget
                                           .backToCustomerDetailsFromEstimate(
-                                          widget.customer),
+                                              widget.customer),
                                     ),
                                     SizedBox(
                                       width: 16,
@@ -145,7 +150,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Stack(
@@ -157,27 +162,27 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Container(
                                                   width: 256,
                                                   decoration: new BoxDecoration(
                                                       color:
-                                                      Colors.grey.shade200,
+                                                          Colors.grey.shade200,
                                                       shape: BoxShape.rectangle,
                                                       border: Border.all(
                                                           width: 1.0,
                                                           color:
-                                                          Colors.black26),
+                                                              Colors.black26),
                                                       borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5.0))),
                                                   padding: EdgeInsets.all(8),
                                                   child: Row(
                                                     crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: <Widget>[
                                                       Icon(Icons.email),
                                                       SizedBox(
@@ -186,7 +191,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                       Text(
                                                         widget.customer.Email,
                                                         style:
-                                                        estimateTextStyle(),
+                                                            estimateTextStyle(),
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
@@ -195,25 +200,25 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                 ),
                                                 Container(
                                                   margin:
-                                                  EdgeInsets.only(left: 8),
+                                                      EdgeInsets.only(left: 8),
                                                   width: 144,
                                                   decoration: new BoxDecoration(
                                                       color:
-                                                      Colors.grey.shade200,
+                                                          Colors.grey.shade200,
                                                       shape: BoxShape.rectangle,
                                                       border: Border.all(
                                                           width: 1.0,
                                                           color:
-                                                          Colors.black26),
+                                                              Colors.black26),
                                                       borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5.0))),
                                                   padding: EdgeInsets.all(8),
                                                   child: Row(
                                                     crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: <Widget>[
                                                       Icon(MdiIcons
                                                           .calendarMonth),
@@ -224,7 +229,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                         formattedDate
                                                             .toString(),
                                                         style:
-                                                        estimateTextStyle(),
+                                                            estimateTextStyle(),
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
@@ -242,113 +247,113 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                                  CrossAxisAlignment.center,
                                               children: <Widget>[
                                                 Container(
                                                   width: 256,
                                                   height: 48,
                                                   decoration: new BoxDecoration(
                                                       color:
-                                                      Colors.grey.shade200,
+                                                          Colors.grey.shade200,
                                                       shape: BoxShape.rectangle,
                                                       border: Border.all(
                                                           width: 1.0,
                                                           color:
-                                                          Colors.black26),
+                                                              Colors.black26),
                                                       borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5.0))),
                                                   padding: EdgeInsets.all(8),
                                                   child:
-                                                  DropdownButtonHideUnderline(
+                                                      DropdownButtonHideUnderline(
                                                     child:
-                                                    DropdownButton<String>(
+                                                        DropdownButton<String>(
                                                       items: _days.map((String
-                                                      dropDownStringItem) {
+                                                          dropDownStringItem) {
                                                         return DropdownMenuItem<
                                                             String>(
                                                           value:
-                                                          dropDownStringItem,
+                                                              dropDownStringItem,
                                                           child: Text(
                                                             dropDownStringItem,
                                                             style:
-                                                            estimateTextStyle(),
+                                                                estimateTextStyle(),
                                                             overflow:
-                                                            TextOverflow
-                                                                .ellipsis,
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         );
                                                       }).toList(),
                                                       onChanged: (String
-                                                      newValueSelected) {
+                                                          newValueSelected) {
                                                         setState(() {
                                                           this._currentValueSelected =
                                                               newValueSelected;
                                                           switch (
-                                                          _currentValueSelected) {
+                                                              _currentValueSelected) {
                                                             case "After 15 days":
                                                               {
                                                                 nextDate = DateFormat(
-                                                                    'MM/dd/yyyy')
+                                                                        'MM/dd/yyyy')
                                                                     .format(DateTime
-                                                                    .now()
-                                                                    .add(Duration(
-                                                                    days:
-                                                                    15)));
+                                                                            .now()
+                                                                        .add(Duration(
+                                                                            days:
+                                                                                15)));
                                                               }
                                                               break;
                                                             case "After 30 days":
                                                               {
                                                                 nextDate = DateFormat(
-                                                                    'MM/dd/yyyy')
+                                                                        'MM/dd/yyyy')
                                                                     .format(DateTime
-                                                                    .now()
-                                                                    .add(Duration(
-                                                                    days:
-                                                                    30)));
+                                                                            .now()
+                                                                        .add(Duration(
+                                                                            days:
+                                                                                30)));
                                                               }
                                                               break;
                                                             case "After 60 days":
                                                               {
                                                                 nextDate = DateFormat(
-                                                                    'MM/dd/yyyy')
+                                                                        'MM/dd/yyyy')
                                                                     .format(DateTime
-                                                                    .now()
-                                                                    .add(Duration(
-                                                                    days:
-                                                                    60)));
+                                                                            .now()
+                                                                        .add(Duration(
+                                                                            days:
+                                                                                60)));
                                                               }
                                                               break;
                                                           }
                                                         });
                                                       },
                                                       value:
-                                                      _currentValueSelected,
+                                                          _currentValueSelected,
                                                     ),
                                                   ),
                                                 ),
                                                 Container(
                                                   width: 144,
                                                   margin:
-                                                  EdgeInsets.only(left: 8),
+                                                      EdgeInsets.only(left: 8),
                                                   decoration: new BoxDecoration(
                                                       color:
-                                                      Colors.grey.shade200,
+                                                          Colors.grey.shade200,
                                                       shape: BoxShape.rectangle,
                                                       border: Border.all(
                                                           width: 1.0,
                                                           color:
-                                                          Colors.black26),
+                                                              Colors.black26),
                                                       borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0))),
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  5.0))),
                                                   padding: EdgeInsets.all(8),
                                                   child: Row(
                                                     crossAxisAlignment:
-                                                    CrossAxisAlignment
-                                                        .center,
+                                                        CrossAxisAlignment
+                                                            .center,
                                                     children: <Widget>[
                                                       Icon(MdiIcons
                                                           .calendarMonth),
@@ -358,7 +363,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                       Text(
                                                         nextDate,
                                                         style:
-                                                        estimateTextStyle(),
+                                                            estimateTextStyle(),
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
@@ -399,7 +404,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                   highlightElevation: 2,
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
-                                      new BorderRadius.circular(36.0),
+                                          new BorderRadius.circular(36.0),
                                       side: BorderSide(color: Colors.white12)),
                                   disabledColor: Colors.black,
                                   color: Colors.black,
@@ -409,7 +414,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       left: 16, right: 16, top: 12, bottom: 12),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Icon(Icons.add),
                                       Text(
@@ -447,15 +452,12 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Row(
                                       children: <Widget>[
@@ -503,10 +505,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                   ],
                                 ),
                                 Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.start,
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Row(
                                       children: <Widget>[
@@ -517,8 +517,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         Text(
                                           _productList[index]
                                               .Quantity
-                                              .toString()
-                                          ,
+                                              .toString(),
                                           style: listTextStyle(),
                                         )
                                       ],
@@ -533,9 +532,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                           width: 16,
                                         ),
                                         Text(
-                                          _productList[index]
-                                              .Rate
-                                              .toString(),
+                                          _productList[index].Rate.toString(),
                                           style: listTextStyle(),
                                         )
                                       ],
@@ -625,8 +622,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         color: Colors.grey.shade200,
                                         shape: BoxShape.rectangle,
                                         border: Border.all(
-                                            width: 1.0,
-                                            color: Colors.black26),
+                                            width: 1.0, color: Colors.black26),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5.0))),
                                     child: InkWell(
@@ -638,7 +634,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                             builder: (context) {
                                               return DrawingDialog(
                                                   picture:
-                                                  _generateDrawingPicture);
+                                                      _generateDrawingPicture);
                                             },
                                           ),
                                         );
@@ -659,7 +655,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         cursorColor: Colors.black87,
                                         controller: _noteController,
                                         keyboardType:
-                                        TextInputType.emailAddress,
+                                            TextInputType.emailAddress,
                                         decoration: new InputDecoration(
                                           border: InputBorder.none,
                                           hintText: "Write note here..",
@@ -672,8 +668,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         color: Colors.grey.shade200,
                                         shape: BoxShape.rectangle,
                                         border: Border.all(
-                                            width: 1.0,
-                                            color: Colors.black26),
+                                            width: 1.0, color: Colors.black26),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5.0))),
                                     padding: EdgeInsets.all(8),
@@ -685,10 +680,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                 children: <Widget>[
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text("Subtotal"),
                                       SizedBox(
@@ -713,10 +708,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text("Discount"),
                                       SizedBox(
@@ -727,7 +722,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         height: 48,
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
                                             Container(
                                               width: 140,
@@ -739,62 +734,61 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                       width: 1.0,
                                                       color: Colors.black26),
                                                   borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(
-                                                          5.0))),
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
                                               padding: EdgeInsets.all(8),
                                               child:
-                                              DropdownButtonHideUnderline(
+                                                  DropdownButtonHideUnderline(
                                                 child: DropdownButton<String>(
                                                   items: _DiscountType.map(
-                                                          (String
-                                                      dropDownStringItem) {
-                                                        return DropdownMenuItem<
-                                                            String>(
-                                                          value:
-                                                          dropDownStringItem,
-                                                          child: Text(
-                                                              dropDownStringItem),
-                                                        );
-                                                      }).toList(),
+                                                      (String
+                                                          dropDownStringItem) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: dropDownStringItem,
+                                                      child: Text(
+                                                          dropDownStringItem),
+                                                    );
+                                                  }).toList(),
                                                   onChanged: (String
-                                                  newValueSelected) {
+                                                      newValueSelected) {
                                                     setState(() {
                                                       this._DiscountTypeSelectedValue =
                                                           newValueSelected;
                                                       switch (
-                                                      _DiscountTypeSelectedValue) {
+                                                          _DiscountTypeSelectedValue) {
                                                         case "Select One":
                                                           {
                                                             nextDate = DateFormat(
-                                                                'MM/dd/yyyy')
+                                                                    'MM/dd/yyyy')
                                                                 .format(DateTime
-                                                                .now()
-                                                                .add(Duration(
-                                                                days:
-                                                                15)));
+                                                                        .now()
+                                                                    .add(Duration(
+                                                                        days:
+                                                                            15)));
                                                           }
                                                           break;
                                                         case "Cash":
                                                           {
                                                             nextDate = DateFormat(
-                                                                'MM/dd/yyyy')
+                                                                    'MM/dd/yyyy')
                                                                 .format(DateTime
-                                                                .now()
-                                                                .add(Duration(
-                                                                days:
-                                                                30)));
+                                                                        .now()
+                                                                    .add(Duration(
+                                                                        days:
+                                                                            30)));
                                                           }
                                                           break;
                                                         case "Percantage":
                                                           {
                                                             nextDate = DateFormat(
-                                                                'MM/dd/yyyy')
+                                                                    'MM/dd/yyyy')
                                                                 .format(DateTime
-                                                                .now()
-                                                                .add(Duration(
-                                                                days:
-                                                                60)));
+                                                                        .now()
+                                                                    .add(Duration(
+                                                                        days:
+                                                                            60)));
                                                           }
                                                           break;
                                                       }
@@ -802,7 +796,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                     });
                                                   },
                                                   value:
-                                                  _DiscountTypeSelectedValue,
+                                                      _DiscountTypeSelectedValue,
                                                 ),
                                               ),
                                             ),
@@ -819,50 +813,45 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                       width: 1.0,
                                                       color: Colors.black26),
                                                   borderRadius:
-                                                  BorderRadius.all(
-                                                      Radius.circular(
-                                                          5.0))),
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              5.0))),
                                               padding: EdgeInsets.all(2),
                                               child: TextFormField(
                                                 controller:
-                                                _EstimateDiscountController,
+                                                    _EstimateDiscountController,
                                                 style: customTextStyle(),
                                                 onChanged: (val) =>
                                                     estimateTotalCalculation(),
                                                 cursorColor: Colors.black87,
                                                 keyboardType:
-                                                TextInputType.number,
+                                                    TextInputType.number,
                                                 maxLines: 1,
                                                 autofocus: true,
-                                                decoration:
-                                                new InputDecoration(
+                                                decoration: new InputDecoration(
                                                   alignLabelWithHint: true,
                                                   hintText:
-                                                  _DiscountTypeSelectedValue ==
-                                                      "Cash"
-                                                      ? "Amount"
-                                                      : "Percentage",
+                                                      _DiscountTypeSelectedValue ==
+                                                              "Cash"
+                                                          ? "Amount"
+                                                          : "Percentage",
                                                   focusedBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide:
-                                                      BorderSide
-                                                          .none),
+                                                      UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide.none),
                                                   enabledBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide:
-                                                      BorderSide
-                                                          .none),
+                                                      UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide.none),
                                                   icon: Icon(
                                                     _DiscountTypeSelectedValue ==
-                                                        "Cash"
+                                                            "Cash"
                                                         ? MdiIcons.cashRefund
-                                                        : MdiIcons
-                                                        .filePercent,
+                                                        : MdiIcons.filePercent,
                                                     color: Colors.grey,
                                                     size: 18,
                                                   ),
-                                                  hintStyle:
-                                                  customHintStyle(),
+                                                  hintStyle: customHintStyle(),
                                                   isDense: true,
                                                 ),
                                               ),
@@ -882,10 +871,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text("Subtotal"),
                                       SizedBox(
@@ -910,10 +899,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.max,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       SizedBox(
                                         width: 144,
@@ -930,13 +919,12 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                           padding: EdgeInsets.all(8),
                                           child: DropdownButtonHideUnderline(
                                             child: DropdownButton<String>(
-                                              items: _TaxType.map((String
-                                              dropDownStringItem) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                              items: _TaxType.map(
+                                                  (String dropDownStringItem) {
+                                                return DropdownMenuItem<String>(
                                                   value: dropDownStringItem,
-                                                  child: Text(
-                                                      dropDownStringItem),
+                                                  child:
+                                                      Text(dropDownStringItem),
                                                 );
                                               }).toList(),
                                               onChanged:
@@ -975,10 +963,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text("Est. Total"),
                                       SizedBox(
@@ -1008,59 +996,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                /*Container(
-                                        margin: EdgeInsets.only(right: 36),
-                                        height: 48,
-                                        width: 142,
-                                        child: RaisedButton(
-                                          highlightElevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: new BorderRadius.circular(36.0),
-                                              side: BorderSide(color: Colors.white12)),
-                                          disabledColor: Colors.black,
-                                          color: Colors.black,
-                                          elevation: 2,
-                                          textColor: Colors.white,
-                                          padding: EdgeInsets.all(12.0),
-                                          child: Text(
-                                            "Send Email",
-                                            style: new TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontFamily: "Roboto"),
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(right: 36),
-                                        height: 48,
-                                        width: 142,
-                                        child: RaisedButton(
-                                          highlightElevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: new BorderRadius.circular(36.0),
-                                              side: BorderSide(color: Colors.white12)),
-                                          disabledColor: Colors.black,
-                                          color: Colors.black,
-                                          elevation: 2,
-                                          textColor: Colors.white,
-                                          padding: EdgeInsets.all(12.0),
-                                          child: Text(
-                                            "View Proposal",
-                                            style: new TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontFamily: "Roboto"),
-                                          ),
-                                          onPressed: () {},
-                                        ),
-                                      ),*/
                                 Container(
                                   height: 48,
                                   width: 144,
@@ -1068,9 +1007,9 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                     highlightElevation: 2,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                        new BorderRadius.circular(36.0),
-                                        side: BorderSide(
-                                            color: Colors.white12)),
+                                            new BorderRadius.circular(36.0),
+                                        side:
+                                            BorderSide(color: Colors.white12)),
                                     disabledColor: Colors.black,
                                     color: Colors.black,
                                     elevation: 2,
@@ -1143,7 +1082,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                           Radius.circular(5.0))),
                                   padding: EdgeInsets.all(8),
                                   child: TypeAheadField(
-                                           textFieldConfiguration:
+                                    textFieldConfiguration:
                                         TextFieldConfiguration(
                                             controller: _productNameController,
                                             autofocus: true,
@@ -1486,6 +1425,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                         style: customButtonTextStyle(),
                       ),
                       onPressed: () {
+                        selectedProduct.quantity =
+                            int.parse(_quantityController.text);
+                        selectedProduct.price =
+                            double.parse(_priceController.text);
                         refreshList(selectedProduct);
                         Navigator.of(context).pop();
                       },
@@ -1526,7 +1469,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     );
   }
 
-  void showSaving(String message) {
+  void showSaving(String message) async {
     showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -1544,7 +1487,14 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         );
       },
     );
-    CreateEstimate();
+    bool resultStatus = await CreateEstimate();
+    Navigator.of(context).pop();
+    showAPIResponse(
+        context,
+        resultStatus ? "Estimate saved Successfully!" : "Failed to Delete!",
+        Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
+    setState(() {});
+    widget.backToCustomerDetailsFromEstimate(widget.customer);
   }
 
   Future getSuggestions(String pattern) async {
@@ -1592,7 +1542,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
 
   Future estimateTotalCalculation() async {
     setState(() {
-      double discount = _EstimateDiscountController.text==null || _EstimateDiscountController.text.isEmpty
+      double discount = _EstimateDiscountController.text == null ||
+              _EstimateDiscountController.text.isEmpty
           ? 0
           : double.parse(_EstimateDiscountController.text);
       estimateBaseSubTotal = getCurrentBaseSubtotal();
@@ -1626,6 +1577,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     var url = "http://api.rmrcloud.com/GenerateEstimate";
     var result = await http.post(url, headers: headers);
     if (result.statusCode == 200) {
+      estimateIntId = json.decode(result.body)['Invoice']['Id'];
       estimateId = json.decode(result.body)['Invoice']['InvoiceId'];
       return estimateId;
     } else {
@@ -1638,37 +1590,33 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   Future CreateEstimate() async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
-      'EstimateId': estimateId,
-      'DiscountAmount': estimateDiscountTotal.toStringAsFixed(2),//cash
+      'EstimateId': estimateIntId.toString(),
+      'DiscountAmount': estimateDiscountTotal.toStringAsFixed(2), //cash
       'TotalAmount': estimateTotalAmount.toStringAsFixed(2),
       'Amount': estimateMainSubtotal.toStringAsFixed(2),
       'Tax': estimateTaxTotal.toStringAsFixed(2),
       'Note': _noteController.text,
-      'DiscountPercent': "",//percentage
-      'DiscountType':'amount',//dropdown
+      'DiscountPercent': "", //percentage
+      'DiscountType': "", //dropdown
       'DueDate': nextDate,
       'CreatedDate': formattedDate,
       'CustomerId': widget.customer.CustomerId,
       'CompanyId': widget.loggedInUser.CompanyGUID,
+      'Content-Type': "application/json",
     };
 
-    Map<String, String> body = {};
-    List<Map<String, String>> map = [];
+    Map<String, List> body = {};
+    List<Map<String, dynamic>> map = [];
     for (Product product in _productList) {
-      map.add(product.toMap());
+      map.add(product.toJson());
     }
-    body['ListEstimate'] = map.toString();
-
+    body['ListEstimate'] = map;
     var url = "http://api.rmrcloud.com/CreateEstimate";
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(url, headers: headers, body: json.encode(body));
     if (result.statusCode == 200) {
-      Navigator.of(context).pop();
-      showMessage(context, "Estimate saved successfully", json.decode(result.body),
-          Colors.green, Icons.check);
+      return json.decode(result.body)['result'];
     } else {
-      Navigator.of(context).pop();
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
+      return false;
     }
   }
 }

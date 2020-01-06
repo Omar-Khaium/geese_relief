@@ -24,7 +24,7 @@ class Product {
   }
 
   String get Quantity {
-    return quantity==null || quantity==0 ? "1" : quantity.toStringAsFixed(2);
+    return quantity==null || quantity==0 ? "1" : quantity.toString();
   }
 
   String get Discount {
@@ -47,13 +47,13 @@ class Product {
     rate = map['RetailPrice'];
   }
 
-  Map<String, String> toMap() {
-    return <String, String> {
-      'EquipmentId' : guid,
-      'EquipName' : name,
-      'EquipDetail' : description,
-      'Quantity' : quantity.toString(),
-      'UnitPrice' : rate.toString(),
-    };
-  }
+  Map<String, dynamic> toJson() =>
+      {
+        'EquipmentId' : guid,
+        'EquipName' : name,
+        'EquipDetail' : description,
+        'Quantity' : quantity,
+        'UnitPrice' : rate,
+        'TotalPrice' : price,
+      };
 }
