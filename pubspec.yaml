@@ -21,13 +21,14 @@ dependencies:
   smooth_star_rating: 1.0.3
   shimmer: ^1.0.1
   flutter_colorpicker: any
-  intl: ^0.16.0
-  painter: ^0.3.2
-  popup_menu: ^1.0.4
-  flutter_typeahead: ^1.7.0
+  intl:
+  painter:
+  popup_menu:
+  flutter_typeahead:
   video_player:
-  image_picker: ^0.6.2+3
-
+  image_picker:
+  async:
+  serializer:
 
 dev_dependencies:
   flutter_test:

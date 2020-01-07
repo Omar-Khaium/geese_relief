@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/estimate.dart';
@@ -13,13 +13,15 @@ import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+
 import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
   CustomerDetails customerDetails = new CustomerDetails(
-      "", "", "", "", "", "", "", "", "", "", "", "", "",0.0, [],"");
+      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, [], "");
   final Login login;
   final String customerID;
   final ValueChanged<int> backToDashboard;
@@ -28,7 +30,6 @@ class CustomerDetailsFragment extends StatefulWidget {
   final ValueChanged<CustomerDetails> goToRecommendedLevel;
   CustomerDetails customer;
   LoggedInUser loggedInUser;
-
 
   CustomerDetailsFragment(
       {Key key,
@@ -49,87 +50,104 @@ class CustomerDetailsFragment extends StatefulWidget {
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   var _future;
+
   //-------------Image---------------
   File _imageFile;
-  _openGallery(BuildContext context) async{
-    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile=pickFromGallery;
-    });
-    Navigator.of(context).pop();
 
-  }
-  _openCamera(BuildContext context) async{
-    File pickFromGallery= (await ImagePicker.pickImage(source: ImageSource.camera));
+  _openGallery(BuildContext context) async {
+    File pickFromGallery =
+        (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
-      _imageFile=pickFromGallery;
+      _imageFile = pickFromGallery;
     });
     Navigator.of(context).pop();
   }
+
+  _openCamera(BuildContext context) async {
+    File pickFromGallery =
+        (await ImagePicker.pickImage(source: ImageSource.camera));
+    setState(() {
+      _imageFile = pickFromGallery;
+    });
+    Navigator.of(context).pop();
+  }
+
   @override
   void initState() {
-    _future=getData();
+    _future = getData();
     super.initState();
   }
-  Future<void> _showDialog(BuildContext context){
-    return showDialog(context:context,builder: (BuildContext context){
 
-      return AlertDialog(
-        title: Text("Make A choice"),
-        content: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: ListBody(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: GestureDetector(
-                    child: Text("Gallery"),
-                    onTap: (){
-                      _openGallery(context);
-                    },
-                  ),
+  Future<void> _showDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Make A choice"),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: ListBody(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: GestureDetector(
+                        child: Text("Gallery"),
+                        onTap: () {
+                          _openGallery(context);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: GestureDetector(
+                        child: Text("Camera"),
+                        onTap: () {
+                          _openCamera(context);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: GestureDetector(
-                    child: Text("Camera"),
-                    onTap: (){
-                      _openCamera(context);
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      );
-    });
+          );
+        });
   }
 
-
-  Widget _decideImageView(){
-    widget.customerDetails.ProfileImage==null;
-    if(widget.customerDetails.ProfileImage != null){
-      return Image.network(widget.customerDetails.ProfileImage,height: 140,width: 150,fit: BoxFit.cover,);
-    }
-
-
-    else if(_imageFile!=null){
-      return GestureDetector(
-        child: Image.file(_imageFile,width: 150,height: 140,fit: BoxFit.cover,),
-        onTap: (){
-          _showDialog(context);
-        },
-      );
-
-    }
-    else{
-      return Icon(Icons.person,size: 150,);
-
+  Widget _decideImageView() {
+    if (_imageFile == null) {
+      Widget _decideImageView() {
+        widget.customerDetails.ProfileImage == null;
+        if (widget.customerDetails.ProfileImage != null) {
+          return Image.network(
+            widget.customerDetails.ProfileImage,
+            height: 140,
+            width: 150,
+            fit: BoxFit.cover,
+          );
+        } else if (_imageFile != null) {
+          return GestureDetector(
+            child: Image.file(
+              _imageFile,
+              width: 150,
+              height: 140,
+              fit: BoxFit.cover,
+            ),
+            onTap: () {
+              _showDialog(context);
+            },
+          );
+        } else {
+          return Icon(
+            Icons.person,
+            size: 150,
+          );
+        }
+      }
     }
   }
+
   //-------------Image---------------
 
   @override
@@ -196,20 +214,25 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             Stack(
                                               children: <Widget>[
                                                 ClipRRect(
-                                                  borderRadius:
-                                                  new BorderRadius.all(
-                                                      Radius.circular(12)),
-                                                  child:_decideImageView()
-                                                ),
+                                                    borderRadius:
+                                                        new BorderRadius.all(
+                                                            Radius.circular(
+                                                                12)),
+                                                    child: _decideImageView()),
                                                 Padding(
-                                                  padding:EdgeInsets.all(4),
+                                                  padding: EdgeInsets.all(4),
                                                   child: Align(
-                                                    alignment: Alignment.topCenter,
+                                                    alignment:
+                                                        Alignment.topCenter,
                                                     child: GestureDetector(
-                                                        child: Icon(MdiIcons.circleEditOutline,color: Colors.white,),
-                                                    onTap: (){
-                                                      _showDialog(context);
-                                                    },
+                                                      child: Icon(
+                                                        MdiIcons
+                                                            .circleEditOutline,
+                                                        color: Colors.white,
+                                                      ),
+                                                      onTap: () {
+                                                        _showDialog(context);
+                                                      },
                                                     ),
                                                   ),
                                                 )
@@ -351,7 +374,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               elevation: 8,
                                               onPressed: () {
-                                                widget.goToRecommendedLevel(widget.customerDetails);
+                                                widget.goToRecommendedLevel(
+                                                    widget.customerDetails);
                                               },
                                               color: Colors.black,
                                               child: Padding(
@@ -590,13 +614,21 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             SizedBox(
                                               width: 8,
                                             ),
-                                            CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.grey.shade300,
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.black,
-                                                size: 18,
+                                            InkWell(
+                                              onTap: () {
+                                                deleteDialog(widget
+                                                    .customerDetails
+                                                    .estimates[index]
+                                                    .Id);
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.grey.shade300,
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.black,
+                                                  size: 18,
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -731,5 +763,42 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           return Icons.exposure_zero;
         }
     }
+  }
+
+  void deleteDialog(String Id) async {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return new BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: AlertDialog(
+            title: Text(
+              "Deleting Estimate",
+              style: estimateTextStyle(),
+            ),
+            contentTextStyle: estimateTextStyle(),
+          ),
+        );
+      },
+    );
+    bool status = await deleteEstimate(Id);
+    Navigator.of(context).pop();
+    showAPIResponse(
+        context,
+        status ? "Deleted Successfully!" : "Failed to Delete!",
+        Color(status ? COLOR_SUCCESS : COLOR_DANGER));
+    setState(() {});
+  }
+
+  Future deleteEstimate(String Id) async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'EstimateId': Id
+    };
+
+    var url = "http://api.rmrcloud.com/DeleteEstimate";
+    var result = await http.delete(url, headers: headers);
+    return json.decode(result.body)['result'];
   }
 }
