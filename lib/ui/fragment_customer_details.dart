@@ -21,7 +21,7 @@ import '../utils.dart';
 
 class CustomerDetailsFragment extends StatefulWidget {
   CustomerDetails customerDetails = new CustomerDetails(
-      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, []);
+      "", "", "", "", "", "", "", "", "", "", "", "", "", 0.0, [], "");
   final Login login;
   final String customerID;
   final ValueChanged<int> backToDashboard;
@@ -49,6 +49,8 @@ class CustomerDetailsFragment extends StatefulWidget {
 }
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
+  var _future;
+
   //-------------Image---------------
   File _imageFile;
 
@@ -72,6 +74,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
 
   @override
   void initState() {
+    _future = getData();
     super.initState();
   }
 
@@ -114,22 +117,34 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
 
   Widget _decideImageView() {
     if (_imageFile == null) {
-      return GestureDetector(
-        child: Icon(
-          Icons.person,
-          size: 100,
-        ),
-        onTap: () {
-          _showDialog(context);
-        },
-      );
-    } else {
-      return Image.file(
-        _imageFile,
-        width: 150,
-        height: 140,
-        fit: BoxFit.cover,
-      );
+      Widget _decideImageView() {
+        widget.customerDetails.ProfileImage == null;
+        if (widget.customerDetails.ProfileImage != null) {
+          return Image.network(
+            widget.customerDetails.ProfileImage,
+            height: 140,
+            width: 150,
+            fit: BoxFit.cover,
+          );
+        } else if (_imageFile != null) {
+          return GestureDetector(
+            child: Image.file(
+              _imageFile,
+              width: 150,
+              height: 140,
+              fit: BoxFit.cover,
+            ),
+            onTap: () {
+              _showDialog(context);
+            },
+          );
+        } else {
+          return Icon(
+            Icons.person,
+            size: 150,
+          );
+        }
+      }
     }
   }
 
@@ -162,7 +177,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: getData(),
+              future: _future,
               builder: (context, snapshot) {
                 try {
                   if (snapshot.hasData) {
