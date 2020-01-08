@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,6 +49,7 @@ class CustomerDetailsFragment extends StatefulWidget {
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   var _future;
+  var _base64Image;
 
   //-------------Image---------------
   File _imageFile;
@@ -59,15 +59,20 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
       _imageFile = pickFromGallery;
+      _base64Image = base64Encode(_imageFile.readAsBytesSync());
+      Navigator.of(context).pop();
+      uploadCustomerImage();
     });
     Navigator.of(context).pop();
   }
-
   _openCamera(BuildContext context) async {
     File pickFromGallery =
         (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
       _imageFile = pickFromGallery;
+      _base64Image = base64Encode(_imageFile.readAsBytesSync());
+
+      uploadCustomerImage();
     });
     Navigator.of(context).pop();
   }
@@ -94,6 +99,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                       child: GestureDetector(
                         child: Text("Gallery"),
                         onTap: () {
+                          widget.customerDetails.ProfileImage = null;
                           _openGallery(context);
                         },
                       ),
@@ -103,6 +109,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                       child: GestureDetector(
                         child: Text("Camera"),
                         onTap: () {
+                          widget.customerDetails.ProfileImage = null;
                           _openCamera(context);
                         },
                       ),
@@ -114,38 +121,80 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           );
         });
   }
-
-  Widget _decideImageView() {
-    if (_imageFile == null) {
-      Widget _decideImageView() {
-        widget.customerDetails.ProfileImage == null;
-        if (widget.customerDetails.ProfileImage != null) {
-          return Image.network(
-            widget.customerDetails.ProfileImage,
-            height: 140,
-            width: 150,
-            fit: BoxFit.cover,
-          );
-        } else if (_imageFile != null) {
-          return GestureDetector(
-            child: Image.file(
-              _imageFile,
-              width: 150,
-              height: 140,
-              fit: BoxFit.cover,
+   _showSaveDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Padding(
+                padding: EdgeInsets.all(8),
+                child: Text("Do you want to save this image ?",style: new TextStyle(fontSize: 24,color: Colors.black),)),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Container(
+                        width:132,
+                        child: OutlineButton(
+                          highlightElevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(36.0),
+                              side: BorderSide(color: Colors.white12)),
+                          color: Colors.black,
+                          textColor: Colors.white,
+                          padding: EdgeInsets.all(12.0),
+                          child: Text(
+                            "No,Thanks",
+                            style: new TextStyle(
+                                color: Colors.black,
+                                fontSize: 22,
+                                fontFamily: "Roboto"),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Container(
+                        width:132,
+                        child: RaisedButton(
+                          highlightElevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(36.0),
+                              side: BorderSide(color: Colors.white12)),
+                          disabledColor: Colors.black,
+                          color: Colors.black,
+                          elevation: 2,
+                          textColor: Colors.white,
+                          padding: EdgeInsets.all(12.0),
+                          child: Text(
+                            "Save",
+                            style: new TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontFamily: "Roboto"),
+                          ),
+                          onPressed: () {
+                            uploadCustomerImage();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            onTap: () {
-              _showDialog(context);
-            },
           );
-        } else {
-          return Icon(
-            Icons.person,
-            size: 150,
-          );
-        }
-      }
-    }
+        });
   }
 
   //-------------Image---------------
@@ -218,21 +267,46 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                         new BorderRadius.all(
                                                             Radius.circular(
                                                                 12)),
-                                                    child: _decideImageView()),
+                                                    child: _imageFile != null
+                                                        ? Image.file(
+                                                            _imageFile,
+                                                            width: 150,
+                                                            height: 140,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : (widget.customerDetails
+                                                                    .ProfileImage !=
+                                                                null
+                                                            ? Image.network(
+                                                                widget
+                                                                    .customerDetails
+                                                                    .ProfileImage,
+                                                                height: 140,
+                                                                width: 150,
+                                                                fit: BoxFit
+                                                                    .cover)
+                                                            : Icon(
+                                                                Icons.person,
+                                                                size: 142,
+                                                              ))),
                                                 Padding(
                                                   padding: EdgeInsets.all(4),
                                                   child: Align(
                                                     alignment:
                                                         Alignment.topCenter,
-                                                    child: GestureDetector(
-                                                      child: Icon(
-                                                        MdiIcons
-                                                            .circleEditOutline,
-                                                        color: Colors.white,
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey.shade500,
+                                                      child: GestureDetector(
+                                                        child: Icon(
+                                                          MdiIcons
+                                                              .circleEditOutline,
+                                                          color: Colors.white,
+                                                        ),
+                                                        onTap: () {
+                                                          _showDialog(context);
+                                                        },
                                                       ),
-                                                      onTap: () {
-                                                        _showDialog(context);
-                                                      },
                                                     ),
                                                   ),
                                                 )
@@ -614,21 +688,13 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             SizedBox(
                                               width: 8,
                                             ),
-                                            InkWell(
-                                              onTap: () {
-                                                deleteDialog(widget
-                                                    .customerDetails
-                                                    .estimates[index]
-                                                    .Id);
-                                              },
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.grey.shade300,
-                                                child: Icon(
-                                                  Icons.delete,
-                                                  color: Colors.black,
-                                                  size: 18,
-                                                ),
+                                            CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: Colors.black,
+                                                size: 18,
                                               ),
                                             ),
                                           ],
@@ -692,6 +758,32 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           Colors.redAccent, Icons.warning);
       return {};
     }
+  }
+
+  Future uploadCustomerImage() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'CustomerId': '${widget.customerID}',
+    };
+    Map<String, String> body = <String, String>{
+      "filename": "Demo-File.png",
+      "filepath": _base64Image
+    };
+
+    var url = "http://api.rmrcloud.com/CustomerImageUpload";
+    http.post(url, headers: headers, body: body).then((response) {
+      try {
+        if (response.statusCode == 200) {
+          return response;
+        } else {
+          showMessage(context, "Network error!", json.decode(response.body),
+              Colors.redAccent, Icons.warning);
+          return [];
+        }
+      } catch (error) {
+        return Container();
+      }
+    });
   }
 
   Estimate estimate;
@@ -765,40 +857,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     }
   }
 
-  void deleteDialog(String Id) async {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: AlertDialog(
-            title: Text(
-              "Deleting Estimate",
-              style: estimateTextStyle(),
-            ),
-            contentTextStyle: estimateTextStyle(),
-          ),
-        );
-      },
-    );
-    bool status = await deleteEstimate(Id);
-    Navigator.of(context).pop();
-    showAPIResponse(
-        context,
-        status ? "Deleted Successfully!" : "Failed to Delete!",
-        Color(status ? COLOR_SUCCESS : COLOR_DANGER));
-    setState(() {});
-  }
 
-  Future deleteEstimate(String Id) async {
-    Map<String, String> headers = {
-      'Authorization': widget.login.accessToken,
-      'EstimateId': Id
-    };
 
-    var url = "http://api.rmrcloud.com/DeleteEstimate";
-    var result = await http.delete(url, headers: headers);
-    return json.decode(result.body)['result'];
-  }
 }
