@@ -8,12 +8,13 @@ class Product {
   int quantity;
   double rate;
   double discount;
+  double discountPercent;
   bool discountAsPercentage;
   double price;
   String date;
 
   Product(this.id, this.guid, this.name, this.description, this.quantity,
-      this.rate, this.discount, this.discountAsPercentage, this.price, this.date);
+      this.rate, this.discount, this.discountPercent, this.discountAsPercentage, this.price, this.date);
 
   String get Name {
     return name==null ? "-" : name;
@@ -54,6 +55,9 @@ class Product {
         'EquipDetail' : description,
         'Quantity' : quantity,
         'UnitPrice' : rate,
+        'DiscountAmount' : rate*quantity - price,
+        'DiscountPercent' : discountAsPercentage ? discountPercent : 0,
+        'DiscountType' : discountAsPercentage ? "Percentage" : "Cash",
         'TotalPrice' : price,
       };
 }

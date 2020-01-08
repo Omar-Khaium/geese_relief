@@ -6,6 +6,9 @@ class SignaturePlaceholder extends StatelessWidget {
     return Container(
       color:
       Colors.grey.shade200,
+      child: Center(
+        child: Text("Tap To Sign"),
+      ),
     );
   }
 }

@@ -29,13 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  bson:
-    dependency: transitive
-    description:
-      name: bson
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.2"
   charcode:
     dependency: transitive
     description:
@@ -71,13 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  fixnum:
-    dependency: transitive
+  dotted_border:
+    dependency: "direct main"
     description:
-      name: fixnum
+      name: dotted_border
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.11"
+    version: "1.0.4"
   flushbar:
     dependency: "direct main"
     description:
@@ -184,13 +177,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  more:
-    dependency: transitive
-    description:
-      name: more
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.18.2"
   painter:
     dependency: "direct main"
     description:
@@ -205,6 +191,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   path_provider:
     dependency: "direct main"
     description:
@@ -247,13 +247,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
-  serializer:
-    dependency: "direct main"
-    description:
-      name: serializer
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.2"
   shimmer:
     dependency: "direct main"
     description:
