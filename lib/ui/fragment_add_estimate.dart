@@ -69,8 +69,12 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   String base64Drawing = "";
   String base64PMSignature = "";
   String base64HOSignature = "";
+  String _drawingImagePath = "";
+  String _PMSignatureImagePath = "";
+  String _HOSignatureImagePath = "";
+  String _CameraImagePath = "";
   var base64 = const Base64Codec();
-
+  String message;
   String formattedDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
 
   String estimateId = "";
@@ -1114,7 +1118,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                               if (_productList.length == 0) {
                                 showError("Product list is empty!");
                               } else {
-                                showSaving("Please wait...");
+                                showSaving();
                               }
                             },
                           ),
@@ -1560,24 +1564,47 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     );
   }
 
-  void showSaving(String message) async {
+  void showSaving() async {
+    message = "Please wait...";
     showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return new BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: AlertDialog(
-            title: Text(
-              "Saving Estimate",
-              style: estimateTextStyle(),
-            ),
-            content: Text(message),
-            contentTextStyle: estimateTextStyle(),
+          child: StatefulBuilder(
+            builder: (context, setState){
+              return AlertDialog(
+                title: Text(
+                  "Saving Estimate",
+                  style: estimateTextStyle(),
+                ),
+                content: Text(message),
+                contentTextStyle: estimateTextStyle(),
+              );
+            },
           ),
         );
       },
     );
+    setState(() {
+      message = "Uploading Camera Image...";
+    });
+    await uploadCameraImage();
+
+    setState(() {
+      message = "Uploading Drawing Image...";
+    });
+    await uploadDrawingImage();
+
+    setState(() {
+      message = "Uploading Home Owner Signature...";
+    });
+    await uploadHOSignatureImage();
+
+    setState(() {
+      message = "Saving Estimate...";
+    });
     bool resultStatus = await CreateEstimate();
     Navigator.of(context).pop();
     showAPIResponse(
@@ -1687,15 +1714,15 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       'Amount': estimateMainSubtotal.toStringAsFixed(2),
       'Tax': estimateTaxTotal.toStringAsFixed(2),
       'Note': _noteController.text,
-      'DiscountPercent': "", //percentage
-      'DiscountType': "", //dropdown
+      'DiscountPercent': _EstimateDiscountModeIsPercentage ? _EstimateDiscountController.text : null, //percentage
+      'DiscountType': _EstimateDiscountModeIsPercentage ? "percent" : "amount", //dropdown
       'DueDate': nextDate,
       'CreatedDate': formattedDate,
       'CustomerId': widget.customer.CustomerId,
       'CompanyId': widget.loggedInUser.CompanyGUID,
-      'Drawingimage': '',
-      'Cameraimage': '',
-      'Signimage': '',
+      'Drawingimage': _drawingImagePath,
+      'Cameraimage': _CameraImagePath,
+      'Signimage': _HOSignatureImagePath,
       'Content-Type': "application/json",
     };
 
@@ -1722,5 +1749,65 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
 
   taxColor() {
     return estimateTaxTotal.toStringAsFixed(2) == "0.00" ? Colors.black : Colors.red;
+  }
+
+  Future uploadCameraImage() async {
+    var url = "http://api.rmrcloud.com/UploadImageFile";
+    Map<String, String> headers = <String, String>{
+      "Authorization" : widget.login.accessToken
+    };
+    Map<String, String> body = <String, String>{
+      "filename" : "file-from-omar.png",
+      "filepath" : base64.encode(_imageFile.readAsBytesSync())
+    };
+    var result =
+    await http.post(url, headers: headers, body: body);
+    if (result.statusCode == 200) {
+      Map map = json.decode(result.body);
+      _CameraImagePath = map['filePath'];
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future uploadDrawingImage() async {
+    var url = "http://api.rmrcloud.com/UploadImageFile";
+    Map<String, String> headers = <String, String>{
+      "Authorization" : widget.login.accessToken
+    };
+    Map<String, String> body = <String, String>{
+      "filename" : "file-from-omar.png",
+      "filepath" : base64Drawing
+    };
+    var result =
+    await http.post(url, headers: headers, body: body);
+    if (result.statusCode == 200) {
+      Map map = json.decode(result.body);
+      _drawingImagePath = map['filePath'];
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future uploadHOSignatureImage() async {
+    var url = "http://api.rmrcloud.com/UploadImageFile";
+    Map<String, String> headers = <String, String>{
+      "Authorization" : widget.login.accessToken
+    };
+    Map<String, String> body = <String, String>{
+      "filename" : "file-from-omar.png",
+      "filepath" : base64HOSignature
+    };
+    var result =
+    await http.post(url, headers: headers, body: body);
+    if (result.statusCode == 200) {
+      Map map = json.decode(result.body);
+      _HOSignatureImagePath = map['filePath'];
+      return true;
+    } else {
+      return false;
+    }
   }
 }

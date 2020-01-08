@@ -57,7 +57,7 @@ class Product {
         'UnitPrice' : rate,
         'DiscountAmount' : rate*quantity - price,
         'DiscountPercent' : discountAsPercentage ? discountPercent : 0,
-        'DiscountType' : discountAsPercentage ? "Percentage" : "Cash",
+        'DiscountType' : discountAsPercentage ? "percent" : "amount",
         'TotalPrice' : price,
       };
 }
