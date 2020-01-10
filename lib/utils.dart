@@ -46,7 +46,7 @@ void showAPIResponse(BuildContext context, String title, Color color) {
 }
 
 String formatDate(String date) {
-  DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'hh:mm:ss.ZZZ");
+  DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'hh:mm:ss");
   DateTime dateTime = inputFormat.parse(date);
   DateFormat outputFormat = DateFormat("MM/dd/yyyy", );
   return outputFormat.format(dateTime);

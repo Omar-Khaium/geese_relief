@@ -84,7 +84,7 @@ class _LogInUIState extends State<LogInUI> {
       'grant_type': 'password'
     };
 
-    var url = 'https://api.rmrcloud.com/token';
+    var url = 'bn://api.rmrcloud.com/token';
     try {
       http.post(url, body: data).then((response) {
         if (response.statusCode == 200) {
