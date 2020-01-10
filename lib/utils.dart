@@ -55,3 +55,9 @@ String formatDate(String date) {
 final COLOR_DANGER = 0xE54F42;
 final COLOR_SUCCESS = 0x38CC76;
 final COLOR_WARNING = 0xFFA628;
+
+//var currencyFormat = new NumberFormat.currency(locale: "en_US", name: "USD", decimalDigits: 2);
+var currencyFormat = new NumberFormat("#,###.##", "en_US");
+var numberFormat = new NumberFormat("#,###", "en_US");
+RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+Function mathFunc = (Match match) => '${match[1]},';

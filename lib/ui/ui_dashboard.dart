@@ -19,6 +19,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../utils.dart';
 import 'fragment_recommended_level.dart';
+import 'fragment_update_estimate.dart';
 
 class DashboardUI extends StatefulWidget {
   Login login;
@@ -90,9 +91,11 @@ class _DashboardUIState extends State<DashboardUI>
         backToDashboard: _backToDashboard,
         customerID: customerID,
         goToAddEstimate: _goToAddEstimate,
+        goToUpdateEstimate: _goToUpdateEstimate,
         goToBasementReport: _goToBasementInspectionReport,);
     });
   }
+
   _goToAddEstimate(CustomerDetails customer) {
     setState(() {
       fragment = AddEstimateFragment(
@@ -102,6 +105,17 @@ class _DashboardUIState extends State<DashboardUI>
           customer: customer);
     });
   }
+
+  _goToUpdateEstimate(CustomerDetails customer) {
+    setState(() {
+      fragment = UpdateEstimateFragment(
+          login: widget.login,
+          loggedInUser: widget.loggedInUser,
+          backToCustomerDetailsFromEstimate: _backToCustomerDetailsFromEstimate,
+          customer: customer);
+    });
+  }
+
   _backToCustomerDetailsFromEstimate(CustomerDetails customer) {
     setState(() {
       fragment = new CustomerDetailsFragment(login: widget.login,
@@ -109,6 +123,7 @@ class _DashboardUIState extends State<DashboardUI>
         customer: customer,
         customerID: customer.Id,
         goToAddEstimate: _goToAddEstimate,
+        goToUpdateEstimate: _goToUpdateEstimate,
         goToBasementReport: _goToBasementInspectionReport,);
     });
   }
@@ -150,6 +165,7 @@ class _DashboardUIState extends State<DashboardUI>
         customerID: customerID,
         goToBasementReport: _goToBasementInspectionReport,
         goToAddEstimate: _goToAddEstimate,
+        goToUpdateEstimate: _goToUpdateEstimate,
         goToRecommendedLevel: _goToAddRecommendedLevel,
       loggedInUser: widget.loggedInUser,);
     });

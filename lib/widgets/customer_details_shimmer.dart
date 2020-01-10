@@ -35,8 +35,8 @@ class ShimmerCustomerDetailsFragment extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(
-                            width: 100,
-                            height: 100,
+                            width: 128,
+                            height: 128,
                             child: Shimmer.fromColors(
                               baseColor: Colors.black12,
                               highlightColor: Colors.white24,
