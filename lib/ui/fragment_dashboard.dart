@@ -32,7 +32,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       'PageSize': '10'
     };
 
-    var url = "http://api.rmrcloud.com/GetAllCustomer";
+    var url = "https://api.rmrcloud.com/GetAllCustomer";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       return result;
@@ -208,7 +208,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       'customerid': arrayList[index].Id,
     };
 
-    var url = "http://api.rmrcloud.com/DeleteCustomer";
+    var url = "https://api.rmrcloud.com/DeleteCustomer";
     var result = await http.delete(url, headers: headers);
     if (result.statusCode == 200) {
       arrayList.removeAt(index);

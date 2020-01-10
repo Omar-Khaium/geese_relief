@@ -11,4 +11,9 @@ class DropDownSingleItem {
     DataValue = map['DataValue'];
   }
 
+  @override
+  String toString() {
+    return DisplayText;
+  }
+
 }

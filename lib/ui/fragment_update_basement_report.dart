@@ -11,76 +11,78 @@ import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
-import 'package:flutter_grate_app/widgets/place_image.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:painter/painter.dart';
 
 import '../utils.dart';
 
-class AddBasementReportFragment extends StatefulWidget {
+class UpdateBasementReportFragment extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
   CustomerDetails customer;
   ValueChanged<String> backToCustomerDetails;
   BasementInspection basementInspection;
+  bool isOnAddMode;
 
-  AddBasementReportFragment({Key key,
-    this.login,
-    this.loggedInUser,
-    this.customer,
-    this.backToCustomerDetails})
+  UpdateBasementReportFragment(
+      {Key key,
+      this.login,
+      this.loggedInUser,
+      this.customer,
+      @required this.isOnAddMode,
+      this.backToCustomerDetails})
       : super(key: key);
 
   @override
-  _AddBasementReportFragmentState createState() =>
-      _AddBasementReportFragmentState();
+  _UpdateBasementReportFragmentState createState() =>
+      _UpdateBasementReportFragmentState();
 }
 
-class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
+class _UpdateBasementReportFragmentState
+    extends State<UpdateBasementReportFragment> {
   var _futureDropDown, _futureGetData;
 
   TextEditingController _OutsideRelativeHumidityController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _OutsideTemperatureController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _1stFloorRelativeHumidityController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _1stFloorTemperatureController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _BasementRelativeHumidityController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _BasementTemperatureController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _Other1Controller = new TextEditingController();
   TextEditingController _Other2Controller = new TextEditingController();
   TextEditingController _VisualBasementInspectionOtherController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _NoticedSmellsCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _NoticedMoldsCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _SufferFromRespiratoryCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _ChildrenPlayInTheBasementCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _HavePetsCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _NoticedBugsCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _GetWaterCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _EverSeePipesDrippingCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _AnyRepairsToTryAndFixCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _TestedForRadonInThePast2YearsCommentController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _BasementEvaluationOtherController =
-  new TextEditingController();
+      new TextEditingController();
   TextEditingController _NotesController = new TextEditingController();
 
   var progress = 0.0;
@@ -90,7 +92,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
-    (await ImagePicker.pickImage(source: ImageSource.gallery));
+        (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
       _imageFile = pickFromGallery;
     });
@@ -99,7 +101,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
   _openCamera(BuildContext context) async {
     File pickFromGallery =
-    (await ImagePicker.pickImage(source: ImageSource.camera));
+        (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
       _imageFile = pickFromGallery;
     });
@@ -233,7 +235,6 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
   Map<String, String> headers = <String, String>{};
 
-
   String message;
 
   void initState() {
@@ -304,14 +305,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
       margin: EdgeInsets.only(top: 16, left: 32, right: 32),
       child: Column(
         children: <Widget>[
@@ -404,7 +399,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 ListRowItem(
                                   icon: Icons.phone,
                                   text:
-                                  widget.loggedInUser.CompanyContactNumber,
+                                      widget.loggedInUser.CompanyContactNumber,
                                 ),
                                 ListRowItem(
                                   icon: MdiIcons.fax,
@@ -422,8 +417,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             ListRowItem(
                               icon: Icons.event,
                               text:
-                              "${DateFormat('MM/dd/yyyy').format(
-                                  DateTime.now())}",
+                                  "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
                             ),
                             SizedBox(
                               height: 16,
@@ -457,16 +451,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                   future: _futureDropDown,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-
-
                       return FutureBuilder(
                         future: _futureGetData,
                         builder: (context, snapshot) {
                           try {
                             if (snapshot.hasData) {
-                              var map = json.decode(snapshot.data.body);
-                              widget.basementInspection =
-                                  BasementInspection.fromMap(map);
                               try {
                                 return Column(
                                   children: <Widget>[
@@ -493,7 +482,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         padding: const EdgeInsets.all(16),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               "Relative Humidity / Temperature Readings",
@@ -511,14 +500,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  CurrentOutsideConditionsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      CurrentOutsideConditionsSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Current Outside Conditions*",
+                                                      "Current Outside Conditions*",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -531,7 +520,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                     value: index,
                                                     child: Text(
                                                         CurrentOutsideConditionsArray[
-                                                        index]
+                                                                index]
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
@@ -541,14 +530,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              CurrentOutsideConditionsSelection,
+                                                  CurrentOutsideConditionsSelection,
                                             ),
                                             SizedBox(
                                               height: 8,
                                             ),
                                             new TextField(
                                               controller:
-                                              _OutsideRelativeHumidityController,
+                                                  _OutsideRelativeHumidityController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -556,20 +545,20 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               cursorColor: Colors.black,
                                               keyboardType: TextInputType
                                                   .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
+                                                      decimal: false,
+                                                      signed: false),
                                               maxLines: 1,
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _OutsideRelativeHumidityController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _OutsideRelativeHumidityController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Outside Relative Humidity *",
+                                                      "Outside Relative Humidity *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -581,7 +570,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _OutsideTemperatureController,
+                                                  _OutsideTemperatureController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -589,20 +578,20 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               cursorColor: Colors.black,
                                               keyboardType: TextInputType
                                                   .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
+                                                      decimal: false,
+                                                      signed: false),
                                               maxLines: 1,
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _OutsideTemperatureController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _OutsideTemperatureController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Outside Temperature *",
+                                                      "Outside Temperature *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -614,7 +603,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _1stFloorRelativeHumidityController,
+                                                  _1stFloorRelativeHumidityController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -622,13 +611,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               cursorColor: Colors.black,
                                               keyboardType: TextInputType
                                                   .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
+                                                      decimal: false,
+                                                      signed: false),
                                               maxLines: 1,
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "1st Floor Relative Humidity",
+                                                      "1st Floor Relative Humidity",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -640,7 +629,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _1stFloorTemperatureController,
+                                                  _1stFloorTemperatureController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -648,13 +637,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               cursorColor: Colors.black,
                                               keyboardType: TextInputType
                                                   .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
+                                                      decimal: false,
+                                                      signed: false),
                                               maxLines: 1,
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "1st Floor Temperature",
+                                                      "1st Floor Temperature",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -668,10 +657,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               elevation: 2,
                                               child: Padding(
                                                 padding:
-                                                const EdgeInsets.all(16),
+                                                    const EdgeInsets.all(16),
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Text(
                                                       "Current Inside Condition",
@@ -689,30 +678,29 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                     DropdownButtonFormField(
                                                       decoration: new InputDecoration(
                                                           errorText:
-                                                          HeatSelection == 0
-                                                              ? "Select another value"
-                                                              : null,
+                                                              HeatSelection == 0
+                                                                  ? "Select another value"
+                                                                  : null,
                                                           errorStyle:
-                                                          customTextFieldErrorStyle(),
+                                                              customTextFieldErrorStyle(),
                                                           labelText: "Heat*",
                                                           labelStyle:
-                                                          customTextStyle(),
+                                                              customTextStyle(),
                                                           hintText: "e.g. hint",
                                                           hintStyle:
-                                                          customHintStyle(),
+                                                              customHintStyle(),
                                                           alignLabelWithHint:
-                                                          false,
+                                                              false,
                                                           isDense: true),
                                                       items: List.generate(
                                                           HeatArray.length,
-                                                              (index) {
-                                                            return DropdownMenuItem(
-                                                                value: index,
-                                                                child: Text(
-                                                                    HeatArray[
+                                                          (index) {
+                                                        return DropdownMenuItem(
+                                                            value: index,
+                                                            child: Text(HeatArray[
                                                                     index]
-                                                                        .DisplayText));
-                                                          }),
+                                                                .DisplayText));
+                                                      }),
                                                       onChanged: (index) {
                                                         setState(() {
                                                           HeatSelection = index;
@@ -726,30 +714,29 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                     DropdownButtonFormField(
                                                       decoration: new InputDecoration(
                                                           errorText:
-                                                          AirSelection == 0
-                                                              ? "Select another value"
-                                                              : null,
+                                                              AirSelection == 0
+                                                                  ? "Select another value"
+                                                                  : null,
                                                           errorStyle:
-                                                          customTextFieldErrorStyle(),
+                                                              customTextFieldErrorStyle(),
                                                           labelText: "Air *",
                                                           labelStyle:
-                                                          customTextStyle(),
+                                                              customTextStyle(),
                                                           hintText: "e.g. hint",
                                                           hintStyle:
-                                                          customHintStyle(),
+                                                              customHintStyle(),
                                                           alignLabelWithHint:
-                                                          false,
+                                                              false,
                                                           isDense: true),
                                                       items: List.generate(
                                                           AirArray.length,
-                                                              (index) {
-                                                            return DropdownMenuItem(
-                                                                value: index,
-                                                                child: Text(
-                                                                    AirArray[
+                                                          (index) {
+                                                        return DropdownMenuItem(
+                                                            value: index,
+                                                            child: Text(AirArray[
                                                                     index]
-                                                                        .DisplayText));
-                                                          }),
+                                                                .DisplayText));
+                                                      }),
                                                       onChanged: (index) {
                                                         setState(() {
                                                           AirSelection = index;
@@ -762,7 +749,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                     ),
                                                     new TextField(
                                                       controller:
-                                                      _BasementRelativeHumidityController,
+                                                          _BasementRelativeHumidityController,
                                                       obscureText: false,
                                                       onChanged: (val) {
                                                         setState(() {});
@@ -770,20 +757,20 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                       cursorColor: Colors.black,
                                                       keyboardType: TextInputType
                                                           .numberWithOptions(
-                                                          decimal: false,
-                                                          signed: false),
+                                                              decimal: false,
+                                                              signed: false),
                                                       maxLines: 1,
                                                       style: customTextStyle(),
                                                       decoration: new InputDecoration(
                                                           labelText:
-                                                          "Basement Relative Humidity",
+                                                              "Basement Relative Humidity",
                                                           labelStyle:
-                                                          customTextStyle(),
+                                                              customTextStyle(),
                                                           hintText: "e.g. hint",
                                                           hintStyle:
-                                                          customHintStyle(),
+                                                              customHintStyle(),
                                                           alignLabelWithHint:
-                                                          false,
+                                                              false,
                                                           isDense: true),
                                                     ),
                                                     SizedBox(
@@ -791,7 +778,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                     ),
                                                     new TextField(
                                                       controller:
-                                                      _BasementTemperatureController,
+                                                          _BasementTemperatureController,
                                                       obscureText: false,
                                                       onChanged: (val) {
                                                         setState(() {});
@@ -799,20 +786,20 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                       cursorColor: Colors.black,
                                                       keyboardType: TextInputType
                                                           .numberWithOptions(
-                                                          decimal: false,
-                                                          signed: false),
+                                                              decimal: false,
+                                                              signed: false),
                                                       maxLines: 1,
                                                       style: customTextStyle(),
                                                       decoration: new InputDecoration(
                                                           labelText:
-                                                          "Basement Temperature",
+                                                              "Basement Temperature",
                                                           labelStyle:
-                                                          customTextStyle(),
+                                                              customTextStyle(),
                                                           hintText: "e.g. hint",
                                                           hintStyle:
-                                                          customHintStyle(),
+                                                              customHintStyle(),
                                                           alignLabelWithHint:
-                                                          false,
+                                                              false,
                                                           isDense: true),
                                                     ),
                                                     SizedBox(
@@ -821,21 +808,21 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                     DropdownButtonFormField(
                                                       decoration: new InputDecoration(
                                                           errorText:
-                                                          BasementDehumidifierSelection ==
-                                                              0
-                                                              ? "Select another value"
-                                                              : null,
+                                                              BasementDehumidifierSelection ==
+                                                                      0
+                                                                  ? "Select another value"
+                                                                  : null,
                                                           errorStyle:
-                                                          customTextFieldErrorStyle(),
+                                                              customTextFieldErrorStyle(),
                                                           labelText:
-                                                          "Basement Dehumidifier *",
+                                                              "Basement Dehumidifier *",
                                                           labelStyle:
-                                                          customTextStyle(),
+                                                              customTextStyle(),
                                                           hintText: "e.g. hint",
                                                           hintStyle:
-                                                          customHintStyle(),
+                                                              customHintStyle(),
                                                           alignLabelWithHint:
-                                                          false,
+                                                              false,
                                                           isDense: true),
                                                       items: List.generate(
                                                           BasementDehumidifierArray
@@ -844,7 +831,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                             value: index,
                                                             child: Text(
                                                                 BasementDehumidifierArray[
-                                                                index]
+                                                                        index]
                                                                     .DisplayText));
                                                       }),
                                                       onChanged: (index) {
@@ -854,7 +841,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                         });
                                                       },
                                                       value:
-                                                      BasementDehumidifierSelection,
+                                                          BasementDehumidifierSelection,
                                                     ),
                                                   ],
                                                 ),
@@ -935,7 +922,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         padding: const EdgeInsets.all(16),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               "Visual Basement Inspection",
@@ -953,11 +940,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  GroundWaterSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      GroundWaterSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "Ground Water *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -985,7 +972,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "Ground Water Rating (1-10)",
+                                                      "Ground Water Rating (1-10)",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1013,11 +1000,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  IronBacteriaSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      IronBacteriaSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "Iron Bacteria *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1045,7 +1032,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "Iron Bacteria Rating (1-10)",
+                                                      "Iron Bacteria Rating (1-10)",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1066,7 +1053,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              IronBacteriaRatingSelection,
+                                                  IronBacteriaRatingSelection,
                                             ),
                                             SizedBox(
                                               height: 8,
@@ -1074,11 +1061,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  CondensationSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      CondensationSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "Condensation *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1106,7 +1093,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "Condensation Rating (1-10)",
+                                                      "Condensation Rating (1-10)",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1127,7 +1114,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              CondensationRatingSelection,
+                                                  CondensationRatingSelection,
                                             ),
                                             SizedBox(
                                               height: 8,
@@ -1135,11 +1122,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  WallCracksSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      WallCracksSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "Wall Cracks *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1167,7 +1154,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "Wall Cracks Rating (1-10)",
+                                                      "Wall Cracks Rating (1-10)",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1195,11 +1182,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  FloorCracksSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      FloorCracksSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "Floor Cracks *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1227,7 +1214,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "Floor Cracks Rating (1-10)",
+                                                      "Floor Cracks Rating (1-10)",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1255,14 +1242,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  ExistingSumpPumpSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      ExistingSumpPumpSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Existing Sump Pump *",
+                                                      "Existing Sump Pump *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1290,14 +1277,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  ExistingDrainageSystemSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      ExistingDrainageSystemSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Existing Drainage System *",
+                                                      "Existing Drainage System *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1318,7 +1305,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              ExistingDrainageSystemSelection,
+                                                  ExistingDrainageSystemSelection,
                                             ),
                                             SizedBox(
                                               height: 8,
@@ -1326,14 +1313,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  ExistingRadonSystemSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      ExistingRadonSystemSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Radon System (existing) *",
+                                                      "Radon System (existing) *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1354,7 +1341,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              ExistingRadonSystemSelection,
+                                                  ExistingRadonSystemSelection,
                                             ),
                                             SizedBox(
                                               height: 8,
@@ -1362,14 +1349,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  DryerVentToCodeSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      DryerVentToCodeSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Dryer Vent To Code? *",
+                                                      "Dryer Vent To Code? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1397,13 +1384,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  FoundationTypeSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      FoundationTypeSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "Foundation Type? *",
+                                                      "Foundation Type? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1411,14 +1398,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                   isDense: true),
                                               items: List.generate(
                                                   FoundationTypeArray.length,
-                                                      (index) {
-                                                    return DropdownMenuItem(
-                                                        value: index,
-                                                        child: Text(
-                                                            FoundationTypeArray[
-                                                            index]
-                                                                .DisplayText));
-                                                  }),
+                                                  (index) {
+                                                return DropdownMenuItem(
+                                                    value: index,
+                                                    child: Text(
+                                                        FoundationTypeArray[
+                                                                index]
+                                                            .DisplayText));
+                                              }),
                                               onChanged: (index) {
                                                 setState(() {
                                                   FoundationTypeSelection =
@@ -1433,11 +1420,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText: BulkheadSelection ==
-                                                      0
+                                                          0
                                                       ? "Select another value"
                                                       : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "Bulkhead ? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1464,7 +1451,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _VisualBasementInspectionOtherController,
+                                                  _VisualBasementInspectionOtherController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1511,7 +1498,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         padding: const EdgeInsets.all(16),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
                                               "Customer Basement Evaluation",
@@ -1529,14 +1516,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  NoticedSmellsOrOdorsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      NoticedSmellsOrOdorsSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "1. Have you ever noticed smells/odors coming from the basement? *",
+                                                      "1. Have you ever noticed smells/odors coming from the basement? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1557,14 +1544,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              NoticedSmellsOrOdorsSelection,
+                                                  NoticedSmellsOrOdorsSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _NoticedSmellsCommentController,
+                                                  _NoticedSmellsCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1575,12 +1562,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _NoticedSmellsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _NoticedSmellsCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "1. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1594,14 +1581,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  NoticedMoldOrMildewSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      NoticedMoldOrMildewSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "2. Have you ever noticed mold/mildew on any item in the basement? *",
+                                                      "2. Have you ever noticed mold/mildew on any item in the basement? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1622,14 +1609,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              NoticedMoldOrMildewSelection,
+                                                  NoticedMoldOrMildewSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _NoticedMoldsCommentController,
+                                                  _NoticedMoldsCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1640,12 +1627,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _NoticedMoldsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _NoticedMoldsCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "2. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1659,14 +1646,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  BasementGoDownSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      BasementGoDownSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "3. How often do you go down in the basement? *",
+                                                      "3. How often do you go down in the basement? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1694,14 +1681,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  HomeSufferForRespiratoryProblemsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      HomeSufferForRespiratoryProblemsSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "4. Does anyone in the home suffer from respiratory problems? *",
+                                                      "4. Does anyone in the home suffer from respiratory problems? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1722,14 +1709,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              HomeSufferForRespiratoryProblemsSelection,
+                                                  HomeSufferForRespiratoryProblemsSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _SufferFromRespiratoryCommentController,
+                                                  _SufferFromRespiratoryCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1740,12 +1727,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _SufferFromRespiratoryCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _SufferFromRespiratoryCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "4. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1759,14 +1746,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  ChildrenPlayInBasementSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      ChildrenPlayInBasementSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "5. Do your children play in the basement? *",
+                                                      "5. Do your children play in the basement? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1787,14 +1774,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              ChildrenPlayInBasementSelection,
+                                                  ChildrenPlayInBasementSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _ChildrenPlayInTheBasementCommentController,
+                                                  _ChildrenPlayInTheBasementCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1805,12 +1792,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _ChildrenPlayInTheBasementCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _ChildrenPlayInTheBasementCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "5. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1824,14 +1811,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  ChildrenPlayInBasementSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      ChildrenPlayInBasementSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "6. Do you have pets that go in the basement? *",
+                                                      "6. Do you have pets that go in the basement? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1852,14 +1839,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              ChildrenPlayInBasementSelection,
+                                                  ChildrenPlayInBasementSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _HavePetsCommentController,
+                                                  _HavePetsCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1870,12 +1857,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _HavePetsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _HavePetsCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "6. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1889,14 +1876,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  NoticedBugsOrRodentsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      NoticedBugsOrRodentsSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "7. Have you ever noticed bugs/rodents in the basement? *",
+                                                      "7. Have you ever noticed bugs/rodents in the basement? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1917,14 +1904,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              NoticedBugsOrRodentsSelection,
+                                                  NoticedBugsOrRodentsSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _NoticedBugsCommentController,
+                                                  _NoticedBugsCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1935,12 +1922,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _NoticedBugsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _NoticedBugsCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "7. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -1954,13 +1941,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText: GetWaterSelection ==
-                                                      0
+                                                          0
                                                       ? "Select another value"
                                                       : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "8. Do you get water?* How high does the water level get?",
+                                                      "8. Do you get water?* How high does the water level get?",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -1986,7 +1973,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _GetWaterCommentController,
+                                                  _GetWaterCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1997,12 +1984,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _GetWaterCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _GetWaterCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "8. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -2016,7 +2003,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "9. How do you normally remove the water from basement?",
+                                                      "9. How do you normally remove the water from basement?",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2024,13 +2011,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                   isDense: true),
                                               items: List.generate(
                                                   RemoveWaterArray.length,
-                                                      (index) {
-                                                    return DropdownMenuItem(
-                                                        value: index,
-                                                        child: Text(
-                                                            RemoveWaterArray[index]
-                                                                .DisplayText));
-                                                  }),
+                                                  (index) {
+                                                return DropdownMenuItem(
+                                                    value: index,
+                                                    child: Text(
+                                                        RemoveWaterArray[index]
+                                                            .DisplayText));
+                                              }),
                                               onChanged: (index) {
                                                 setState(() {
                                                   RemoveWaterSelection = index;
@@ -2044,14 +2031,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  SeeCondensationPipesDrippingSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      SeeCondensationPipesDrippingSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "10. Do you ever see pipes dripping (condensation)? *",
+                                                      "10. Do you ever see pipes dripping (condensation)? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2072,14 +2059,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              SeeCondensationPipesDrippingSelection,
+                                                  SeeCondensationPipesDrippingSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _EverSeePipesDrippingCommentController,
+                                                  _EverSeePipesDrippingCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2090,12 +2077,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _EverSeePipesDrippingCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _EverSeePipesDrippingCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "10. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -2109,14 +2096,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  RepairsTryAndFixSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      RepairsTryAndFixSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "11. Have you done any repairs to try and fix these problems? *",
+                                                      "11. Have you done any repairs to try and fix these problems? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2143,7 +2130,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _AnyRepairsToTryAndFixCommentController,
+                                                  _AnyRepairsToTryAndFixCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2154,12 +2141,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _AnyRepairsToTryAndFixCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _AnyRepairsToTryAndFixCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "11. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -2173,13 +2160,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  LivingPlanSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      LivingPlanSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "12. How long do you plan on living here?* Are you planning to sell*",
+                                                      "12. How long do you plan on living here?* Are you planning to sell*",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2206,13 +2193,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  SellPlaningSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      SellPlaningSelection == 0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "12. How long do you plan on living here?* Are you planning to sell*",
+                                                      "12. How long do you plan on living here?* Are you planning to sell*",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2239,7 +2226,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   labelText:
-                                                  "13. What are your plans for the basement once it is dry?",
+                                                      "13. What are your plans for the basement once it is dry?",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2260,7 +2247,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              PlansForBasementOnceSelection,
+                                                  PlansForBasementOnceSelection,
                                             ),
                                             SizedBox(
                                               height: 8,
@@ -2268,14 +2255,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  HomeTestedForRadonSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
+                                                      HomeTestedForRadonSelection ==
+                                                              0
+                                                          ? "Select another value"
+                                                          : null,
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "14. Has your home been tested for radon in the past 2 years? *",
+                                                      "14. Has your home been tested for radon in the past 2 years? *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
                                                   hintStyle: customHintStyle(),
@@ -2296,14 +2283,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 });
                                               },
                                               value:
-                                              HomeTestedForRadonSelection,
+                                                  HomeTestedForRadonSelection,
                                             ),
                                             SizedBox(
                                               height: 4,
                                             ),
                                             new TextField(
                                               controller:
-                                              _TestedForRadonInThePast2YearsCommentController,
+                                                  _TestedForRadonInThePast2YearsCommentController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2314,12 +2301,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               style: customTextStyle(),
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  _TestedForRadonInThePast2YearsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
+                                                      _TestedForRadonInThePast2YearsCommentController
+                                                              .text.isNotEmpty
+                                                          ? null
+                                                          : "* Required",
                                                   errorStyle:
-                                                  customTextFieldErrorStyle(),
+                                                      customTextFieldErrorStyle(),
                                                   labelText: "14. Comment *",
                                                   labelStyle: customTextStyle(),
                                                   hintText: "e.g. hint",
@@ -2335,34 +2322,34 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               children: <Widget>[
                                                 Expanded(
                                                   child:
-                                                  DropdownButtonFormField(
+                                                      DropdownButtonFormField(
                                                     decoration: new InputDecoration(
                                                         errorText:
-                                                        LosePowerSelection == 0
-                                                            ? "Select another value"
-                                                            : null,
+                                                            LosePowerSelection == 0
+                                                                ? "Select another value"
+                                                                : null,
                                                         errorStyle:
-                                                        customTextFieldErrorStyle(),
+                                                            customTextFieldErrorStyle(),
                                                         labelText:
-                                                        "15. Do you lose power? *",
+                                                            "15. Do you lose power? *",
                                                         labelStyle:
-                                                        customTextStyle(),
+                                                            customTextStyle(),
                                                         hintText: "e.g. hint",
                                                         hintStyle:
-                                                        customHintStyle(),
+                                                            customHintStyle(),
                                                         alignLabelWithHint:
-                                                        false,
+                                                            false,
                                                         isDense: true),
                                                     items: List.generate(
                                                         LosePowerArray.length,
-                                                            (index) {
-                                                          return DropdownMenuItem(
-                                                              value: index,
-                                                              child: Text(
-                                                                  LosePowerArray[
-                                                                  index]
-                                                                      .DisplayText));
-                                                        }),
+                                                        (index) {
+                                                      return DropdownMenuItem(
+                                                          value: index,
+                                                          child: Text(
+                                                              LosePowerArray[
+                                                                      index]
+                                                                  .DisplayText));
+                                                    }),
                                                     onChanged: (index) {
                                                       setState(() {
                                                         LosePowerSelection =
@@ -2377,35 +2364,34 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                 ),
                                                 Expanded(
                                                   child:
-                                                  DropdownButtonFormField(
+                                                      DropdownButtonFormField(
                                                     decoration: new InputDecoration(
                                                         errorText:
-                                                        LosePowerHowOftenSelection ==
-                                                            0
-                                                            ? "Select another value"
-                                                            : null,
+                                                            LosePowerHowOftenSelection == 0
+                                                                ? "Select another value"
+                                                                : null,
                                                         errorStyle:
-                                                        customTextFieldErrorStyle(),
+                                                            customTextFieldErrorStyle(),
                                                         labelText:
-                                                        "If so how often? *",
+                                                            "If so how often? *",
                                                         labelStyle:
-                                                        customTextStyle(),
+                                                            customTextStyle(),
                                                         hintText: "e.g. hint",
                                                         hintStyle:
-                                                        customHintStyle(),
+                                                            customHintStyle(),
                                                         alignLabelWithHint:
-                                                        false,
+                                                            false,
                                                         isDense: true),
                                                     items: List.generate(
                                                         LosePowerArray.length,
-                                                            (index) {
-                                                          return DropdownMenuItem(
-                                                              value: index,
-                                                              child: Text(
-                                                                  LosePowerArray[
-                                                                  index]
-                                                                      .DisplayText));
-                                                        }),
+                                                        (index) {
+                                                      return DropdownMenuItem(
+                                                          value: index,
+                                                          child: Text(
+                                                              LosePowerArray[
+                                                                      index]
+                                                                  .DisplayText));
+                                                    }),
                                                     onChanged: (index) {
                                                       setState(() {
                                                         LosePowerHowOftenSelection =
@@ -2413,7 +2399,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                                       });
                                                     },
                                                     value:
-                                                    LosePowerHowOftenSelection,
+                                                        LosePowerHowOftenSelection,
                                                   ),
                                                 ),
                                               ],
@@ -2423,7 +2409,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             ),
                                             new TextField(
                                               controller:
-                                              _BasementEvaluationOtherController,
+                                                  _BasementEvaluationOtherController,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2469,7 +2455,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         padding: const EdgeInsets.all(16),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Container(
@@ -2486,7 +2472,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                               obscureText: false,
                                               cursorColor: Colors.black,
                                               keyboardType:
-                                              TextInputType.multiline,
+                                                  TextInputType.multiline,
                                               maxLines: null,
                                               minLines: 3,
                                               style: customTextStyle(),
@@ -2586,15 +2572,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Key':
-      'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
+          'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
     };
 
     var url = "https://api.rmrcloud.com/GetLookupbyKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['datalist'];
-      List<DropDownSingleItem> _lists =
-      List.generate(map.length, (index) {
+      List<DropDownSingleItem> _lists = List.generate(map.length, (index) {
         return DropDownSingleItem.fromMap(map[index]);
       });
 
@@ -2649,6 +2634,138 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     var url = "https://api.rmrcloud.com/GetCustomerInspectionByCustomerId";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
+      var map = json.decode(result.body);
+      widget.basementInspection =
+          BasementInspection.fromMap(map['CustomerInspectionList']);
+      try {
+        CurrentOutsideConditionsSelection = checkIndex(
+            map['CustomerInspectionList']['CurrentOutsideConditions'],
+            CurrentOutsideConditionsArray);
+        HeatSelection =
+            checkIndex(map['CustomerInspectionList']['Heat'], HeatArray);
+        AirSelection =
+            checkIndex(map['CustomerInspectionList']['Air'], AirArray);
+        BasementDehumidifierSelection = checkIndex(
+            map['CustomerInspectionList']['BasementDehumidifier'],
+            BasementDehumidifierArray);
+        GroundWaterSelection = checkIndex(
+            map['CustomerInspectionList']['GroundWater'], YesNoArray);
+        GroundWaterRatingSelection = checkIndex(
+            map['CustomerInspectionList']['GroundWaterRating'], RatingArray);
+        IronBacteriaSelection = checkIndex(
+            map['CustomerInspectionList']['IronBacteria'], YesNoArray);
+        IronBacteriaRatingSelection = checkIndex(
+            map['CustomerInspectionList']['IronBacteriaRating'], RatingArray);
+        CondensationSelection = checkIndex(
+            map['CustomerInspectionList']['Condensation'], YesNoArray);
+        CondensationRatingSelection = checkIndex(
+            map['CustomerInspectionList']['CondensationRating'], RatingArray);
+        WallCracksSelection =
+            checkIndex(map['CustomerInspectionList']['WallCracks'], YesNoArray);
+        WallCracksRatingSelection = checkIndex(
+            map['CustomerInspectionList']['WallCracksRating'], RatingArray);
+        FloorCracksSelection = checkIndex(
+            map['CustomerInspectionList']['FloorCracks'], YesNoArray);
+        FloorCracksRatingSelection = checkIndex(
+            map['CustomerInspectionList']['FloorCracksRating'], RatingArray);
+        ExistingSumpPumpSelection = checkIndex(
+            map['CustomerInspectionList']['ExistingSumpPump'], YesNoArray);
+        ExistingDrainageSystemSelection = checkIndex(
+            map['CustomerInspectionList']['ExistingDrainageSystem'],
+            YesNoArray);
+        ExistingRadonSystemSelection = checkIndex(
+            map['CustomerInspectionList']['ExistingRadonSystem'], YesNoArray);
+        DryerVentToCodeSelection = checkIndex(
+            map['CustomerInspectionList']['DryerVentToCode'], YesNoArray);
+        FoundationTypeSelection = checkIndex(
+            map['CustomerInspectionList']['FoundationType'],
+            FoundationTypeArray);
+        BulkheadSelection =
+            checkIndex(map['CustomerInspectionList']['Bulkhead'], YesNoArray);
+        NoticedSmellsOrOdorsSelection = checkIndex(
+            map['CustomerInspectionList']['NoticedSmellsOrOdors'], YesNoArray);
+        NoticedMoldOrMildewSelection = checkIndex(
+            map['CustomerInspectionList']['NoticedMoldOrMildew'], YesNoArray);
+        BasementGoDownSelection = checkIndex(
+            map['CustomerInspectionList']['BasementGoDown'], YesNoArray);
+        HomeSufferForRespiratoryProblemsSelection = checkIndex(
+            map['CustomerInspectionList']['HomeSufferForRespiratory'],
+            YesNoArray);
+        ChildrenPlayInBasementSelection = checkIndex(
+            map['CustomerInspectionList']['ChildrenPlayInBasement'],
+            YesNoArray);
+        PetsGoInBasementSelection = checkIndex(
+            map['CustomerInspectionList']['PetsGoInBasement'], YesNoArray);
+        NoticedBugsOrRodentsSelection = checkIndex(
+            map['CustomerInspectionList']['NoticedBugsOrRodents'], YesNoArray);
+        GetWaterSelection =
+            checkIndex(map['CustomerInspectionList']['GetWater'], YesNoArray);
+        RemoveWaterSelection = checkIndex(
+            map['CustomerInspectionList']['RemoveWater'], YesNoArray);
+        SeeCondensationPipesDrippingSelection = checkIndex(
+            map['CustomerInspectionList']['SeeCondensationPipesDripping'],
+            YesNoArray);
+        RepairsTryAndFixSelection = checkIndex(
+            map['CustomerInspectionList']['RepairsProblems'], YesNoArray);
+        LivingPlanSelection =
+            checkIndex(map['CustomerInspectionList']['LivingPlan'], YesNoArray);
+        SellPlaningSelection = checkIndex(
+            map['CustomerInspectionList']['SellPlaning'], YesNoArray);
+        PlansForBasementOnceSelection = checkIndex(
+            map['CustomerInspectionList']['PlansForBasementOnce'], YesNoArray);
+        HomeTestedForRadonSelection = checkIndex(
+            map['CustomerInspectionList']['HomeTestForPastRadon'], YesNoArray);
+        LosePowerSelection = checkIndex(
+            map['CustomerInspectionList']['HomeTestForPastRadon'],
+            LosePowerArray);
+        LosePowerHowOftenSelection = checkIndex(
+            map['CustomerInspectionList']['LosePowerHowOften'],
+            LosePowerHowOftenArray);
+        _OutsideRelativeHumidityController.text =
+            map['CustomerInspectionList']['OutsideRelativeHumidity'];
+        _OutsideTemperatureController.text =
+            map['CustomerInspectionList']['OutsideTemperature'];
+        _1stFloorRelativeHumidityController.text =
+            map['CustomerInspectionList']['FirstFloorRelativeHumidity'];
+        _1stFloorTemperatureController.text =
+            map['CustomerInspectionList']['FirstFloorTemperature'];
+        _BasementRelativeHumidityController.text =
+            map['CustomerInspectionList']['BasementRelativeHumidity'];
+        _BasementTemperatureController.text =
+            map['CustomerInspectionList']['BasementTemperature'];
+        _Other1Controller.text =
+            map['CustomerInspectionList']['RelativeOther1'];
+        _Other2Controller.text =
+            map['CustomerInspectionList']['RelativeOther2'];
+        _VisualBasementInspectionOtherController.text =
+            map['CustomerInspectionList']['VisualBasementOther'];
+        _NoticedSmellsCommentController.text =
+            map['CustomerInspectionList']['NoticedSmellsOrOdorsComment'];
+        _NoticedMoldsCommentController.text =
+            map['CustomerInspectionList']['NoticedMoldOrMildewComment'];
+        _SufferFromRespiratoryCommentController.text =
+            map['CustomerInspectionList']['HomeSufferForrespiratoryComment'];
+        _ChildrenPlayInTheBasementCommentController.text =
+            map['CustomerInspectionList']['ChildrenPlayInBasementComment'];
+        _HavePetsCommentController.text =
+            map['CustomerInspectionList']['PetsGoInBasementComment'];
+        _NoticedBugsCommentController.text =
+            map['CustomerInspectionList']['NoticedBugsOrRodentsComment'];
+        _GetWaterCommentController.text =
+            map['CustomerInspectionList']['GetWaterComment'];
+        _EverSeePipesDrippingCommentController.text =
+            map['CustomerInspectionList']['SeeCondensationPipesDrippingComment'];
+        _AnyRepairsToTryAndFixCommentController.text =
+            map['CustomerInspectionList']['RepairsProblemsComment'];
+        _TestedForRadonInThePast2YearsCommentController.text =
+            map['CustomerInspectionList']['HomeTestForPastRadonComment'];
+        _BasementEvaluationOtherController.text =
+            map['CustomerInspectionList']['CustomerBasementOther'];
+        _NotesController.text =
+            map['CustomerInspectionList']['Notes'];
+      } catch (error) {
+        print(error);
+      }
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
@@ -2820,4 +2937,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     //if(resultStatus) widget.backToCustomerDetailsFromEstimate(widget.customer);
   }
 
+  int checkIndex(String _text, List<DropDownSingleItem> _list) {
+    int counter = 0;
+    for (DropDownSingleItem _item in _list) {
+      if (_item.DisplayText == _text) {
+        return counter;
+      } else {
+        counter++;
+      }
+    }
+  }
 }

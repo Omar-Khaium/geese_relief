@@ -84,7 +84,7 @@ class _LogInUIState extends State<LogInUI> {
       'grant_type': 'password'
     };
 
-    var url = 'http://api.rmrcloud.com/token';
+    var url = 'https://api.rmrcloud.com/token';
     try {
       http.post(url, body: data).then((response) {
         if (response.statusCode == 200) {
@@ -469,7 +469,7 @@ class _LogInUIState extends State<LogInUI> {
       'username': login.username
     };
 
-    var url = "http://api.rmrcloud.com/GetUserByUserName";
+    var url = "https://api.rmrcloud.com/GetUserByUserName";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       loggedInUser = LoggedInUser.fromMap(json.decode(result.body));

@@ -14,6 +14,7 @@ import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
 import 'package:flutter_grate_app/ui/fragment_logout.dart';
 import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
+import 'package:flutter_grate_app/ui/fragment_update_basement_report.dart';
 import 'package:flutter_grate_app/widgets/MediaPlayer.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -92,7 +93,7 @@ class _DashboardUIState extends State<DashboardUI>
         customerID: customerID,
         goToAddEstimate: _goToAddEstimate,
         goToUpdateEstimate: _goToUpdateEstimate,
-        goToBasementReport: _goToBasementInspectionReport,);
+        goToAddBasementReport: _goToBasementInspectionReport,);
     });
   }
 
@@ -124,13 +125,23 @@ class _DashboardUIState extends State<DashboardUI>
         customerID: customer.Id,
         goToAddEstimate: _goToAddEstimate,
         goToUpdateEstimate: _goToUpdateEstimate,
-        goToBasementReport: _goToBasementInspectionReport,);
+        goToAddBasementReport: _goToBasementInspectionReport,
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,);
     });
   }
 
   _goToBasementInspectionReport(CustomerDetails customer) {
     setState(() {
       fragment = AddBasementReportFragment(
+          login: widget.login,
+          loggedInUser: widget.loggedInUser,
+          backToCustomerDetails: _backToCustomerDetails,
+          customer: customer);
+    });
+  }
+  _goToUpdateBasementInspectionReport(CustomerDetails customer) {
+    setState(() {
+      fragment = UpdateBasementReportFragment(
           login: widget.login,
           loggedInUser: widget.loggedInUser,
           backToCustomerDetails: _backToCustomerDetails,
@@ -163,7 +174,8 @@ class _DashboardUIState extends State<DashboardUI>
       fragment = new CustomerDetailsFragment(login: widget.login,
         backToDashboard: _backToDashboard,
         customerID: customerID,
-        goToBasementReport: _goToBasementInspectionReport,
+        goToAddBasementReport: _goToBasementInspectionReport,
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
         goToAddEstimate: _goToAddEstimate,
         goToUpdateEstimate: _goToUpdateEstimate,
         goToRecommendedLevel: _goToAddRecommendedLevel,

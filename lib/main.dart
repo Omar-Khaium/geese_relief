@@ -8,7 +8,7 @@ import 'package:flutter_grate_app/widgets/widget_recommended_level_label.dart';
 void main() {
   runApp(
     new MaterialApp(
-      home: new RecommendedLevelCard(),
+      home: new LauncherUI(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.blueGrey.shade900

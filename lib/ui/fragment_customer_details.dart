@@ -23,7 +23,8 @@ class CustomerDetailsFragment extends StatefulWidget {
   final Login login;
   final String customerID;
   final ValueChanged<int> backToDashboard;
-  final ValueChanged<CustomerDetails> goToBasementReport;
+  final ValueChanged<CustomerDetails> goToAddBasementReport;
+  final ValueChanged<CustomerDetails> goToUpdateBasementReport;
   final ValueChanged<CustomerDetails> goToAddEstimate;
   final ValueChanged<CustomerDetails> goToUpdateEstimate;
   final ValueChanged<CustomerDetails> goToRecommendedLevel;
@@ -36,7 +37,8 @@ class CustomerDetailsFragment extends StatefulWidget {
       this.customerID,
       this.customer,
       this.backToDashboard,
-      this.goToBasementReport,
+      this.goToAddBasementReport,
+      this.goToUpdateBasementReport,
       this.goToAddEstimate,
       this.goToUpdateEstimate,
       this.goToRecommendedLevel,
@@ -417,8 +419,15 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               elevation: 8,
                                               onPressed: () {
-                                                widget.goToBasementReport(
-                                                    widget.customer);
+                                                if(widget.customer.HasInspectionReport){
+                                                  widget.goToUpdateBasementReport(
+                                                      widget.customer);
+                                                }
+                                                else{
+                                                  widget.goToAddBasementReport(
+                                                      widget.customer);
+                                                }
+
                                               },
                                               color: Colors.black,
                                               child: Padding(
@@ -765,7 +774,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       'PageSize': '10',
     };
 
-    var url = "http://api.rmrcloud.com/GetCustomerByIdWithEstimateList";
+    var url = "https://api.rmrcloud.com/GetCustomerByIdWithEstimateList";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       return result;
@@ -786,7 +795,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       "filepath": _base64Image
     };
 
-    var url = "http://api.rmrcloud.com/CustomerImageUpload";
+    var url = "https://api.rmrcloud.com/CustomerImageUpload";
     http.post(url, headers: headers, body: body).then((response) {
       try {
         if (response.statusCode == 200) {
@@ -809,7 +818,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         'EstimateId': _list[index].Id,
         'CompanyId': widget.loggedInUser.CompanyGUID,
       };
-      var url = "http://api.rmrcloud.com/EstimateDuplicate";
+      var url = "https://api.rmrcloud.com/EstimateDuplicate";
       var result = await http.post(url, headers: headers);
       if (result.statusCode == 200) {
         Map map = json.decode(result.body);
@@ -939,7 +948,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       'EstimateId': _list[index].Id
     };
 
-    var url = "http://api.rmrcloud.com/DeleteEstimate";
+    var url = "https://api.rmrcloud.com/DeleteEstimate";
     var result = await http.delete(url, headers: headers);
     return json.decode(result.body)['result'];
   }

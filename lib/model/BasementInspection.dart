@@ -5,27 +5,27 @@ class BasementInspection{
   String CompanyId;
   String CustomerId;
   String CurrentOutsideConditions;
-  String OutsideRelativeHumidity;
-  String OutsideTemperature;
-  String FirstFloorRelativeHumidity;
-  String FirstFloorTemperature;
+  double OutsideRelativeHumidity;
+  double OutsideTemperature;
+  double FirstFloorRelativeHumidity;
+  double FirstFloorTemperature;
   String RelativeOther1;
   String RelativeOther2;
   String Heat;
   String Air;
-  String BasementRelativeHumidity;
-  String BasementTemperature;
+  double BasementRelativeHumidity;
+  double BasementTemperature;
   String BasementDehumidifier;
   String GroundWater;
-  String GroundWaterRating;
+  int GroundWaterRating;
   String IronBacteria;
-  String IronBacteriaRating;
+  int IronBacteriaRating;
   String Condensation;
-  String CondensationRating;
+  int CondensationRating;
   String WallCracks;
-  String WallCracksRating;
+  int WallCracksRating;
   String FloorCracks;
-  String FloorCracksRating;
+  int FloorCracksRating;
   String ExistingSumpPump;
   String ExistingDrainageSystem;
   String ExistingRadonSystem;
@@ -113,42 +113,48 @@ class BasementInspection{
       this.InspectionPhoto);
 
   BasementInspection.fromMap(Map<String ,dynamic> map){
-    Id=map['Id'].toString();
-    CompanyId=map['CompanyId'];
-    OutsideRelativeHumidity=map['OutsideRelativeHumidity'];
-    FirstFloorTemperature=map['FirstFloorTemperature'];
-    RelativeOther1=map['RelativeOther1'];
-    RelativeOther2=map['RelativeOther2'];
-    BasementRelativeHumidity=map['BasementRelativeHumidity'];
-    BasementTemperature=map['BasementTemperature'];
-    GroundWaterRating=map['GroundWaterRating'];
-    IronBacteria=map['IronBacteria'];
-    WallCracks=map['WallCracks'];
-    ExistingDrainageSystem=map['ExistingDrainageSystem'];
-    FoundationType=map['FoundationType'];
-    Bulkhead=map['Bulkhead'];
-    VisualBasementOther=map['VisualBasementOther'];
-    NoticedSmellsOrOdors=map['NoticedSmellsOrOdors'];
-    NoticedSmellsOrOdorsComment=map['NoticedSmellsOrOdorsComment'];
-    NoticedMoldOrMildewComment=map['NoticedMoldOrMildewComment'];
-    BasementGoDown=map['BasementGoDown'];
-    HomeSufferForrespiratoryComment=map['HomeSufferForrespiratoryComment'];
-    ChildrenPlayInBasement=map['ChildrenPlayInBasement'];
-    ChildrenPlayInBasementComment=map['ChildrenPlayInBasementComment'];
-    NoticedBugsOrRodentsComment=map['NoticedBugsOrRodentsComment'];
-    GetWaterComment=map['GetWaterComment'];
-    SeeCondensationPipesDrippingComment=map['SeeCondensationPipesDrippingComment'];
-    LivingPlan=map['LivingPlan'];
-    SellPlaning=map['SellPlaning'];
-    PlansForBasementOnce=map['PlansForBasementOnce'];
-    HomeTestForPastRadonComment=map['HomeTestForPastRadonComment'];
-    LosePowerHowOften=map['LosePowerHowOften'];
-    Drawing=map['Drawing'];
-    Notes=map['Notes'];
-    PMSignature=map['PMSignature'];
-    HomeOwnerSignature=map['HomeOwnerSignature'];
-    CreatedBy=map['CreatedBy'];
-    InspectionPhoto=map['InspectionPhoto'];
+    try {
+      Id = map['Id'].toString();
+      CompanyId = map['CompanyId'];
+      OutsideRelativeHumidity = map['OutsideRelativeHumidity'];
+      FirstFloorTemperature = map['FirstFloorTemperature'];
+      RelativeOther1 = map['RelativeOther1'];
+      RelativeOther2 = map['RelativeOther2'];
+      BasementRelativeHumidity = map['BasementRelativeHumidity'];
+      BasementTemperature = map['BasementTemperature'];
+      GroundWaterRating = map['GroundWaterRating'];
+      IronBacteria = map['IronBacteria'];
+      WallCracks = map['WallCracks'];
+      ExistingDrainageSystem = map['ExistingDrainageSystem'];
+      FoundationType = map['FoundationType'];
+      Bulkhead = map['Bulkhead'];
+      VisualBasementOther = map['VisualBasementOther'];
+      NoticedSmellsOrOdors = map['NoticedSmellsOrOdors'];
+      NoticedSmellsOrOdorsComment = map['NoticedSmellsOrOdorsComment'];
+      NoticedMoldOrMildewComment = map['NoticedMoldOrMildewComment'];
+      BasementGoDown = map['BasementGoDown'];
+      HomeSufferForrespiratoryComment = map['HomeSufferForrespiratoryComment'];
+      ChildrenPlayInBasement = map['ChildrenPlayInBasement'];
+      ChildrenPlayInBasementComment = map['ChildrenPlayInBasementComment'];
+      NoticedBugsOrRodentsComment = map['NoticedBugsOrRodentsComment'];
+      GetWaterComment = map['GetWaterComment'];
+      SeeCondensationPipesDrippingComment =
+      map['SeeCondensationPipesDrippingComment'];
+      LivingPlan = map['LivingPlan'];
+      SellPlaning = map['SellPlaning'];
+      PlansForBasementOnce = map['PlansForBasementOnce'];
+      HomeTestForPastRadonComment = map['HomeTestForPastRadonComment'];
+      LosePowerHowOften = map['LosePowerHowOften'];
+      Drawing = map['Drawing'];
+      Notes = map['Notes'];
+      PMSignature = map['PMSignature'];
+      HomeOwnerSignature = map['HomeOwnerSignature'];
+      CreatedBy = map['CreatedBy'];
+      InspectionPhoto = map['InspectionPhoto'];
+    }
+    catch(error){
+      print(error);
+    }
 
   }
 

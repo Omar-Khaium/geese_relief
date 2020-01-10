@@ -24,7 +24,7 @@ class ForgetPasswordUIState extends State<ForgetPasswordUI> {
       'grant_type': 'password'
     };
 
-    var url = 'http://api.rmrcloud.com/token';
+    var url = 'https://api.rmrcloud.com/token';
     http.post(url, body: data).then((response) {
       if (response.statusCode == 200) {
         Map map = json.decode(response.body);

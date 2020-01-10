@@ -55,7 +55,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
 
   var items = ['Type', 'One', 'Two', 'Three'];
   var currentItemSelected = 'Type';
-  var url = 'http://api.rmrcloud.com/SaveCustomer';
+  var url = 'https://api.rmrcloud.com/SaveCustomer';
 
   static String ACCESS_TOKEN = "";
 
@@ -662,7 +662,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       'Key': 'CustomerType'
     };
 
-    var url = "http://api.rmrcloud.com/GetLookupbyKey";
+    var url = "https://api.rmrcloud.com/GetLookupbyKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       return result;
