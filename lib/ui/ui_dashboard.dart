@@ -150,7 +150,6 @@ class _DashboardUIState extends State<DashboardUI>
           customer: customer);
     });
   }
-
   _goToAddRecommendedLevel(CustomerDetails customer) {
     setState(() {
       fragment = RecommendedLevel(
