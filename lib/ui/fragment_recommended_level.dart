@@ -11,10 +11,10 @@ import 'package:flutter_grate_app/widgets/data.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 
 class RecommendedLevel extends StatefulWidget {
-  Login login;
-  LoggedInUser loggedInUser;
-  CustomerDetails customer;
-  ValueChanged<CustomerDetails> backToCustomerDetails;
+  final Login login;
+  final LoggedInUser loggedInUser;
+  final CustomerDetails customer;
+  final ValueChanged<CustomerDetails> backToCustomerDetails;
 
   RecommendedLevel(
       {Key key,
@@ -28,15 +28,15 @@ class RecommendedLevel extends StatefulWidget {
   _RecommendedLevelState createState() => new _RecommendedLevelState();
 }
 
-var cardAspectRatio = 12.0 / 16.0;
-var widgetAspectRatio = cardAspectRatio * 1.2;
+var cardAspectRatio = 1.00;
+var widgetAspectRatio = cardAspectRatio * 1.15;
 
 class _RecommendedLevelState extends State<RecommendedLevel> {
-  var currentPage = images.length - 1.0;
+  var currentPage = recommendations.length - 1.0;
 
   @override
   Widget build(BuildContext context) {
-    PageController controller = PageController(initialPage: images.length - 1);
+    PageController controller = PageController(initialPage: recommendations.length - 1);
     controller.addListener(() {
       setState(() {
         currentPage = controller.page;
@@ -74,11 +74,12 @@ class _RecommendedLevelState extends State<RecommendedLevel> {
                     width: MediaQuery.of(context).size.width * .5,
                     height: MediaQuery.of(context).size.height * .75,
                     child: Stack(
+                      alignment: Alignment.center,
                       children: <Widget>[
                         CardScrollWidget(currentPage),
                         Positioned.fill(
                           child: PageView.builder(
-                            itemCount: images.length,
+                            itemCount: recommendations.length,
                             controller: controller,
                             reverse: true,
                             itemBuilder: (context, index) {
@@ -137,7 +138,7 @@ class _CardScrollWidgetState extends State<CardScrollWidget> {
 
         List<Widget> cardList = new List();
 
-        for (var i = 0; i < images.length; i++) {
+        for (var i = 0; i < recommendations.length; i++) {
           var delta = i - widget.currentPage;
           bool isOnRight = delta > 0;
 
@@ -164,53 +165,15 @@ class _CardScrollWidgetState extends State<CardScrollWidget> {
                   decoration: BoxDecoration(color: Colors.white, boxShadow: [
                     BoxShadow(
                         color: Colors.black12,
-                        offset: Offset(3.0, 6.0),
-                        blurRadius: 10.0)
+                        offset: Offset(0, 0),
+                        blurRadius: 16.0)
                   ]),
                   child: AspectRatio(
                     aspectRatio: cardAspectRatio,
                     child: Stack(
                       fit: StackFit.expand,
                       children: <Widget>[
-                        GestureDetector(
-                            onTap: () {
-                              print("pressed");
-                            },
-                            child: Image.asset(images[i], fit: BoxFit.cover)),
-                        Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 12.0, bottom: 12.0),
-                              child: GestureDetector(
-                                child: Container(
-                                  height: 44,
-                                  width: 126,
-                                  alignment: Alignment.center,
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 22.0, vertical: 6.0),
-                                  decoration: BoxDecoration(
-                                      color: Colors.blueAccent,
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                  child: Text(
-                                    "View Details",
-                                    style: new TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                onTap: () {
-                                  /* setState(() {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              new RecommendedLevelDetails(),
-                                        ));
-                                  });*/
-                                  print("pressed");
-                                },
-                              ),
-                            ))
+                        recommendations[i],
                       ],
                     ),
                   ),

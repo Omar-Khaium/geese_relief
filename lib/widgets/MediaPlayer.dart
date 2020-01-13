@@ -4,8 +4,9 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
 
+  String url;
 
-  VideoPlayerScreen({Key key}) : super(key: key);
+  VideoPlayerScreen({Key key, this.url}) : super(key: key);
 
   @override
   _VideoPlayerScreenState createState() => _VideoPlayerScreenState();
@@ -18,7 +19,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   void initState() {
     _controller = VideoPlayerController.asset(
-      'images/video.mp4',
+      widget.url,
     );
 
     // Initialize the controller and store the Future for later use.

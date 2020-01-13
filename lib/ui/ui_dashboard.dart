@@ -94,7 +94,9 @@ class _DashboardUIState extends State<DashboardUI>
         customerID: customer.Id,
         customer: customer,
         goToAddEstimate: _goToAddEstimate,
+        goToRecommendedLevel: _goToAddRecommendedLevel,
         goToUpdateEstimate: _goToUpdateEstimate,
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
         goToAddBasementReport: _goToBasementInspectionReport,);
     });
   }
