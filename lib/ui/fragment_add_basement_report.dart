@@ -25,7 +25,7 @@ class AddBasementReportFragment extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
   CustomerDetails customer;
-  ValueChanged<String> backToCustomerDetails;
+  ValueChanged<CustomerDetails> backToCustomerDetails;
   BasementInspection basementInspection;
 
   AddBasementReportFragment({Key key,
@@ -320,7 +320,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
             child: Row(
               children: <Widget>[
                 CustomBackButton(
-                  onTap: () => widget.backToCustomerDetails(widget.customer.Id),
+                  onTap: () => widget.backToCustomerDetails(widget.customer),
                 ),
                 SizedBox(
                   width: 16,

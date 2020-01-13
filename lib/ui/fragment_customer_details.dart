@@ -248,7 +248,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                         return Estimate.fromMap(estimateMap[index]);
                       });
                     }
-                    widget.customer = CustomerDetails.fromMap(map);
                     try {
                       return Column(
                         children: <Widget>[
@@ -777,6 +776,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     var url = "https://api.rmrcloud.com/GetCustomerByIdWithEstimateList";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
+      widget.customer = CustomerDetails.fromMap(json.decode(result.body));
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

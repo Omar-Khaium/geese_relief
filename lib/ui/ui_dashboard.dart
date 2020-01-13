@@ -86,11 +86,13 @@ class _DashboardUIState extends State<DashboardUI>
     });
   }
 
-  _backToCustomerDetails(String customerID) {
+  _backToCustomerDetails(CustomerDetails customer) {
     setState(() {
       fragment = new CustomerDetailsFragment(login: widget.login,
+        loggedInUser: widget.loggedInUser,
         backToDashboard: _backToDashboard,
-        customerID: customerID,
+        customerID: customer.Id,
+        customer: customer,
         goToAddEstimate: _goToAddEstimate,
         goToUpdateEstimate: _goToUpdateEstimate,
         goToAddBasementReport: _goToBasementInspectionReport,);
@@ -154,18 +156,8 @@ class _DashboardUIState extends State<DashboardUI>
       fragment = RecommendedLevel(
           login: widget.login,
           loggedInUser: widget.loggedInUser,
-          goToRecommendedLevelDetails: _goToAddRecommendedLevelDetails(2),
           backToCustomerDetails: _backToCustomerDetails,
           customer: customer);
-    });
-  }
-  _goToAddRecommendedLevelDetails(int index) {
-    setState(() {
-      fragment = RecommendedLevelDetails(
-          login: widget.login,
-          loggedInUser: widget.loggedInUser,
-          backToRecommendedLevel: _backToCustomerDetails,
-          index : index);
     });
   }
 

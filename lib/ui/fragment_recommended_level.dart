@@ -1,28 +1,27 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
+import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/data.dart';
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter_grate_app/widgets/text_style.dart';
 
 class RecommendedLevel extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
   CustomerDetails customer;
-  ValueChanged<String> backToCustomerDetails;
-  ValueChanged<RecommendedLevel> goToRecommendedLevelDetails;
+  ValueChanged<CustomerDetails> backToCustomerDetails;
 
   RecommendedLevel(
       {Key key,
-        this.login,
-        this.loggedInUser,
-        this.customer,
-        this.goToRecommendedLevelDetails,
-        this.backToCustomerDetails})
+      this.login,
+      this.loggedInUser,
+      this.customer,
+      this.backToCustomerDetails})
       : super(key: key);
 
   @override
@@ -45,44 +44,62 @@ class _RecommendedLevelState extends State<RecommendedLevel> {
     });
 
     return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [
-            Color(0xFF1b1e44),
-            Color(0xFF2d3447),
-          ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              tileMode: TileMode.clamp)),
-      child: Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width * .5,
-                  height: MediaQuery.of(context).size.height * .75,
-                  child: Stack(
-                    children: <Widget>[
-                      CardScrollWidget(currentPage),
-                      Positioned.fill(
-                        child: PageView.builder(
-                          itemCount: images.length,
-                          controller: controller,
-                          reverse: true,
-                          itemBuilder: (context, index) {
-                            return Container();
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      margin: EdgeInsets.only(top: 16, left: 32, right: 32),
+      child: Column(children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Row(
+            children: <Widget>[
+              CustomBackButton(
+                onTap: () => widget.backToCustomerDetails(widget.customer),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Text("Customer Details", style: fragmentTitleStyle()),
+            ],
           ),
         ),
-      ),
+        SizedBox(
+          height: 24,
+        ),
+        Expanded(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * .5,
+                    height: MediaQuery.of(context).size.height * .75,
+                    child: Stack(
+                      children: <Widget>[
+                        CardScrollWidget(currentPage),
+                        Positioned.fill(
+                          child: PageView.builder(
+                            itemCount: images.length,
+                            controller: controller,
+                            reverse: true,
+                            itemBuilder: (context, index) {
+                              return InkWell(child: Container(), onTap: ()=>Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                    new RecommendedLevelDetails(loggedInUser: widget.loggedInUser, login:  widget.login, index: index,customer: widget.customer,),
+                                  )),);
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ]),
     );
   }
 }
@@ -135,48 +152,67 @@ class _CardScrollWidgetState extends State<CardScrollWidget> {
             bottom: padding + verticalInset * max(-delta, 0.0),
             start: start,
             textDirection: TextDirection.rtl,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black12,
-                      offset: Offset(3.0, 6.0),
-                      blurRadius: 10.0)
-                ]),
-                child: AspectRatio(
-                  aspectRatio: cardAspectRatio,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Image.asset(images[i], fit: BoxFit.cover),
-                      Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.only(left: 12.0, bottom: 12.0),
-                            child: InkWell(
-                              child: Container(
-                                height: 44,
-                                width: 126,
-                                alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 22.0, vertical: 6.0),
-                                decoration: BoxDecoration(
-                                    color: Colors.blueAccent,
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                child: Text("View Details",style: new TextStyle(color: Colors.white),),
+            child: InkWell(
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => new RecommendedLevelDetails(),
+                  )),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black12,
+                        offset: Offset(3.0, 6.0),
+                        blurRadius: 10.0)
+                  ]),
+                  child: AspectRatio(
+                    aspectRatio: cardAspectRatio,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        GestureDetector(
+                            onTap: () {
+                              print("pressed");
+                            },
+                            child: Image.asset(images[i], fit: BoxFit.cover)),
+                        Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 12.0, bottom: 12.0),
+                              child: GestureDetector(
+                                child: Container(
+                                  height: 44,
+                                  width: 126,
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 22.0, vertical: 6.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.blueAccent,
+                                      borderRadius:
+                                          BorderRadius.circular(20.0)),
+                                  child: Text(
+                                    "View Details",
+                                    style: new TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                onTap: () {
+                                  /* setState(() {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              new RecommendedLevelDetails(),
+                                        ));
+                                  });*/
+                                  print("pressed");
+                                },
                               ),
-                              onTap: (){
-                                setState(() {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) => new RecommendedLevelDetails(),
-                                  ));
-                                });
-                              },
-                            ),
-                          ))
-                    ],
+                            ))
+                      ],
+                    ),
                   ),
                 ),
               ),

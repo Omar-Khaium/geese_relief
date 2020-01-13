@@ -23,16 +23,14 @@ class UpdateBasementReportFragment extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
   CustomerDetails customer;
-  ValueChanged<String> backToCustomerDetails;
+  ValueChanged<CustomerDetails> backToCustomerDetails;
   BasementInspection basementInspection;
-  bool isOnAddMode;
 
   UpdateBasementReportFragment(
       {Key key,
       this.login,
       this.loggedInUser,
       this.customer,
-      @required this.isOnAddMode,
       this.backToCustomerDetails})
       : super(key: key);
 
@@ -315,7 +313,7 @@ class _UpdateBasementReportFragmentState
             child: Row(
               children: <Widget>[
                 CustomBackButton(
-                  onTap: () => widget.backToCustomerDetails(widget.customer.Id),
+                  onTap: () => widget.backToCustomerDetails(widget.customer),
                 ),
                 SizedBox(
                   width: 16,
@@ -2540,8 +2538,11 @@ class _UpdateBasementReportFragmentState
                                   ),
                                 );
                               }
-                            } else {
-                              return Container();
+                            }
+                            else {
+                              return Center(
+                                child: Text("Loading"),
+                              );
                             }
                           } catch (error) {
                             return Center(
@@ -2651,88 +2652,87 @@ class _UpdateBasementReportFragmentState
         GroundWaterSelection = checkIndex(
             map['CustomerInspectionList']['GroundWater'], YesNoArray);
         GroundWaterRatingSelection = checkIndex(
-            map['CustomerInspectionList']['GroundWaterRating'], RatingArray);
+            map['CustomerInspectionList']['GroundWaterRating'].toString(), RatingArray);
         IronBacteriaSelection = checkIndex(
-            map['CustomerInspectionList']['IronBacteria'], YesNoArray);
+            map['CustomerInspectionList']['IronBacteria'].toString(), YesNoArray);
         IronBacteriaRatingSelection = checkIndex(
-            map['CustomerInspectionList']['IronBacteriaRating'], RatingArray);
+            map['CustomerInspectionList']['IronBacteriaRating'].toString(), RatingArray);
         CondensationSelection = checkIndex(
-            map['CustomerInspectionList']['Condensation'], YesNoArray);
+            map['CustomerInspectionList']['Condensation'].toString(), YesNoArray);
         CondensationRatingSelection = checkIndex(
-            map['CustomerInspectionList']['CondensationRating'], RatingArray);
+            map['CustomerInspectionList']['CondensationRating'].toString(), RatingArray);
         WallCracksSelection =
-            checkIndex(map['CustomerInspectionList']['WallCracks'], YesNoArray);
+            checkIndex(map['CustomerInspectionList']['WallCracks'].toString(), YesNoArray);
         WallCracksRatingSelection = checkIndex(
-            map['CustomerInspectionList']['WallCracksRating'], RatingArray);
+            map['CustomerInspectionList']['WallCracksRating'].toString(), RatingArray);
         FloorCracksSelection = checkIndex(
-            map['CustomerInspectionList']['FloorCracks'], YesNoArray);
+            map['CustomerInspectionList']['FloorCracks'].toString(), YesNoArray);
         FloorCracksRatingSelection = checkIndex(
-            map['CustomerInspectionList']['FloorCracksRating'], RatingArray);
+            map['CustomerInspectionList']['FloorCracksRating'].toString(), RatingArray);
         ExistingSumpPumpSelection = checkIndex(
             map['CustomerInspectionList']['ExistingSumpPump'], YesNoArray);
         ExistingDrainageSystemSelection = checkIndex(
-            map['CustomerInspectionList']['ExistingDrainageSystem'],
+            map['CustomerInspectionList']['ExistingDrainageSystem'].toString(),
             YesNoArray);
         ExistingRadonSystemSelection = checkIndex(
-            map['CustomerInspectionList']['ExistingRadonSystem'], YesNoArray);
+            map['CustomerInspectionList']['ExistingRadonSystem'].toString(), YesNoArray);
         DryerVentToCodeSelection = checkIndex(
-            map['CustomerInspectionList']['DryerVentToCode'], YesNoArray);
+            map['CustomerInspectionList']['DryerVentToCode'].toString(), YesNoArray);
         FoundationTypeSelection = checkIndex(
             map['CustomerInspectionList']['FoundationType'],
             FoundationTypeArray);
         BulkheadSelection =
-            checkIndex(map['CustomerInspectionList']['Bulkhead'], YesNoArray);
+            checkIndex(map['CustomerInspectionList']['Bulkhead'].toString(), YesNoArray);
         NoticedSmellsOrOdorsSelection = checkIndex(
-            map['CustomerInspectionList']['NoticedSmellsOrOdors'], YesNoArray);
+            map['CustomerInspectionList']['NoticedSmellsOrOdors'].toString(), YesNoArray);
         NoticedMoldOrMildewSelection = checkIndex(
-            map['CustomerInspectionList']['NoticedMoldOrMildew'], YesNoArray);
+            map['CustomerInspectionList']['NoticedMoldOrMildew'].toString(), YesNoArray);
         BasementGoDownSelection = checkIndex(
-            map['CustomerInspectionList']['BasementGoDown'], YesNoArray);
+            map['CustomerInspectionList']['BasementGoDown'].toString(), YesNoArray);
         HomeSufferForRespiratoryProblemsSelection = checkIndex(
-            map['CustomerInspectionList']['HomeSufferForRespiratory'],
+            map['CustomerInspectionList']['HomeSufferForRespiratory'].toString(),
             YesNoArray);
         ChildrenPlayInBasementSelection = checkIndex(
-            map['CustomerInspectionList']['ChildrenPlayInBasement'],
+            map['CustomerInspectionList']['ChildrenPlayInBasement'].toString(),
             YesNoArray);
         PetsGoInBasementSelection = checkIndex(
-            map['CustomerInspectionList']['PetsGoInBasement'], YesNoArray);
+            map['CustomerInspectionList']['PetsGoInBasement'].toString(), YesNoArray);
         NoticedBugsOrRodentsSelection = checkIndex(
-            map['CustomerInspectionList']['NoticedBugsOrRodents'], YesNoArray);
+            map['CustomerInspectionList']['NoticedBugsOrRodents'].toString(), YesNoArray);
         GetWaterSelection =
-            checkIndex(map['CustomerInspectionList']['GetWater'], YesNoArray);
+            checkIndex(map['CustomerInspectionList']['GetWater'].toString(), YesNoArray);
         RemoveWaterSelection = checkIndex(
-            map['CustomerInspectionList']['RemoveWater'], YesNoArray);
+            map['CustomerInspectionList']['RemoveWater'].toString(), YesNoArray);
         SeeCondensationPipesDrippingSelection = checkIndex(
             map['CustomerInspectionList']['SeeCondensationPipesDripping'],
             YesNoArray);
         RepairsTryAndFixSelection = checkIndex(
-            map['CustomerInspectionList']['RepairsProblems'], YesNoArray);
+            map['CustomerInspectionList']['RepairsProblems'].toString(), YesNoArray);
         LivingPlanSelection =
-            checkIndex(map['CustomerInspectionList']['LivingPlan'], YesNoArray);
+            checkIndex(map['CustomerInspectionList']['LivingPlan'].toString(), YesNoArray);
         SellPlaningSelection = checkIndex(
-            map['CustomerInspectionList']['SellPlaning'], YesNoArray);
+            map['CustomerInspectionList']['SellPlaning'].toString(), YesNoArray);
         PlansForBasementOnceSelection = checkIndex(
-            map['CustomerInspectionList']['PlansForBasementOnce'], YesNoArray);
+            map['CustomerInspectionList']['PlansForBasementOnce'].toString(), YesNoArray);
         HomeTestedForRadonSelection = checkIndex(
-            map['CustomerInspectionList']['HomeTestForPastRadon'], YesNoArray);
+            map['CustomerInspectionList']['HomeTestForPastRadon'].toString(), YesNoArray);
         LosePowerSelection = checkIndex(
             map['CustomerInspectionList']['HomeTestForPastRadon'],
             LosePowerArray);
         LosePowerHowOftenSelection = checkIndex(
             map['CustomerInspectionList']['LosePowerHowOften'],
             LosePowerHowOftenArray);
-        _OutsideRelativeHumidityController.text =
-            map['CustomerInspectionList']['OutsideRelativeHumidity'];
+        _OutsideRelativeHumidityController.text = "${map['CustomerInspectionList']['OutsideRelativeHumidity']}";
         _OutsideTemperatureController.text =
-            map['CustomerInspectionList']['OutsideTemperature'];
+            map['CustomerInspectionList']['OutsideTemperature'].toString();
         _1stFloorRelativeHumidityController.text =
-            map['CustomerInspectionList']['FirstFloorRelativeHumidity'];
+            map['CustomerInspectionList']['FirstFloorRelativeHumidity'].toString();
         _1stFloorTemperatureController.text =
-            map['CustomerInspectionList']['FirstFloorTemperature'];
+            map['CustomerInspectionList']['FirstFloorTemperature'].toString();
         _BasementRelativeHumidityController.text =
-            map['CustomerInspectionList']['BasementRelativeHumidity'];
+            map['CustomerInspectionList']['BasementRelativeHumidity'].toString();
         _BasementTemperatureController.text =
-            map['CustomerInspectionList']['BasementTemperature'];
+            map['CustomerInspectionList']['BasementTemperature'].toString();
         _Other1Controller.text =
             map['CustomerInspectionList']['RelativeOther1'];
         _Other2Controller.text =

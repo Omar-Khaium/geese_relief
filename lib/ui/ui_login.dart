@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -83,8 +84,9 @@ class _LogInUIState extends State<LogInUI> {
       'password': '${_passwordController.text}',
       'grant_type': 'password'
     };
-
-    var url = 'bn://api.rmrcloud.com/token';
+    HttpClient client = new HttpClient();
+    client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    var url = 'https://api.rmrcloud.com/token';
     try {
       http.post(url, body: data).then((response) {
         if (response.statusCode == 200) {
