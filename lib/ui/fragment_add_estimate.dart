@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -5,10 +6,12 @@ import 'dart:ui';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_full_pdf_viewer/full_pdf_viewer_scaffold.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/product.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/widgets/PDFScreen.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/drawing_placeholder.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
@@ -18,13 +21,13 @@ import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
 import 'package:flutter_grate_app/widgets/widget_signature.dart';
-import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:painter/painter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../utils.dart';
 
@@ -64,7 +67,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   List<Product> _productList = [];
   Product selectedProduct;
   int estimateIntId = 0;
-  PDFDocument _document;
 
   Widget _PMSignature = Container();
   Widget _HOSignature = Container();
@@ -1852,12 +1854,11 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     TextEditingController _ToEmailController = new TextEditingController();
     TextEditingController _CCEmailController = new TextEditingController();
     TextEditingController _SubjectEmailController = new TextEditingController();
-    TextEditingController _BodyEmailController = new TextEditingController();
+    Completer<WebViewController> _controller = Completer<WebViewController>();
 
     _ToEmailController.text = map['EstimateEmailModel']['email'];
     _SubjectEmailController.text = map['EstimateEmailModel']['subject'];
-
-    preparePdf(map);
+    _SubjectEmailController.text = map['EstimateEmailModel']['body'];
 
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
@@ -1878,146 +1879,105 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                         "Send",
                         style: TextStyle(color: Colors.white),
                       )),
-                ],
-              ),
-              backgroundColor: Colors.white,
-              body: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      children: <Widget>[
-                        TextField(
-                          controller: _ToEmailController,
-                          cursorColor: Colors.black87,
-                          enabled: false,
-                          keyboardType: TextInputType.emailAddress,
-                          maxLines: 1,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          style: customTextStyle(),
-                          decoration: new InputDecoration(
-                            labelText: "To",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            errorText: _ToEmailController.text.isNotEmpty
-                                ? null
-                                : "* Required",
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        TextField(
-                          controller: _CCEmailController,
-                          cursorColor: Colors.black87,
-                          enabled: false,
-                          keyboardType: TextInputType.emailAddress,
-                          maxLines: 1,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          style: customTextStyle(),
-                          decoration: new InputDecoration(
-                            labelText: "cc",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            errorText: _CCEmailController.text.isNotEmpty
-                                ? null
-                                : "* Required",
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        TextField(
-                          controller: _SubjectEmailController,
-                          cursorColor: Colors.black87,
-                          enabled: false,
-                          keyboardType: TextInputType.emailAddress,
-                          maxLines: 1,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          style: customTextStyle(),
-                          decoration: new InputDecoration(
-                            labelText: "Subject",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            errorText: _SubjectEmailController.text.isNotEmpty
-                                ? null
-                                : "* Required",
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        TextField(
-                          controller: _BodyEmailController,
-                          cursorColor: Colors.black87,
-                          enabled: false,
-                          keyboardType: TextInputType.emailAddress,
-                          maxLines: 1,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          style: customTextStyle(),
-                          decoration: new InputDecoration(
-                            labelText: "Body",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            errorText: _BodyEmailController.text.isNotEmpty
-                                ? null
-                                : "* Required",
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
-                        RichText(
-
-                        )
-                      ],
+                  IconButton(
+                    icon: Icon(MdiIcons.filePdf),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PDFScreen(map['filepath'])),
                     ),
-                    flex: 1,
-                  ),
-                  SizedBox(
-                    width: 1,
-                    child: Container(
-                      color: Colors.black,
-                    ),
-                  ),
-                  Expanded(
-                    child: PDFViewer(document: _document),
-                    flex: 1,
                   )
                 ],
               ),
+              backgroundColor: Colors.white,
+              body: ListView(
+                padding: EdgeInsets.only(left: 16, right: 16),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  TextField(
+                    controller: _ToEmailController,
+                    cursorColor: Colors.black87,
+                    enabled: false,
+                    keyboardType: TextInputType.emailAddress,
+                    maxLines: 1,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    style: customTextStyle(),
+                    decoration: new InputDecoration(
+                      labelText: "To",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorText: _ToEmailController.text.isNotEmpty
+                          ? null
+                          : "* Required",
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  TextField(
+                    controller: _CCEmailController,
+                    cursorColor: Colors.black87,
+                    enabled: false,
+                    keyboardType: TextInputType.emailAddress,
+                    maxLines: 1,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    style: customTextStyle(),
+                    decoration: new InputDecoration(
+                      labelText: "cc",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorText: _CCEmailController.text.isNotEmpty
+                          ? null
+                          : "* Required",
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  TextField(
+                    controller: _SubjectEmailController,
+                    cursorColor: Colors.black87,
+                    enabled: false,
+                    keyboardType: TextInputType.emailAddress,
+                    maxLines: 1,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    style: customTextStyle(),
+                    decoration: new InputDecoration(
+                      labelText: "Subject",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorText: _SubjectEmailController.text.isNotEmpty
+                          ? null
+                          : "* Required",
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  /*Html(data: map['EstimateEmailModel']['body'],),*/
+                ],
+              )
             ),
           );
         },
         fullscreenDialog: true));
-  }
-
-  void preparePdf(Map map) async {
-    String url = map['filepath'];
-    _document = await PDFDocument.fromURL(url);
   }
 }

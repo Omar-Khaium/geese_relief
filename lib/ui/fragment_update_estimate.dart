@@ -18,7 +18,6 @@ import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
 import 'package:flutter_grate_app/widgets/widget_signature.dart';
-import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -90,7 +89,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   double estimateTaxTotal = 0.0;
   double estimateTotalAmount = 0.0;
 
-  PDFDocument _document;
   var _future;
 
   File _imageFile;
@@ -1647,7 +1645,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                 title: Text("Proposal"),
               ),
               backgroundColor: Colors.white,
-              body: PDFViewer(document: _document),
+              body: Container(),
             ),
           );
         },
@@ -1902,7 +1900,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   void preparePdf() async {
-    _document = await PDFDocument.fromURL("http://www.africau.edu/images/default/sample.pdf");
     showSendMail();
   }
 }
