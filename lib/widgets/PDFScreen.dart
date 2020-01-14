@@ -1,4 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:flushbar/flushbar.dart';
+import 'package:flutter_grate_app/model/customer_details.dart';
+import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
@@ -7,9 +13,14 @@ import 'package:path_provider/path_provider.dart';
 
 class SendMailFragment extends StatefulWidget {
   Map map;
+  String estimateId;
   String urlPDFPath = "";
+  Login accessToken;
+  ValueChanged<bool> isLoading;
+  LoggedInUser loggedInUser;
+  CustomerDetails customerId;
 
-  SendMailFragment(this.map);
+  SendMailFragment(this.map,this.estimateId,this.accessToken,this.customerId);
 
   @override
   _SendMailFragmentState createState() => _SendMailFragmentState();
@@ -21,6 +32,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   TextEditingController _SubjectEmailController = new TextEditingController();
   TextEditingController _BodyEmailController = new TextEditingController();
 
+  String emailUrl="";
   @override
   void initState() {
     super.initState();
@@ -53,13 +65,27 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text("Send Mail",style: fragmentTitleStyle(),),
-        iconTheme: IconThemeData(color: Colors.black),
-        actions: <Widget>[
-          Icon(Icons.send),
-        ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0),
+        child: AppBar(
+          backgroundColor: Colors.white,
+          title: Text("Send Mail",style: fragmentTitleStyle(),),
+          iconTheme: IconThemeData(color: Colors.black),
+          actions: <Widget>[
+           Padding(
+             padding: EdgeInsets.only(right: 26),
+             child: GestureDetector(
+               onTap: (){
+                 postData();
+               },
+               child: CircleAvatar(
+                 backgroundColor: Colors.grey.shade600,
+                 child:  Icon(Icons.send),
+               ),
+             ),
+           )
+          ],
+        ),
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,8 +130,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
                   onChanged: (val) {
-                    setState(() {});
-                  },
+                    setState(() {});},
                   style: customTextStyle(),
                   decoration: new InputDecoration(
                     labelText: "cc",
@@ -198,6 +223,64 @@ class _SendMailFragmentState extends State<SendMailFragment> {
     );
   }
 
+  Future<String> postData() async {
+    try{
+      Map <String, String> data = {
+        'Authorization': widget.accessToken.accessToken,
+        'customerid': widget.customerId.CustomerId,
+        'invoiceid': widget.estimateId.toString(),
+        'toemail': _ToEmailController.text.toString() ,
+        'ccmail': _CCEmailController.text.toString() ,
+        'subject': _SubjectEmailController.text.toString(),
+        'body': _BodyEmailController.text.toString(),
+      };
+
+      var url = "https://api.rmrcloud.com/SendEmailEstimate";
+      http.post(url, headers: data).then((response) {
+        if (response.statusCode == 200) {
+          Map map = json.decode(response.body);
+          http.get(map['EmailUrl']).then((responseResults){
+            if(responseResults.statusCode==200){
+              showAPIResponse(context, "Email Successfully Sent", Colors.green.shade600);
+            }
+            else {
+              showAPIResponse(context, "Email Not Sent", Colors.red.shade600);
+            }
+          });
+          print(map);
+
+        } else {
+          Flushbar(
+            flushbarPosition: FlushbarPosition.TOP,
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            backgroundColor: Colors.redAccent,
+            icon: Icon(
+              Icons.error_outline,
+              size: 24.0,
+              color: Colors.white,
+            ),
+            duration: Duration(seconds: 4),
+            leftBarIndicatorColor: Colors.white70,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.red[800],
+                offset: Offset(0.0, 2.0),
+                blurRadius: 3.0,
+              )
+            ],
+            title: response.toString(),
+            message: "",
+            shouldIconPulse: false,
+          )..show(context);
+          widget.accessToken.isAuthenticated = false;
+        }
+      });
+    }
+    catch (error) {
+      error.toString();
+    }
+
+  }
 
 }
 

@@ -63,8 +63,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   List<DropDownSingleItem> TypeArray = [];
   int TypeDropdown = 0;
 
-  var items = ['Type', 'One', 'Two', 'Three'];
-  var currentItemSelected = 'Type';
   var url = 'https://api.rmrcloud.com/SaveCustomer';
 
   static String ACCESS_TOKEN = "";
@@ -136,17 +134,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var map = json.decode(snapshot.data.body)['datalist'];
-          List<DropDownSingleItem> lists = List.generate(map.length, (index) {
-            return DropDownSingleItem.fromMap(map[index]);
-          });
-          for (DropDownSingleItem item in lists) {
-            switch (item.DataKey) {
-              case 'CustomerType':
-                TypeArray.add(item);
-                break;
-            }
-          }
+
           return Column(
             children: <Widget>[
               SizedBox(
@@ -705,6 +693,17 @@ class _AddCustomerState extends State<AddCustomerFragment> {
     var url = "https://api.rmrcloud.com/GetLookupbyKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
+      var map = json.decode(result.body)['data'];
+      List<DropDownSingleItem> lists = List.generate(map.length, (index) {
+        return DropDownSingleItem.fromMap(map[index]);
+      });
+      for (DropDownSingleItem item in lists) {
+        switch (item.DataKey) {
+          case 'CustomerType':
+            TypeArray.add(item);
+            break;
+        }
+      }
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

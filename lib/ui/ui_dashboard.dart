@@ -187,9 +187,7 @@ class _DashboardUIState extends State<DashboardUI>
     return Scaffold(
       backgroundColor: Colors.white,
       body: WillPopScope(
-        onWillPop: (){
-
-        },
+        onWillPop: (){},
         child: ModalProgressHUD(
           child: SafeArea(
             child: Row(

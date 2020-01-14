@@ -64,19 +64,17 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     setState(() {
       _imageFile = pickFromGallery;
       _base64Image = base64Encode(_imageFile.readAsBytesSync());
-      Navigator.of(context).pop();
       uploadCustomerImage();
     });
     Navigator.of(context).pop();
   }
 
   _openCamera(BuildContext context) async {
-    File pickFromGallery =
+    File pickFromCamera =
         (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
-      _imageFile = pickFromGallery;
+      _imageFile = pickFromCamera;
       _base64Image = base64Encode(_imageFile.readAsBytesSync());
-
       uploadCustomerImage();
     });
     Navigator.of(context).pop();
@@ -127,84 +125,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         });
   }
 
-  _showSaveDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Padding(
-                padding: EdgeInsets.all(8),
-                child: Text(
-                  "Do you want to save this image ?",
-                  style: new TextStyle(fontSize: 24, color: Colors.black),
-                )),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Container(
-                        width: 132,
-                        child: OutlineButton(
-                          highlightElevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(36.0),
-                              side: BorderSide(color: Colors.white12)),
-                          color: Colors.black,
-                          textColor: Colors.white,
-                          padding: EdgeInsets.all(12.0),
-                          child: Text(
-                            "No,Thanks",
-                            style: new TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                                fontFamily: "Roboto"),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Container(
-                        width: 132,
-                        child: RaisedButton(
-                          highlightElevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(36.0),
-                              side: BorderSide(color: Colors.white12)),
-                          disabledColor: Colors.black,
-                          color: Colors.black,
-                          elevation: 2,
-                          textColor: Colors.white,
-                          padding: EdgeInsets.all(12.0),
-                          child: Text(
-                            "Save",
-                            style: new TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontFamily: "Roboto"),
-                          ),
-                          onPressed: () {
-                            uploadCustomerImage();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
 
   //-------------Image---------------
 
