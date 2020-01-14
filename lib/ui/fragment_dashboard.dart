@@ -72,7 +72,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                 if (snapshot.hasData) {
                   try {
                     var map = json.decode(snapshot.data.body);
-                    var _customersMap = map['customerlist']['CustomerList'];
+                    var _customersMap = map['data']['CustomerList'];
                     arrayList = List.generate(_customersMap.length, (index) {
                       return Customer.fromMap(_customersMap[index]);
                     });
