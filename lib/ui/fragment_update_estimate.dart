@@ -1709,7 +1709,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
         'Key': pattern.trim()
       };
 
-      var url = "http://api.rmrcloud.com/GetEquipmentListByKey";
+      var url = "https://api.rmrcloud.com/GetEquipmentListByKey";
       var result = await http.get(url, headers: headers);
       if (result.statusCode == 200) {
         return json.decode(result.body)['EquipmentList'];
@@ -1795,7 +1795,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var url = "http://api.rmrcloud.com/CreateEstimate";
+    var url = "https://api.rmrcloud.com/CreateEstimate";
     var result =
     await http.post(url, headers: headers, body: json.encode(body));
     print(json.encode(body));
@@ -1819,7 +1819,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   Future uploadCameraImage() async {
-    var url = "http://api.rmrcloud.com/UploadImageFile";
+    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1838,7 +1838,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   Future uploadDrawingImage() async {
-    var url = "http://api.rmrcloud.com/UploadImageFile";
+    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1857,7 +1857,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   Future uploadHOSignatureImage() async {
-    var url = "http://api.rmrcloud.com/UploadImageFile";
+    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1881,7 +1881,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       'EstimateId': widget.customer.EstimateId
     };
 
-    var url = "http://api.rmrcloud.com/GetEstimateById";
+    var url = "https://api.rmrcloud.com/GetEstimateById";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       Map mapForEditData = json.decode(result.body);

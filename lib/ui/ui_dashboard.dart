@@ -186,30 +186,35 @@ class _DashboardUIState extends State<DashboardUI>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ModalProgressHUD(
-        child: SafeArea(
-          child: Row(
-            children: <Widget>[
-              SideNavUI(
-                refreshEvent: _refresh,
-                key: _keySideNav,
-                login: widget.login,
-                loggedInUser: widget.loggedInUser,
-              ),
-              Expanded(
-                child: fragment,
-              ),
-            ],
+      body: WillPopScope(
+        onWillPop: (){
+
+        },
+        child: ModalProgressHUD(
+          child: SafeArea(
+            child: Row(
+              children: <Widget>[
+                SideNavUI(
+                  refreshEvent: _refresh,
+                  key: _keySideNav,
+                  login: widget.login,
+                  loggedInUser: widget.loggedInUser,
+                ),
+                Expanded(
+                  child: fragment,
+                ),
+              ],
+            ),
           ),
-        ),
-        inAsyncCall: _isLoading,
-        color: Colors.black,
-        progressIndicator: CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation<Color>(
-            Colors.white,
+          inAsyncCall: _isLoading,
+          color: Colors.black,
+          progressIndicator: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+              Colors.white,
+            ),
           ),
+          dismissible: false,
         ),
-        dismissible: false,
       ),
     );
   }

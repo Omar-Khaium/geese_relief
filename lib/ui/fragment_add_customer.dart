@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flushbar/flushbar.dart';
@@ -8,10 +9,9 @@ import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
+import 'package:flutter_grate_app/widgets/UsFormatter.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
-import 'package:flutter_grate_app/widgets/UsFormatter.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -22,7 +22,14 @@ class AddCustomerFragment extends StatefulWidget {
   Login login;
   ValueChanged<bool> isLoading;
   LoggedInUser loggedInUser;
-  AddCustomerFragment({Key key, this.backToDashboard, this.login,this.loggedInUser,this.isLoading}) : super(key: key);
+
+  AddCustomerFragment(
+      {Key key,
+      this.backToDashboard,
+      this.login,
+      this.loggedInUser,
+      this.isLoading})
+      : super(key: key);
 
   @override
   _AddCustomerState createState() => _AddCustomerState();
@@ -30,12 +37,15 @@ class AddCustomerFragment extends StatefulWidget {
 
 class _AddCustomerState extends State<AddCustomerFragment> {
   DBHelper dbHelper = new DBHelper();
-  GlobalKey<FormState> _formKey=GlobalKey<FormState>();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
-    if(!widget.login.isAuthenticated) {
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>LogInUI(widget.login)));
+    _future = getData();
+    if (!widget.login.isAuthenticated) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => LogInUI(widget.login)));
     }
   }
 
@@ -51,20 +61,22 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   TextEditingController _stateController = new TextEditingController();
   TextEditingController _zipController = new TextEditingController();
   List<DropDownSingleItem> TypeArray = [];
-  int TypeDropdown=0;
+  int TypeDropdown = 0;
 
   var items = ['Type', 'One', 'Two', 'Three'];
   var currentItemSelected = 'Type';
   var url = 'https://api.rmrcloud.com/SaveCustomer';
 
   static String ACCESS_TOKEN = "";
+  var _future;
 
   final _UsNumberTextInputFormatter = UsNumberTextInputFormatter();
+
   // ignore: missing_return
   Future<String> makeRequest() async {
     widget.isLoading(true);
-    try{
-      Map <String, String> data = {
+    try {
+      Map<String, String> data = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'authorization': widget.login.accessToken,
         'FirstName': '${_firstNameController.text}',
@@ -112,29 +124,27 @@ class _AddCustomerState extends State<AddCustomerFragment> {
           widget.login.isAuthenticated = false;
         }
       });
+    } catch (error) {
+      error.toString();
     }
-    catch (error) {
-     error.toString();
-    }
-
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return FutureBuilder(
-      future: getData(),
-      builder: (context,snapshot){
-        if(snapshot.hasData){
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
           var map = json.decode(snapshot.data.body)['datalist'];
-          List<DropDownSingleItem> lists=List.generate(map.length, (index){
-
+          List<DropDownSingleItem> lists = List.generate(map.length, (index) {
             return DropDownSingleItem.fromMap(map[index]);
           });
-          for(DropDownSingleItem item in lists){
-            switch(item.DataKey){
-              case 'CustomerType':TypeArray.add(item);
-              break;
+          for (DropDownSingleItem item in lists) {
+            switch (item.DataKey) {
+              case 'CustomerType':
+                TypeArray.add(item);
+                break;
             }
           }
           return Column(
@@ -148,8 +158,12 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                   margin: EdgeInsets.only(left: 32),
                   child: Row(
                     children: <Widget>[
-                      CustomBackButton(onTap: ()=> widget.backToDashboard(0),),
-                      SizedBox(width: 16,),
+                      CustomBackButton(
+                        onTap: () => widget.backToDashboard(0),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
                       Text("Add Customer", style: fragmentTitleStyle()),
                     ],
                   ),
@@ -183,18 +197,20 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                   setState(() {});
                                 },
                                 keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
                                 maxLines: 1,
                                 decoration: new InputDecoration(
                                   labelText: "First Name",
                                   errorText:
-                                  _firstNameController
-                                      .text.isNotEmpty
-                                      ? null
-                                      : "* Required",
+                                      _firstNameController.text.isNotEmpty
+                                          ? null
+                                          : "* Required",
                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87)),
+                                      borderSide:
+                                          BorderSide(color: Colors.black87)),
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                                   icon: new Icon(
                                     Icons.person,
                                     color: Colors.grey,
@@ -214,6 +230,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 keyboardType: TextInputType.text,
                                 controller: _lastNameController,
                                 maxLines: 1,
+                                textInputAction: TextInputAction.next,
                                 onChanged: (val) {
                                   setState(() {});
                                 },
@@ -221,16 +238,16 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 decoration: new InputDecoration(
                                   labelText: "Last Name",
                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87)),
+                                      borderSide:
+                                          BorderSide(color: Colors.black87)),
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                                   icon: new Icon(
                                     Icons.person,
                                     color: Colors.grey,
                                   ),
-                                  errorText:
-                                  _lastNameController
-                                      .text.isNotEmpty
+                                  errorText: _lastNameController.text.isNotEmpty
                                       ? null
                                       : "* Required",
                                   hintStyle: customHintStyle(),
@@ -241,13 +258,14 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           ],
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         TextFormField(
                           cursorColor: Colors.black87,
                           style: customTextStyle(),
                           controller: _businessTypeController,
                           keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
                           maxLines: 1,
                           onChanged: (val) {
                             setState(() {});
@@ -263,40 +281,32 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               color: Colors.grey,
                             ),
                             isDense: true,
-                            errorText:
-                            _businessTypeController
-                                .text.isNotEmpty
+                            errorText: _businessTypeController.text.isNotEmpty
                                 ? null
                                 : "* Required",
                             hintStyle: customHintStyle(),
                           ),
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         DropdownButtonFormField(
+                          isDense: true,
                           decoration: new InputDecoration(
-                              errorText:
-                              TypeDropdown==0
+                              errorText: TypeDropdown == 0
                                   ? "Select another value"
                                   : null,
-                              labelText:
-                              "Type",
+                              labelText: "Type",
                               labelStyle: customTextStyle(),
                               hintText: "e.g. hint",
                               hintStyle: customHintStyle(),
                               alignLabelWithHint: false,
                               isDense: true),
-                          items: List.generate(
-                              TypeArray.length,
-                                  (index) {
-                                return DropdownMenuItem(
-                                    value: index,
-                                    child: Text(
-                                        TypeArray[
-                                        index]
-                                            .DisplayText));
-                              }),
+                          items: List.generate(TypeArray.length, (index) {
+                            return DropdownMenuItem(
+                                value: index,
+                                child: Text(TypeArray[index].DisplayText));
+                          }),
                           onChanged: (index) {
                             setState(() {
                               TypeDropdown = index;
@@ -305,7 +315,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           value: TypeDropdown,
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         Row(
                           children: <Widget>[
@@ -319,6 +329,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 },
                                 cursorColor: Colors.black87,
                                 keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
                                 maxLines: 1,
                                 inputFormatters: <TextInputFormatter>[
                                   WhitelistingTextInputFormatter.digitsOnly,
@@ -327,18 +338,19 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 decoration: new InputDecoration(
                                   labelText: "Primary Phone",
                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87)),
+                                      borderSide:
+                                          BorderSide(color: Colors.black87)),
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                                   icon: new Icon(
                                     Icons.call,
                                     color: Colors.grey,
                                   ),
                                   errorText:
-                                  _primaryPhoneController
-                                      .text.isNotEmpty
-                                      ? null
-                                      : "* Required",
+                                      _primaryPhoneController.text.isNotEmpty
+                                          ? null
+                                          : "* Required",
                                   hintStyle: customHintStyle(),
                                   isDense: true,
                                 ),
@@ -352,12 +364,12 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               child: TextFormField(
                                 cursorColor: Colors.black87,
                                 controller: _secondaryPhoneController,
-                                onChanged: (val){
-                                  setState(() {
-                                  });
+                                onChanged: (val) {
+                                  setState(() {});
                                 },
                                 keyboardType: TextInputType.number,
                                 maxLines: 1,
+                                textInputAction: TextInputAction.next,
                                 style: customTextStyle(),
                                 inputFormatters: <TextInputFormatter>[
                                   WhitelistingTextInputFormatter.digitsOnly,
@@ -366,18 +378,19 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 decoration: new InputDecoration(
                                   labelText: "Secondary Phone",
                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87)),
+                                      borderSide:
+                                          BorderSide(color: Colors.black87)),
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                                   icon: new Icon(
                                     Icons.call,
                                     color: Colors.grey,
                                   ),
                                   errorText:
-                                  _secondaryPhoneController
-                                      .text.isNotEmpty
-                                      ? null
-                                      : "* Required",
+                                      _secondaryPhoneController.text.isNotEmpty
+                                          ? null
+                                          : "* Required",
                                   hintStyle: customHintStyle(),
                                   isDense: true,
                                 ),
@@ -386,17 +399,17 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           ],
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         TextFormField(
                           cursorColor: Colors.black87,
                           style: customTextStyle(),
                           controller: _cellPhoneController,
                           keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
                           maxLines: 1,
-                          onChanged: (val){
-                            setState(() {
-                            });
+                          onChanged: (val) {
+                            setState(() {});
                           },
                           inputFormatters: <TextInputFormatter>[
                             WhitelistingTextInputFormatter.digitsOnly,
@@ -413,27 +426,24 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               color: Colors.grey,
                             ),
                             isDense: true,
-                            errorText:
-                            _cellPhoneController
-                                .text.isNotEmpty
+                            errorText: _cellPhoneController.text.isNotEmpty
                                 ? null
                                 : "* Required",
                             hintStyle: customHintStyle(),
                           ),
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         TextFormField(
                           cursorColor: Colors.black87,
                           style: customTextStyle(),
                           controller: _emailController,
-                          onChanged: (val){
-                            setState(() {
-
-                            });
+                          onChanged: (val) {
+                            setState(() {});
                           },
                           keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                           maxLines: 1,
                           decoration: new InputDecoration(
                             labelText: "Email",
@@ -445,9 +455,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               Icons.email,
                               color: Colors.grey,
                             ),
-                            errorText:
-                            _emailController
-                                .text.isNotEmpty
+                            errorText: _emailController.text.isNotEmpty
                                 ? null
                                 : "* Required",
                             hintStyle: customHintStyle(),
@@ -455,16 +463,16 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           ),
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         TextFormField(
                           cursorColor: Colors.black87,
                           style: customTextStyle(),
                           controller: _streetController,
                           keyboardType: TextInputType.text,
-                          onChanged: (val){
-                            setState(() {
-                            });
+                          textInputAction: TextInputAction.next,
+                          onChanged: (val) {
+                            setState(() {});
                           },
                           maxLines: 1,
                           decoration: new InputDecoration(
@@ -477,9 +485,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               MdiIcons.road,
                               color: Colors.grey,
                             ),
-                            errorText:
-                            _streetController
-                                .text.isNotEmpty
+                            errorText: _streetController.text.isNotEmpty
                                 ? null
                                 : "* Required",
                             hintStyle: customHintStyle(),
@@ -487,14 +493,15 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           ),
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         TextFormField(
                           cursorColor: Colors.black87,
                           style: customTextStyle(),
                           controller: _cityController,
                           keyboardType: TextInputType.text,
-                          onChanged: (val){
+                          textInputAction: TextInputAction.next,
+                          onChanged: (val) {
                             setState(() {});
                           },
                           maxLines: 1,
@@ -508,9 +515,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               Icons.location_city,
                               color: Colors.grey,
                             ),
-                            errorText:
-                            _cityController
-                                .text.isNotEmpty
+                            errorText: _cityController.text.isNotEmpty
                                 ? null
                                 : "* Required",
                             hintStyle: customHintStyle(),
@@ -518,7 +523,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           ),
                         ),
                         SizedBox(
-                          height: 36,
+                          height: 16,
                         ),
                         Row(
                           children: <Widget>[
@@ -529,25 +534,24 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 cursorColor: Colors.black87,
                                 controller: _stateController,
                                 keyboardType: TextInputType.text,
-                                onChanged: (val){
-                                  setState(() {
-
-                                  });
+                                textInputAction: TextInputAction.next,
+                                onChanged: (val) {
+                                  setState(() {});
                                 },
                                 maxLines: 1,
                                 decoration: new InputDecoration(
                                   labelText: "State",
                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87)),
+                                      borderSide:
+                                          BorderSide(color: Colors.black87)),
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                                   icon: new Icon(
                                     MdiIcons.homeCity,
                                     color: Colors.grey,
                                   ),
-                                  errorText:
-                                  _stateController
-                                      .text.isNotEmpty
+                                  errorText: _stateController.text.isNotEmpty
                                       ? null
                                       : "* Required",
                                   hintStyle: customHintStyle(),
@@ -563,23 +567,26 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               child: TextFormField(
                                 style: customTextStyle(),
                                 controller: _zipController,
+                                textInputAction: TextInputAction.search,
                                 cursorColor: Colors.black87,
-                                onChanged: (val) {setState(() {});},
+                                onChanged: (val) {
+                                  setState(() {});
+                                },
                                 keyboardType: TextInputType.number,
                                 maxLines: 1,
                                 decoration: new InputDecoration(
                                   labelText: "Zip",
                                   focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.black87)),
+                                      borderSide:
+                                          BorderSide(color: Colors.black87)),
                                   enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.grey)),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey)),
                                   icon: new Icon(
                                     MdiIcons.zipBox,
                                     color: Colors.grey,
                                   ),
-                                  errorText:
-                                  _zipController
-                                      .text.isNotEmpty
+                                  errorText: _zipController.text.isNotEmpty
                                       ? null
                                       : "* Required",
                                   hintStyle: customHintStyle(),
@@ -616,21 +623,25 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                if(_firstNameController.text.isNotEmpty
-                                && _secondaryPhoneController.text.isNotEmpty
-                                && _businessTypeController.text.isNotEmpty
-                                &&_primaryPhoneController.text.isNotEmpty
-                                && _secondaryPhoneController.text.isNotEmpty
-                                && _cellPhoneController.text.isNotEmpty
-                                &&_emailController.text.isNotEmpty
-                                &&_streetController.text.isNotEmpty
-                                &&_cityController.text.isNotEmpty
-                                &&_stateController.text.isNotEmpty
-                                &&_zipController.text.isNotEmpty){
+                                if (_firstNameController.text.isNotEmpty &&
+                                    _secondaryPhoneController.text.isNotEmpty &&
+                                    _businessTypeController.text.isNotEmpty &&
+                                    _primaryPhoneController.text.isNotEmpty &&
+                                    _secondaryPhoneController.text.isNotEmpty &&
+                                    _cellPhoneController.text.isNotEmpty &&
+                                    _emailController.text.isNotEmpty &&
+                                    _streetController.text.isNotEmpty &&
+                                    _cityController.text.isNotEmpty &&
+                                    _stateController.text.isNotEmpty &&
+                                    _zipController.text.isNotEmpty) {
                                   makeRequest();
-                                }
-                                else{
-                                 showMessage(context, "Validation Error", "Please fill all the fields", Colors.red, Icons.error);
+                                } else {
+                                  showMessage(
+                                      context,
+                                      "Validation Error",
+                                      "Please fill all the fields",
+                                      Colors.red,
+                                      Icons.error);
                                 }
                               },
                             ),
@@ -646,16 +657,45 @@ class _AddCustomerState extends State<AddCustomerFragment> {
               ),
             ],
           );
-        }
-        else{
-          return Center(
-            child: Text("Loading"),
+        } else {
+          return Column(
+            children: <Widget>[
+              SizedBox(
+                height: 16,
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: EdgeInsets.only(left: 32),
+                  child: Row(
+                    children: <Widget>[
+                      CustomBackButton(
+                        onTap: () => widget.backToDashboard(0),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Text("Add Customer", style: fragmentTitleStyle()),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Container(
+                child: LinearProgressIndicator(
+                  backgroundColor: Colors.grey.shade200,
+                ),
+                margin: EdgeInsets.only(left: 32, right: 32),
+              ),
+            ],
           );
         }
       },
-
     );
   }
+
   Future getData() async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
@@ -672,6 +712,4 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       return [];
     }
   }
-
-
 }

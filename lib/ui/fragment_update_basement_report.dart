@@ -496,6 +496,7 @@ class _UpdateBasementReportFragmentState
                                               ),
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       CurrentOutsideConditionsSelection ==
@@ -674,6 +675,7 @@ class _UpdateBasementReportFragmentState
                                                       ),
                                                     ),
                                                     DropdownButtonFormField(
+                                                      isDense: true,
                                                       decoration: new InputDecoration(
                                                           errorText:
                                                               HeatSelection == 0
@@ -710,6 +712,7 @@ class _UpdateBasementReportFragmentState
                                                       height: 8,
                                                     ),
                                                     DropdownButtonFormField(
+                                                      isDense: true,
                                                       decoration: new InputDecoration(
                                                           errorText:
                                                               AirSelection == 0
@@ -804,6 +807,7 @@ class _UpdateBasementReportFragmentState
                                                       height: 8,
                                                     ),
                                                     DropdownButtonFormField(
+                                                      isDense: true,
                                                       decoration: new InputDecoration(
                                                           errorText:
                                                               BasementDehumidifierSelection ==
@@ -936,6 +940,7 @@ class _UpdateBasementReportFragmentState
                                               ),
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       GroundWaterSelection == 0
@@ -968,6 +973,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "Ground Water Rating (1-10)",
@@ -996,6 +1002,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       IronBacteriaSelection == 0
@@ -1028,6 +1035,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "Iron Bacteria Rating (1-10)",
@@ -1057,6 +1065,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       CondensationSelection == 0
@@ -1089,6 +1098,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "Condensation Rating (1-10)",
@@ -1118,6 +1128,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       WallCracksSelection == 0
@@ -1150,6 +1161,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "Wall Cracks Rating (1-10)",
@@ -1178,6 +1190,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       FloorCracksSelection == 0
@@ -1210,6 +1223,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "Floor Cracks Rating (1-10)",
@@ -1238,6 +1252,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       ExistingSumpPumpSelection ==
@@ -1273,6 +1288,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       ExistingDrainageSystemSelection ==
@@ -1309,6 +1325,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       ExistingRadonSystemSelection ==
@@ -1345,6 +1362,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       DryerVentToCodeSelection ==
@@ -1380,6 +1398,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       FoundationTypeSelection == 0
@@ -1416,6 +1435,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText: BulkheadSelection ==
                                                           0
@@ -1512,6 +1532,7 @@ class _UpdateBasementReportFragmentState
                                               ),
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       NoticedSmellsOrOdorsSelection ==
@@ -1577,6 +1598,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       NoticedMoldOrMildewSelection ==
@@ -1642,6 +1664,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       BasementGoDownSelection ==
@@ -1677,6 +1700,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       HomeSufferForRespiratoryProblemsSelection ==
@@ -1742,6 +1766,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       ChildrenPlayInBasementSelection ==
@@ -1807,6 +1832,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       ChildrenPlayInBasementSelection ==
@@ -1872,6 +1898,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       NoticedBugsOrRodentsSelection ==
@@ -1937,6 +1964,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText: GetWaterSelection ==
                                                           0
@@ -1999,6 +2027,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "9. How do you normally remove the water from basement?",
@@ -2027,6 +2056,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       SeeCondensationPipesDrippingSelection ==
@@ -2092,6 +2122,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       RepairsTryAndFixSelection ==
@@ -2156,6 +2187,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       LivingPlanSelection == 0
@@ -2189,6 +2221,7 @@ class _UpdateBasementReportFragmentState
                                               height: 4,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       SellPlaningSelection == 0
@@ -2222,6 +2255,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   labelText:
                                                       "13. What are your plans for the basement once it is dry?",
@@ -2251,6 +2285,7 @@ class _UpdateBasementReportFragmentState
                                               height: 8,
                                             ),
                                             DropdownButtonFormField(
+                                              isDense: true,
                                               decoration: new InputDecoration(
                                                   errorText:
                                                       HomeTestedForRadonSelection ==
@@ -2321,6 +2356,7 @@ class _UpdateBasementReportFragmentState
                                                 Expanded(
                                                   child:
                                                       DropdownButtonFormField(
+                                                        isDense: true,
                                                     decoration: new InputDecoration(
                                                         errorText:
                                                             LosePowerSelection == 0
@@ -2363,6 +2399,7 @@ class _UpdateBasementReportFragmentState
                                                 Expanded(
                                                   child:
                                                       DropdownButtonFormField(
+                                                        isDense: true,
                                                     decoration: new InputDecoration(
                                                         errorText:
                                                             LosePowerHowOftenSelection == 0
@@ -2940,11 +2977,12 @@ class _UpdateBasementReportFragmentState
   int checkIndex(String _text, List<DropDownSingleItem> _list) {
     int counter = 0;
     for (DropDownSingleItem _item in _list) {
-      if (_item.DisplayText == _text) {
+      if (_item.DataValue == _text) {
         return counter;
       } else {
         counter++;
       }
     }
+    return 0;
   }
 }
