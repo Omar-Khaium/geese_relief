@@ -2613,7 +2613,7 @@ class _UpdateBasementReportFragmentState
           'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
     };
 
-    var url = "https://api.rmrcloud.com/GetLookupbyKey";
+    var url = "https://api.gratecrm.com/GetLookupbyKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['datalist'];
@@ -2669,7 +2669,7 @@ class _UpdateBasementReportFragmentState
       'CustomerId': widget.customer.CustomerId,
     };
 
-    var url = "https://api.rmrcloud.com/GetCustomerInspectionByCustomerId";
+    var url = "https://api.gratecrm.com/GetCustomerInspectionByCustomerId";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body);
@@ -2813,7 +2813,7 @@ class _UpdateBasementReportFragmentState
 
   Future saveInspectionReport() async {
     try {
-      var url = "https://api.rmrcloud.com/SaveCustomerInspection";
+      var url = "https://api.gratecrm.com/SaveCustomerInspection";
 
       headers['Authorization'] = widget.login.accessToken;
       headers['CustomerId'] = widget.customer.CustomerId;

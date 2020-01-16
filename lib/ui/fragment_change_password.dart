@@ -37,7 +37,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
       'Password': '${_oldPaswordController.text}',
       'NewPassword': '${_newPaswordController.text}',
     };
-    var url = "https://api.rmrcloud.com/ChangePassword";
+    var url = "https://api.gratecrm.com/ChangePassword";
     var result = await http.post(url, headers: headers);
     if (result.statusCode == 200){
       if(widget.login.password==_oldPaswordController.text){

@@ -84,6 +84,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   void initState() {
 //    _future = getData();
     super.initState();
+    getDate();
   }
 
   Future<void> _showDialog(BuildContext context) {
@@ -666,7 +667,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                         ),
                       );
                     }
-                  } else {
+                  }
+                  else {
                     return ShimmerCustomerDetailsFragment();
                   }
                 } catch (error) {
@@ -693,7 +695,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       'PageSize': '10',
     };
 
-    var url = "https://api.rmrcloud.com/GetCustomerByIdWithEstimateList";
+    var url = "https://api.gratecrm.com/GetCustomerByIdWithEstimateList";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
@@ -715,7 +717,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       "filepath": _base64Image
     };
 
-    var url = "https://api.rmrcloud.com/CustomerImageUpload";
+    var url = "https://api.gratecrm.com/CustomerImageUpload";
     http.post(url, headers: headers, body: body).then((response) {
       try {
         if (response.statusCode == 200) {
@@ -738,7 +740,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         'EstimateId': _list[index].Id,
         'CompanyId': widget.loggedInUser.CompanyGUID,
       };
-      var url = "https://api.rmrcloud.com/EstimateDuplicate";
+      var url = "https://api.gratecrm.com/EstimateDuplicate";
       var result = await http.post(url, headers: headers);
       if (result.statusCode == 200) {
         Map map = json.decode(result.body);
@@ -868,8 +870,27 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       'EstimateId': _list[index].Id
     };
 
-    var url = "https://api.rmrcloud.com/DeleteEstimate";
+    var url = "https://api.gratecrm.com/DeleteEstimate";
     var result = await http.delete(url, headers: headers);
     return json.decode(result.body)['result'];
+  }
+
+  Future getDate() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+    };
+
+    var url = "https://api.gratecrm.com/GetOrganizationList";
+    var result = await http.get(url, headers: headers);
+    if (result.statusCode == 200) {
+      Map map=json.decode(result.body);
+      print(map['orglist'][0]['text']);
+      return result;
+
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return {};
+    }
   }
 }

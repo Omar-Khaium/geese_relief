@@ -63,7 +63,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   List<DropDownSingleItem> TypeArray = [];
   int TypeDropdown = 0;
 
-  var url = 'https://api.rmrcloud.com/SaveCustomer';
+  var url = 'https://api.gratecrm.com/SaveCustomer';
 
   static String ACCESS_TOKEN = "";
   var _future;
@@ -690,7 +690,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       'Key': 'CustomerType'
     };
 
-    var url = "https://api.rmrcloud.com/GetLookupbyKey";
+    var url = "https://api.gratecrm.com/GetLookupbyKey";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['data'];

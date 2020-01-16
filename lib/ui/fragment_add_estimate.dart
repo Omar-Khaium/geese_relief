@@ -1653,7 +1653,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         'Key': pattern.trim()
       };
 
-      var url = "https://api.rmrcloud.com/GetEquipmentListByKey";
+      var url = "https://api.gratecrm.com/GetEquipmentListByKey";
       var result = await http.get(url, headers: headers);
       if (result.statusCode == 200) {
         return json.decode(result.body)['EquipmentList'];
@@ -1716,7 +1716,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
 
-    var url = "https://api.rmrcloud.com/GenerateEstimate";
+    var url = "https://api.gratecrm.com/GenerateEstimate";
     var result = await http.post(url, headers: headers);
     if (result.statusCode == 200) {
       estimateIntId = json.decode(result.body)['Invoice']['Id'];
@@ -1762,7 +1762,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var url = "https://api.rmrcloud.com/CreateEstimate";
+    var url = "https://api.gratecrm.com/CreateEstimate";
     var result =
         await http.post(url, headers: headers, body: json.encode(body));
     if (result.statusCode == 200) {
@@ -1785,7 +1785,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   }
 
   Future uploadCameraImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
+    var url = "https://api.gratecrm.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1804,7 +1804,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   }
 
   Future uploadDrawingImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
+    var url = "https://api.gratecrm.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1823,7 +1823,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   }
 
   Future uploadHOSignatureImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
+    var url = "https://api.gratecrm.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };

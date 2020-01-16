@@ -418,7 +418,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
 
-    var url = "https://api.rmrcloud.com/RecommendedLevel";
+    var url = "https://api.gratecrm.com/RecommendedLevel";
     var result = await http.post(url, headers: headers);
     return json.decode(result.body)['result'];
   }

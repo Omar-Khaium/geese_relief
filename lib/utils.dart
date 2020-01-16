@@ -2,7 +2,8 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-void showMessage(BuildContext context, String title, String message, Color color, IconData icon) {
+void showMessage(BuildContext context, String title, String message,
+    Color color, IconData icon) {
   Flushbar(
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.GROUNDED,
@@ -48,7 +49,9 @@ void showAPIResponse(BuildContext context, String title, Color color) {
 String formatDate(String date) {
   DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'hh:mm:ss");
   DateTime dateTime = inputFormat.parse(date);
-  DateFormat outputFormat = DateFormat("MM/dd/yyyy", );
+  DateFormat outputFormat = DateFormat(
+    "MM/dd/yyyy",
+  );
   return outputFormat.format(dateTime);
 }
 
