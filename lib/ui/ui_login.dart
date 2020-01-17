@@ -47,15 +47,6 @@ class _LogInUIState extends State<LogInUI> {
   Login login;
   LoggedInUser loggedInUser;
 
-  List<Organization> menus = [
-    Organization(Icon(MdiIcons.bookMinus), "Portfolio"),
-    Organization(Icon(MdiIcons.settings), "Service"),
-    Organization(Icon(MdiIcons.bagPersonal), "Clients"),
-    Organization(Icon(Icons.supervisor_account), "Our Team"),
-    Organization(Icon(Icons.announcement), "Announcement"),
-    Organization(Icon(Icons.rate_review), "Review"),
-  ];
-
   saveToDatabase() async {
     Login log = await dbHelper.saveLogin(login);
 
@@ -614,82 +605,4 @@ class _LogInUIState extends State<LogInUI> {
     await dbHelper.save(loggedInUser, DBInfo.TABLE_CURRENT_USER);
   }
 
-  void showPopUp() {
-    try{
-      showDialog<void>(
-        context: context,
-        barrierDismissible: true, // user must tap button!
-        builder: (BuildContext context) {
-          return AlertDialog(
-              backgroundColor: Colors.white,
-              content : FutureBuilder(
-                future: getOrganizationData(),
-                builder: (context, snapshot) {
-                  try {
-                    if (snapshot.hasData) {
-                      var map = json.decode(snapshot.data.body);
-                      var organizationMap = map['orglist'];
-                      if (organizationMap == null) {
-                        _list = [];
-                      } else {
-                        _list = List.generate(organizationMap.length, (index) {
-                          return Organization.fromMap(organizationMap[index]);
-                        });
-                      }
-                      try {
-                        return Container(
-                          width: 300,
-                          height: 300,
-                          color: Colors.white,
-                          child: new ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: organizationMap.length,
-                            itemBuilder: (BuildContext context, index) {
-                              return Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Container(
-                                    height: 50,
-                                    color: Colors.white,
-                                    child: Table(
-                                      children: [
-                                        TableRow(children: [
-                                          _list[index].image,
-                                          Text(_list[index].text)
-                                        ]),
-                                      ],
-                                    )),
-                              );
-                            },
-                          ),
-                        );
-                      } catch (error) {
-                        return Center(
-                          child: Text(
-                            "Something went wrong...",
-                            style: listTextStyle(),
-                          ),
-                        );
-                      }
-                    } else {
-                      return ShimmerCustomerDetailsFragment();
-                    }
-                  } catch (error) {
-                    return Center(
-                      child: Text(
-                        "Something went wrong...",
-                        style: listTextStyle(),
-                      ),
-                    );
-                  }
-                },
-              ));
-        },
-      );
-    }
-    catch(error){
-      print(error);
-    }
-  }
 }

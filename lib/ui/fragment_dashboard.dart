@@ -163,7 +163,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                             color: Colors.redAccent.shade200,
                                           ),
                                           onPressed: () {
-                                            deleteCustomer(index);
+                                            showPopup(index);
                                           },
                                         ),
                                       )
@@ -219,5 +219,125 @@ class _DashboardFragmentState extends State<DashboardFragment> {
           Colors.redAccent, Icons.warning);
       return [];
     }
+  }
+
+  void showPopup(index) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            backgroundColor: Colors.white,
+            title: Container(
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Text(
+                                "Delete ?" +arrayList[index].Name,
+                                style: new TextStyle(
+                                    color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),
+                              ),
+                            )),
+                      ),
+                      Container(
+                        width: 200,
+                        height: 20,
+                        margin: EdgeInsets.only(top: 2, bottom: 2),
+                        child: Divider(
+                          color: Colors.grey,
+                          thickness: .5,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Are you sure you want to delete ?",
+                          style: new TextStyle(
+                              color: Colors.black87, fontSize: 20),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 36,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              width: 128,
+                              child: RaisedButton(
+                                highlightElevation: 2,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    new BorderRadius.circular(36.0),
+                                    side: BorderSide(color: Colors.white12)),
+                                disabledColor: Colors.black,
+                                color: Colors.green,
+                                elevation: 2,
+                                textColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Cancel",
+                                  style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontFamily: "Roboto"),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                            Container(
+                              width: 128,
+                              child: RaisedButton(
+                                highlightElevation: 2,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    new BorderRadius.circular(36.0),
+                                    side: BorderSide(color: Colors.white12)),
+                                disabledColor: Colors.black,
+                                color: Colors.red.shade200,
+                                elevation: 2,
+                                textColor: Colors.white,
+                                padding: EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Delete",
+                                  style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontFamily: "Roboto"),
+                                ),
+                                onPressed: () {
+                                 deleteCustomer(index);
+                                 Navigator.of(context).pop();
+                                 setState(() {
+                                 });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ));
+      },
+    );
   }
 }
