@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
@@ -16,6 +17,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 import '../utils.dart';
 
@@ -54,14 +56,17 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
 //  var _future;
   List<Estimate> _list = [];
   var _base64Image;
+  String message="";
 
   //-------------Image---------------
   File _imageFile;
+  bool _isLoading = false;
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
         (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
+      _isLoading=true;
       _imageFile = pickFromGallery;
       _base64Image = base64Encode(_imageFile.readAsBytesSync());
       uploadCustomerImage();
@@ -73,6 +78,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     File pickFromCamera =
         (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
+      _isLoading=true;
       _imageFile = pickFromCamera;
       _base64Image = base64Encode(_imageFile.readAsBytesSync());
       uploadCustomerImage();
@@ -125,7 +131,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           );
         });
   }
-
 
   //-------------Image---------------
 
@@ -207,27 +212,45 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     child: Container(
                                                       child: _imageFile != null
                                                           ? Image.file(
-                                                        _imageFile,
-                                                        width: 150,
-                                                        height: 140,
-                                                        fit: BoxFit.cover,
-                                                      )
+                                                              _imageFile,
+                                                              width: 150,
+                                                              height: 140,
+                                                              fit: BoxFit.cover,
+                                                            )
                                                           : (widget.customer
-                                                          .ProfileImage !=
-                                                          null && widget.customer.ProfileImage.isNotEmpty
-                                                          ? Image.network(
-                                                          widget.customer
-                                                              .ProfileImage,
-                                                          height: 128,
-                                                          width: 128,
-                                                          fit: BoxFit
-                                                              .cover)
-                                                          : Icon(
-                                                        Icons.person,
-                                                        size: 142,
-                                                      )),
-                                                      color: Colors.grey.shade100,
+                                                                          .ProfileImage !=
+                                                                      null &&
+                                                                  widget
+                                                                      .customer
+                                                                      .ProfileImage
+                                                                      .isNotEmpty
+                                                              ? Image.network(
+                                                                  widget
+                                                                      .customer
+                                                                      .ProfileImage,
+                                                                  height: 128,
+                                                                  width: 128,
+                                                                  fit: BoxFit
+                                                                      .cover)
+                                                              : Icon(
+                                                                  Icons.person,
+                                                                  size: 142,
+                                                                )),
+                                                      color:
+                                                          Colors.grey.shade100,
                                                     )),
+                                                _isLoading ? Positioned(
+                                                  right: 40.0,
+                                                  top: 40.0,
+                                                  child: Align(
+                                                    alignment:Alignment.center,
+                                                    child: Center(
+                                                      child: CircularProgressIndicator(
+                                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.orangeAccent)),
+                                                    )
+                                                  ),
+                                                ) : Container(
+                                                  alignment:Alignment.center,),
                                                 Padding(
                                                   padding: EdgeInsets.all(4),
                                                   child: Align(
@@ -243,12 +266,12 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                           color: Colors.white,
                                                         ),
                                                         onTap: () {
-                                                          _showDialog(context);
-                                                        },
+                                                         _showDialog(context);
+                                                         },
                                                       ),
                                                     ),
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                             SizedBox(
@@ -277,10 +300,16 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     SizedBox(
                                                       width: 6,
                                                     ),
-                                                    Text(
-                                                      widget.customer.Email,
-                                                      style: new TextStyle(
-                                                          fontSize: 16),
+                                                    InkWell(
+                                                      child: Text(
+                                                        widget.customer.Email,
+                                                        style: new TextStyle(
+                                                            fontSize: 16),
+                                                      ),
+                                                      onTap: () {
+                                                        UrlLauncher.launch(
+                                                            'mailto:${widget.customer.Email}');
+                                                      },
                                                     ),
                                                   ],
                                                 ),
@@ -295,11 +324,20 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     SizedBox(
                                                       width: 6,
                                                     ),
-                                                    Text(
-                                                        widget.customer
-                                                            .ContactNum,
-                                                        style: new TextStyle(
-                                                            fontSize: 16)),
+                                                    InkWell(
+                                                      child: Text(
+                                                          widget.customer
+                                                              .ContactNum,
+                                                          style: new TextStyle(
+                                                              fontSize: 16)
+
+                                                          //UrlLauncher.launch('tel://$_phoneNumber');
+                                                          ),
+                                                      onTap: () {
+                                                        UrlLauncher.launch(
+                                                            'tel://${widget.customer.ContactNum}');
+                                                      },
+                                                    ),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -339,15 +377,15 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               elevation: 8,
                                               onPressed: () {
-                                                if(widget.customer.HasInspectionReport){
-                                                  widget.goToUpdateBasementReport(
-                                                      widget.customer);
-                                                }
-                                                else{
+                                                if (widget.customer
+                                                    .HasInspectionReport) {
+                                                  widget
+                                                      .goToUpdateBasementReport(
+                                                          widget.customer);
+                                                } else {
                                                   widget.goToAddBasementReport(
                                                       widget.customer);
                                                 }
-
                                               },
                                               color: Colors.black,
                                               child: Padding(
@@ -482,7 +520,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                             height: 16,
                           ),
                           Expanded(
-                            child: ListView.builder(
+                            child: (_list.length==0) ? Container(
+                              child: Image.asset('images/no_data.jpg',fit: BoxFit.cover,),
+                            ) : ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
@@ -580,8 +620,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     width: 16,
                                                   ),
                                                   Text(
-                                                    "${_list[index].Price==null || _list[index].Price=="0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}"
-                                                    ,
+                                                    "${_list[index].Price == null || _list[index].Price == "0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}",
                                                     style: listTextStyle(),
                                                   )
                                                 ],
@@ -721,6 +760,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     http.post(url, headers: headers, body: body).then((response) {
       try {
         if (response.statusCode == 200) {
+          setState(() {
+            _isLoading=false;
+          });
+          showPopup();
           return response;
         } else {
           showMessage(context, "Network error!", json.decode(response.body),
@@ -883,14 +926,66 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     var url = "https://api.gratecrm.com/GetOrganizationList";
     var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
-      Map map=json.decode(result.body);
+      Map map = json.decode(result.body);
       print(map['orglist'][0]['text']);
       return result;
-
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
       return {};
     }
+  }
+
+
+  void showPopup() {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+            titlePadding: EdgeInsets.all(0),
+            backgroundColor: Colors.white,
+            title: Container(
+              width: 300,
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Image.asset('images/success.gif',height: 250,fit: BoxFit.fitHeight,),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          width: 300,
+                          child: RaisedButton(
+                            highlightElevation: 2,
+                            disabledColor: Colors.black,
+                            color: Colors.black87,
+                            elevation: 2,
+                            textColor: Colors.white,
+                            padding: EdgeInsets.all(12.0),
+                            child: Text(
+                              "Ok",
+                              style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontFamily: "Roboto"),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
+      },
+    );
   }
 }

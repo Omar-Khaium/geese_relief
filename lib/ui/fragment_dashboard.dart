@@ -77,7 +77,11 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                       return Customer.fromMap(_customersMap[index]);
                     });
 
-                    return ListView.builder(
+                    return (arrayList.length==0) ? Container(
+                      child: Center(
+                        child: Image.asset('images/no_data.jpg',fit: BoxFit.cover,),
+                      )
+                    ) :ListView.builder(
                       itemCount: arrayList.length,
                       itemBuilder: (context, index) {
                         customer = arrayList[index];
@@ -324,8 +328,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                 onPressed: () {
                                  deleteCustomer(index);
                                  Navigator.of(context).pop();
-                                 setState(() {
-                                 });
+                                 setState(() {}
+                                 );
                                 },
                               ),
                             ),
