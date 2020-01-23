@@ -41,7 +41,7 @@ class AddBasementReportFragment extends StatefulWidget {
 }
 
 class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
-  var _futureDropDown, _futureGetData;
+  var _future;
 
   TextEditingController _OutsideRelativeHumidityController =
   new TextEditingController();
@@ -238,8 +238,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
   void initState() {
     super.initState();
-    _futureDropDown = getDropDownData();
-    _futureGetData = getData();
+    _future = getDropDownData();
 
     /*CurrentOutsideConditionsSelection = 2;
     HeatSelection = 1;
@@ -454,2122 +453,2107 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                   height: 8,
                 ),
                 FutureBuilder(
-                  future: _futureDropDown,
+                  future: _future,
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-
-
-                      return FutureBuilder(
-                        future: _futureGetData,
-                        builder: (context, snapshot) {
-                          try {
-                            if (snapshot.hasData) {
-                              var map = json.decode(snapshot.data.body);
-                              widget.basementInspection =
-                                  BasementInspection.fromMap(map);
-                              try {
-                                return Column(
-                                  children: <Widget>[
+                    try {
+                      if (snapshot.hasData) {
+                        try {
+                          return Column(
+                            children: <Widget>[
 /*------------------RELATIVE HUMIDITY / TEMPERATURE READINGS------------------*/
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            spreadRadius: 2,
-                                            offset: Offset(
-                                              0,
-                                              0,
-                                            ),
-                                          )
-                                        ],
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(4)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      spreadRadius: 2,
+                                      offset: Offset(
+                                        0,
+                                        0,
                                       ),
-                                      margin: EdgeInsets.all(4),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Relative Humidity / Temperature Readings",
-                                              style: cardTitleStyle(),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              margin: EdgeInsets.only(
-                                                  top: 8, bottom: 8),
-                                              child: Divider(
-                                                color: Colors.grey,
-                                                thickness: .5,
-                                              ),
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  CurrentOutsideConditionsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Current Outside Conditions*",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  CurrentOutsideConditionsArray
-                                                      .length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        CurrentOutsideConditionsArray[
-                                                        index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  CurrentOutsideConditionsSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              CurrentOutsideConditionsSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _OutsideRelativeHumidityController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType
-                                                  .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _OutsideRelativeHumidityController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Outside Relative Humidity *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _OutsideTemperatureController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType
-                                                  .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _OutsideTemperatureController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Outside Temperature *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _1stFloorRelativeHumidityController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType
-                                                  .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "1st Floor Relative Humidity",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _1stFloorTemperatureController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType
-                                                  .numberWithOptions(
-                                                  decimal: false,
-                                                  signed: false),
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "1st Floor Temperature",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 16,
-                                            ),
-                                            Card(
-                                              elevation: 2,
-                                              child: Padding(
-                                                padding:
-                                                const EdgeInsets.all(16),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      "Current Inside Condition",
-                                                      style: cardTitleStyle(),
-                                                    ),
-                                                    Container(
-                                                      width: 200,
-                                                      margin: EdgeInsets.only(
-                                                          top: 8, bottom: 8),
-                                                      child: Divider(
-                                                        color: Colors.grey,
-                                                        thickness: .5,
-                                                      ),
-                                                    ),
-                                                    DropdownButtonFormField(
-                                                      decoration: new InputDecoration(
-                                                          errorText:
-                                                          HeatSelection == 0
-                                                              ? "Select another value"
-                                                              : null,
-                                                          errorStyle:
-                                                          customTextFieldErrorStyle(),
-                                                          labelText: "Heat*",
-                                                          labelStyle:
-                                                          customTextStyle(),
-                                                          hintText: "e.g. hint",
-                                                          hintStyle:
-                                                          customHintStyle(),
-                                                          alignLabelWithHint:
-                                                          false,
-                                                          isDense: true),
-                                                      items: List.generate(
-                                                          HeatArray.length,
-                                                              (index) {
-                                                            return DropdownMenuItem(
-                                                                value: index,
-                                                                child: Text(
-                                                                    HeatArray[
-                                                                    index]
-                                                                        .DisplayText));
-                                                          }),
-                                                      onChanged: (index) {
-                                                        setState(() {
-                                                          HeatSelection = index;
-                                                        });
-                                                      },
-                                                      value: HeatSelection,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    DropdownButtonFormField(
-                                                      decoration: new InputDecoration(
-                                                          errorText:
-                                                          AirSelection == 0
-                                                              ? "Select another value"
-                                                              : null,
-                                                          errorStyle:
-                                                          customTextFieldErrorStyle(),
-                                                          labelText: "Air *",
-                                                          labelStyle:
-                                                          customTextStyle(),
-                                                          hintText: "e.g. hint",
-                                                          hintStyle:
-                                                          customHintStyle(),
-                                                          alignLabelWithHint:
-                                                          false,
-                                                          isDense: true),
-                                                      items: List.generate(
-                                                          AirArray.length,
-                                                              (index) {
-                                                            return DropdownMenuItem(
-                                                                value: index,
-                                                                child: Text(
-                                                                    AirArray[
-                                                                    index]
-                                                                        .DisplayText));
-                                                          }),
-                                                      onChanged: (index) {
-                                                        setState(() {
-                                                          AirSelection = index;
-                                                        });
-                                                      },
-                                                      value: AirSelection,
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    new TextField(
-                                                      controller:
-                                                      _BasementRelativeHumidityController,
-                                                      obscureText: false,
-                                                      onChanged: (val) {
-                                                        setState(() {});
-                                                      },
-                                                      cursorColor: Colors.black,
-                                                      keyboardType: TextInputType
-                                                          .numberWithOptions(
-                                                          decimal: false,
-                                                          signed: false),
-                                                      maxLines: 1,
-                                                      style: customTextStyle(),
-                                                      decoration: new InputDecoration(
-                                                          labelText:
-                                                          "Basement Relative Humidity",
-                                                          labelStyle:
-                                                          customTextStyle(),
-                                                          hintText: "e.g. hint",
-                                                          hintStyle:
-                                                          customHintStyle(),
-                                                          alignLabelWithHint:
-                                                          false,
-                                                          isDense: true),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    new TextField(
-                                                      controller:
-                                                      _BasementTemperatureController,
-                                                      obscureText: false,
-                                                      onChanged: (val) {
-                                                        setState(() {});
-                                                      },
-                                                      cursorColor: Colors.black,
-                                                      keyboardType: TextInputType
-                                                          .numberWithOptions(
-                                                          decimal: false,
-                                                          signed: false),
-                                                      maxLines: 1,
-                                                      style: customTextStyle(),
-                                                      decoration: new InputDecoration(
-                                                          labelText:
-                                                          "Basement Temperature",
-                                                          labelStyle:
-                                                          customTextStyle(),
-                                                          hintText: "e.g. hint",
-                                                          hintStyle:
-                                                          customHintStyle(),
-                                                          alignLabelWithHint:
-                                                          false,
-                                                          isDense: true),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    DropdownButtonFormField(
-                                                      decoration: new InputDecoration(
-                                                          errorText:
-                                                          BasementDehumidifierSelection ==
-                                                              0
-                                                              ? "Select another value"
-                                                              : null,
-                                                          errorStyle:
-                                                          customTextFieldErrorStyle(),
-                                                          labelText:
-                                                          "Basement Dehumidifier *",
-                                                          labelStyle:
-                                                          customTextStyle(),
-                                                          hintText: "e.g. hint",
-                                                          hintStyle:
-                                                          customHintStyle(),
-                                                          alignLabelWithHint:
-                                                          false,
-                                                          isDense: true),
-                                                      items: List.generate(
-                                                          BasementDehumidifierArray
-                                                              .length, (index) {
-                                                        return DropdownMenuItem(
-                                                            value: index,
-                                                            child: Text(
-                                                                BasementDehumidifierArray[
-                                                                index]
-                                                                    .DisplayText));
-                                                      }),
-                                                      onChanged: (index) {
-                                                        setState(() {
-                                                          BasementDehumidifierSelection =
-                                                              index;
-                                                        });
-                                                      },
-                                                      value:
-                                                      BasementDehumidifierSelection,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 16,
-                                            ),
-                                            new TextField(
-                                              controller: _Other1Controller,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText: "Other",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            new TextField(
-                                              controller: _Other2Controller,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText: "Other",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                          ],
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.all(4),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Relative Humidity / Temperature Readings",
+                                        style: cardTitleStyle(),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        margin: EdgeInsets.only(
+                                            top: 8, bottom: 8),
+                                        child: Divider(
+                                          color: Colors.grey,
+                                          thickness: .5,
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-/*------------------VISUAL BASEMENT INSPECTION------------------*/
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            spreadRadius: 2,
-                                            offset: Offset(
-                                              0,
-                                              0,
-                                            ),
-                                          )
-                                        ],
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            CurrentOutsideConditionsSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Current Outside Conditions*",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            CurrentOutsideConditionsArray
+                                                .length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  CurrentOutsideConditionsArray[
+                                                  index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            CurrentOutsideConditionsSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        CurrentOutsideConditionsSelection,
                                       ),
-                                      margin: EdgeInsets.all(4),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Visual Basement Inspection",
-                                              style: cardTitleStyle(),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              margin: EdgeInsets.only(
-                                                  top: 8, bottom: 8),
-                                              child: Divider(
-                                                color: Colors.grey,
-                                                thickness: .5,
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _OutsideRelativeHumidityController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType
+                                            .numberWithOptions(
+                                            decimal: false,
+                                            signed: false),
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _OutsideRelativeHumidityController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Outside Relative Humidity *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _OutsideTemperatureController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType
+                                            .numberWithOptions(
+                                            decimal: false,
+                                            signed: false),
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _OutsideTemperatureController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Outside Temperature *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _1stFloorRelativeHumidityController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType
+                                            .numberWithOptions(
+                                            decimal: false,
+                                            signed: false),
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "1st Floor Relative Humidity",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _1stFloorTemperatureController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType
+                                            .numberWithOptions(
+                                            decimal: false,
+                                            signed: false),
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "1st Floor Temperature",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      Card(
+                                        elevation: 2,
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.all(16),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                "Current Inside Condition",
+                                                style: cardTitleStyle(),
                                               ),
-                                            ),
+                                              Container(
+                                                width: 200,
+                                                margin: EdgeInsets.only(
+                                                    top: 8, bottom: 8),
+                                                child: Divider(
+                                                  color: Colors.grey,
+                                                  thickness: .5,
+                                                ),
+                                              ),
+                                              DropdownButtonFormField(
+                                                decoration: new InputDecoration(
+                                                    errorText:
+                                                    HeatSelection == 0
+                                                        ? "Select another value"
+                                                        : null,
+                                                    errorStyle:
+                                                    customTextFieldErrorStyle(),
+                                                    labelText: "Heat*",
+                                                    labelStyle:
+                                                    customTextStyle(),
+                                                    hintText: "e.g. hint",
+                                                    hintStyle:
+                                                    customHintStyle(),
+                                                    alignLabelWithHint:
+                                                    false,
+                                                    isDense: true),
+                                                items: List.generate(
+                                                    HeatArray.length,
+                                                        (index) {
+                                                      return DropdownMenuItem(
+                                                          value: index,
+                                                          child: Text(
+                                                              HeatArray[
+                                                              index]
+                                                                  .DisplayText));
+                                                    }),
+                                                onChanged: (index) {
+                                                  setState(() {
+                                                    HeatSelection = index;
+                                                  });
+                                                },
+                                                value: HeatSelection,
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              DropdownButtonFormField(
+                                                decoration: new InputDecoration(
+                                                    errorText:
+                                                    AirSelection == 0
+                                                        ? "Select another value"
+                                                        : null,
+                                                    errorStyle:
+                                                    customTextFieldErrorStyle(),
+                                                    labelText: "Air *",
+                                                    labelStyle:
+                                                    customTextStyle(),
+                                                    hintText: "e.g. hint",
+                                                    hintStyle:
+                                                    customHintStyle(),
+                                                    alignLabelWithHint:
+                                                    false,
+                                                    isDense: true),
+                                                items: List.generate(
+                                                    AirArray.length,
+                                                        (index) {
+                                                      return DropdownMenuItem(
+                                                          value: index,
+                                                          child: Text(
+                                                              AirArray[
+                                                              index]
+                                                                  .DisplayText));
+                                                    }),
+                                                onChanged: (index) {
+                                                  setState(() {
+                                                    AirSelection = index;
+                                                  });
+                                                },
+                                                value: AirSelection,
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              new TextField(
+                                                controller:
+                                                _BasementRelativeHumidityController,
+                                                obscureText: false,
+                                                onChanged: (val) {
+                                                  setState(() {});
+                                                },
+                                                cursorColor: Colors.black,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                    decimal: false,
+                                                    signed: false),
+                                                maxLines: 1,
+                                                style: customTextStyle(),
+                                                decoration: new InputDecoration(
+                                                    labelText:
+                                                    "Basement Relative Humidity",
+                                                    labelStyle:
+                                                    customTextStyle(),
+                                                    hintText: "e.g. hint",
+                                                    hintStyle:
+                                                    customHintStyle(),
+                                                    alignLabelWithHint:
+                                                    false,
+                                                    isDense: true),
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              new TextField(
+                                                controller:
+                                                _BasementTemperatureController,
+                                                obscureText: false,
+                                                onChanged: (val) {
+                                                  setState(() {});
+                                                },
+                                                cursorColor: Colors.black,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                    decimal: false,
+                                                    signed: false),
+                                                maxLines: 1,
+                                                style: customTextStyle(),
+                                                decoration: new InputDecoration(
+                                                    labelText:
+                                                    "Basement Temperature",
+                                                    labelStyle:
+                                                    customTextStyle(),
+                                                    hintText: "e.g. hint",
+                                                    hintStyle:
+                                                    customHintStyle(),
+                                                    alignLabelWithHint:
+                                                    false,
+                                                    isDense: true),
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              DropdownButtonFormField(
+                                                decoration: new InputDecoration(
+                                                    errorText:
+                                                    BasementDehumidifierSelection ==
+                                                        0
+                                                        ? "Select another value"
+                                                        : null,
+                                                    errorStyle:
+                                                    customTextFieldErrorStyle(),
+                                                    labelText:
+                                                    "Basement Dehumidifier *",
+                                                    labelStyle:
+                                                    customTextStyle(),
+                                                    hintText: "e.g. hint",
+                                                    hintStyle:
+                                                    customHintStyle(),
+                                                    alignLabelWithHint:
+                                                    false,
+                                                    isDense: true),
+                                                items: List.generate(
+                                                    BasementDehumidifierArray
+                                                        .length, (index) {
+                                                  return DropdownMenuItem(
+                                                      value: index,
+                                                      child: Text(
+                                                          BasementDehumidifierArray[
+                                                          index]
+                                                              .DisplayText));
+                                                }),
+                                                onChanged: (index) {
+                                                  setState(() {
+                                                    BasementDehumidifierSelection =
+                                                        index;
+                                                  });
+                                                },
+                                                value:
+                                                BasementDehumidifierSelection,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                      new TextField(
+                                        controller: _Other1Controller,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText: "Other",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      new TextField(
+                                        controller: _Other2Controller,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText: "Other",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+/*------------------VISUAL BASEMENT INSPECTION------------------*/
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(4)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      spreadRadius: 2,
+                                      offset: Offset(
+                                        0,
+                                        0,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.all(4),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Visual Basement Inspection",
+                                        style: cardTitleStyle(),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        margin: EdgeInsets.only(
+                                            top: 8, bottom: 8),
+                                        child: Divider(
+                                          color: Colors.grey,
+                                          thickness: .5,
+                                        ),
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            GroundWaterSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "Ground Water *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            GroundWaterSelection = index;
+                                          });
+                                        },
+                                        value: GroundWaterSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "Ground Water Rating (1-10)",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            RatingArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  RatingArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            GroundWaterRatingSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: GroundWaterRatingSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            IronBacteriaSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "Iron Bacteria *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            IronBacteriaSelection = index;
+                                          });
+                                        },
+                                        value: IronBacteriaSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "Iron Bacteria Rating (1-10)",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            RatingArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  RatingArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            IronBacteriaRatingSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        IronBacteriaRatingSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            CondensationSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "Condensation *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            CondensationSelection = index;
+                                          });
+                                        },
+                                        value: CondensationSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "Condensation Rating (1-10)",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            RatingArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  RatingArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            CondensationRatingSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        CondensationRatingSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            WallCracksSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "Wall Cracks *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            WallCracksSelection = index;
+                                          });
+                                        },
+                                        value: WallCracksSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "Wall Cracks Rating (1-10)",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            RatingArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  RatingArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            WallCracksRatingSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: WallCracksRatingSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            FloorCracksSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "Floor Cracks *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            FloorCracksSelection = index;
+                                          });
+                                        },
+                                        value: FloorCracksSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "Floor Cracks Rating (1-10)",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            RatingArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  RatingArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            FloorCracksRatingSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: FloorCracksRatingSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            ExistingSumpPumpSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Existing Sump Pump *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            ExistingSumpPumpSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: ExistingSumpPumpSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            ExistingDrainageSystemSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Existing Drainage System *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            ExistingDrainageSystemSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        ExistingDrainageSystemSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            ExistingRadonSystemSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Radon System (existing) *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            ExistingRadonSystemSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        ExistingRadonSystemSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            DryerVentToCodeSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Dryer Vent To Code? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            DryerVentToCodeSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: DryerVentToCodeSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            FoundationTypeSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "Foundation Type? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            FoundationTypeArray.length,
+                                                (index) {
+                                              return DropdownMenuItem(
+                                                  value: index,
+                                                  child: Text(
+                                                      FoundationTypeArray[
+                                                      index]
+                                                          .DisplayText));
+                                            }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            FoundationTypeSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: FoundationTypeSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText: BulkheadSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "Bulkhead ? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            BulkheadSelection = index;
+                                          });
+                                        },
+                                        value: BulkheadSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _VisualBasementInspectionOtherController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText: "Other",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+/*------------------CUSTOMER BASEMENT EVALUATION------------------*/
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(4)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      spreadRadius: 2,
+                                      offset: Offset(
+                                        0,
+                                        0,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.all(4),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Customer Basement Evaluation",
+                                        style: cardTitleStyle(),
+                                      ),
+                                      Container(
+                                        width: 200,
+                                        margin: EdgeInsets.only(
+                                            top: 8, bottom: 8),
+                                        child: Divider(
+                                          color: Colors.grey,
+                                          thickness: .5,
+                                        ),
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            NoticedSmellsOrOdorsSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "1. Have you ever noticed smells/odors coming from the basement? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            NoticedSmellsOrOdorsSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        NoticedSmellsOrOdorsSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _NoticedSmellsCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _NoticedSmellsCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "1. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            NoticedMoldOrMildewSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "2. Have you ever noticed mold/mildew on any item in the basement? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            NoticedMoldOrMildewSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        NoticedMoldOrMildewSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _NoticedMoldsCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _NoticedMoldsCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "2. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            BasementGoDownSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "3. How often do you go down in the basement? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            BasementGoDownSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: BasementGoDownSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            HomeSufferForRespiratoryProblemsSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "4. Does anyone in the home suffer from respiratory problems? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            HomeSufferForRespiratoryProblemsSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        HomeSufferForRespiratoryProblemsSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _SufferFromRespiratoryCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _SufferFromRespiratoryCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "4. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            ChildrenPlayInBasementSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "5. Do your children play in the basement? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            ChildrenPlayInBasementSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        ChildrenPlayInBasementSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _ChildrenPlayInTheBasementCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _ChildrenPlayInTheBasementCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "5. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            ChildrenPlayInBasementSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "6. Do you have pets that go in the basement? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            ChildrenPlayInBasementSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        ChildrenPlayInBasementSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _HavePetsCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _HavePetsCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "6. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            NoticedBugsOrRodentsSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "7. Have you ever noticed bugs/rodents in the basement? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            NoticedBugsOrRodentsSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        NoticedBugsOrRodentsSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _NoticedBugsCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _NoticedBugsCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "7. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText: GetWaterSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "8. Do you get water?* How high does the water level get?",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            GetWaterSelection = index;
+                                          });
+                                        },
+                                        value: GetWaterSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _GetWaterCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _GetWaterCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "8. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "9. How do you normally remove the water from basement?",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            RemoveWaterArray.length,
+                                                (index) {
+                                              return DropdownMenuItem(
+                                                  value: index,
+                                                  child: Text(
+                                                      RemoveWaterArray[index]
+                                                          .DisplayText));
+                                            }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            RemoveWaterSelection = index;
+                                          });
+                                        },
+                                        value: RemoveWaterSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            SeeCondensationPipesDrippingSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "10. Do you ever see pipes dripping (condensation)? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            SeeCondensationPipesDrippingSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        SeeCondensationPipesDrippingSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _EverSeePipesDrippingCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _EverSeePipesDrippingCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "10. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            RepairsTryAndFixSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "11. Have you done any repairs to try and fix these problems? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            RepairsTryAndFixSelection =
+                                                index;
+                                          });
+                                        },
+                                        value: RepairsTryAndFixSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _AnyRepairsToTryAndFixCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _AnyRepairsToTryAndFixCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "11. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            LivingPlanSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "12. How long do you plan on living here?* Are you planning to sell*",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            LivingPlanSelection = index;
+                                          });
+                                        },
+                                        value: LivingPlanSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            SellPlaningSelection == 0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "12. How long do you plan on living here?* Are you planning to sell*",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            SellPlaningSelection = index;
+                                          });
+                                        },
+                                        value: SellPlaningSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            labelText:
+                                            "13. What are your plans for the basement once it is dry?",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            PlansForBasementOnceSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        PlansForBasementOnceSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      DropdownButtonFormField(
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            HomeTestedForRadonSelection ==
+                                                0
+                                                ? "Select another value"
+                                                : null,
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText:
+                                            "14. Has your home been tested for radon in the past 2 years? *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                        items: List.generate(
+                                            YesNoArray.length, (index) {
+                                          return DropdownMenuItem(
+                                              value: index,
+                                              child: Text(
+                                                  YesNoArray[index]
+                                                      .DisplayText));
+                                        }),
+                                        onChanged: (index) {
+                                          setState(() {
+                                            HomeTestedForRadonSelection =
+                                                index;
+                                          });
+                                        },
+                                        value:
+                                        HomeTestedForRadonSelection,
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      new TextField(
+                                        controller:
+                                        _TestedForRadonInThePast2YearsCommentController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
+                                        },
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            errorText:
+                                            _TestedForRadonInThePast2YearsCommentController
+                                                .text.isNotEmpty
+                                                ? null
+                                                : "* Required",
+                                            errorStyle:
+                                            customTextFieldErrorStyle(),
+                                            labelText: "14. Comment *",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Expanded(
+                                            child:
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  GroundWaterSelection == 0
+                                                  LosePowerSelection == 0
                                                       ? "Select another value"
                                                       : null,
                                                   errorStyle:
                                                   customTextFieldErrorStyle(),
-                                                  labelText: "Ground Water *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  GroundWaterSelection = index;
-                                                });
-                                              },
-                                              value: GroundWaterSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
                                                   labelText:
-                                                  "Ground Water Rating (1-10)",
-                                                  labelStyle: customTextStyle(),
+                                                  "15. Do you lose power? *",
+                                                  labelStyle:
+                                                  customTextStyle(),
                                                   hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
+                                                  hintStyle:
+                                                  customHintStyle(),
+                                                  alignLabelWithHint:
+                                                  false,
                                                   isDense: true),
                                               items: List.generate(
-                                                  RatingArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        RatingArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  GroundWaterRatingSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: GroundWaterRatingSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  IronBacteriaSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "Iron Bacteria *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  IronBacteriaSelection = index;
-                                                });
-                                              },
-                                              value: IronBacteriaSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "Iron Bacteria Rating (1-10)",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  RatingArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        RatingArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  IronBacteriaRatingSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              IronBacteriaRatingSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  CondensationSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "Condensation *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  CondensationSelection = index;
-                                                });
-                                              },
-                                              value: CondensationSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "Condensation Rating (1-10)",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  RatingArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        RatingArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  CondensationRatingSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              CondensationRatingSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  WallCracksSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "Wall Cracks *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  WallCracksSelection = index;
-                                                });
-                                              },
-                                              value: WallCracksSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "Wall Cracks Rating (1-10)",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  RatingArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        RatingArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  WallCracksRatingSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: WallCracksRatingSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  FloorCracksSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "Floor Cracks *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  FloorCracksSelection = index;
-                                                });
-                                              },
-                                              value: FloorCracksSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "Floor Cracks Rating (1-10)",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  RatingArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        RatingArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  FloorCracksRatingSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: FloorCracksRatingSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  ExistingSumpPumpSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Existing Sump Pump *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  ExistingSumpPumpSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: ExistingSumpPumpSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  ExistingDrainageSystemSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Existing Drainage System *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  ExistingDrainageSystemSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              ExistingDrainageSystemSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  ExistingRadonSystemSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Radon System (existing) *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  ExistingRadonSystemSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              ExistingRadonSystemSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  DryerVentToCodeSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Dryer Vent To Code? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  DryerVentToCodeSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: DryerVentToCodeSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  FoundationTypeSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "Foundation Type? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  FoundationTypeArray.length,
+                                                  LosePowerArray.length,
                                                       (index) {
                                                     return DropdownMenuItem(
                                                         value: index,
                                                         child: Text(
-                                                            FoundationTypeArray[
+                                                            LosePowerArray[
                                                             index]
                                                                 .DisplayText));
                                                   }),
                                               onChanged: (index) {
                                                 setState(() {
-                                                  FoundationTypeSelection =
+                                                  LosePowerSelection =
                                                       index;
                                                 });
                                               },
-                                              value: FoundationTypeSelection,
+                                              value: LosePowerSelection,
                                             ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText: BulkheadSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "Bulkhead ? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  BulkheadSelection = index;
-                                                });
-                                              },
-                                              value: BulkheadSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _VisualBasementInspectionOtherController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText: "Other",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-/*------------------CUSTOMER BASEMENT EVALUATION------------------*/
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            spreadRadius: 2,
-                                            offset: Offset(
-                                              0,
-                                              0,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      margin: EdgeInsets.all(4),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(
-                                              "Customer Basement Evaluation",
-                                              style: cardTitleStyle(),
-                                            ),
-                                            Container(
-                                              width: 200,
-                                              margin: EdgeInsets.only(
-                                                  top: 8, bottom: 8),
-                                              child: Divider(
-                                                color: Colors.grey,
-                                                thickness: .5,
-                                              ),
-                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 24,
+                                          ),
+                                          Expanded(
+                                            child:
                                             DropdownButtonFormField(
                                               decoration: new InputDecoration(
                                                   errorText:
-                                                  NoticedSmellsOrOdorsSelection ==
+                                                  LosePowerHowOftenSelection ==
                                                       0
                                                       ? "Select another value"
                                                       : null,
                                                   errorStyle:
                                                   customTextFieldErrorStyle(),
                                                   labelText:
-                                                  "1. Have you ever noticed smells/odors coming from the basement? *",
-                                                  labelStyle: customTextStyle(),
+                                                  "If so how often? *",
+                                                  labelStyle:
+                                                  customTextStyle(),
                                                   hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
+                                                  hintStyle:
+                                                  customHintStyle(),
+                                                  alignLabelWithHint:
+                                                  false,
                                                   isDense: true),
                                               items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  NoticedSmellsOrOdorsSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              NoticedSmellsOrOdorsSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _NoticedSmellsCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _NoticedSmellsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "1. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  NoticedMoldOrMildewSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "2. Have you ever noticed mold/mildew on any item in the basement? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  NoticedMoldOrMildewSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              NoticedMoldOrMildewSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _NoticedMoldsCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _NoticedMoldsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "2. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  BasementGoDownSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "3. How often do you go down in the basement? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  BasementGoDownSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: BasementGoDownSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  HomeSufferForRespiratoryProblemsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "4. Does anyone in the home suffer from respiratory problems? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  HomeSufferForRespiratoryProblemsSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              HomeSufferForRespiratoryProblemsSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _SufferFromRespiratoryCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _SufferFromRespiratoryCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "4. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  ChildrenPlayInBasementSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "5. Do your children play in the basement? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  ChildrenPlayInBasementSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              ChildrenPlayInBasementSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _ChildrenPlayInTheBasementCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _ChildrenPlayInTheBasementCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "5. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  ChildrenPlayInBasementSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "6. Do you have pets that go in the basement? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  ChildrenPlayInBasementSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              ChildrenPlayInBasementSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _HavePetsCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _HavePetsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "6. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  NoticedBugsOrRodentsSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "7. Have you ever noticed bugs/rodents in the basement? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  NoticedBugsOrRodentsSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              NoticedBugsOrRodentsSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _NoticedBugsCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _NoticedBugsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "7. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText: GetWaterSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "8. Do you get water?* How high does the water level get?",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  GetWaterSelection = index;
-                                                });
-                                              },
-                                              value: GetWaterSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _GetWaterCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _GetWaterCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "8. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "9. How do you normally remove the water from basement?",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  RemoveWaterArray.length,
+                                                  LosePowerArray.length,
                                                       (index) {
                                                     return DropdownMenuItem(
                                                         value: index,
                                                         child: Text(
-                                                            RemoveWaterArray[index]
+                                                            LosePowerArray[
+                                                            index]
                                                                 .DisplayText));
                                                   }),
                                               onChanged: (index) {
                                                 setState(() {
-                                                  RemoveWaterSelection = index;
-                                                });
-                                              },
-                                              value: RemoveWaterSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  SeeCondensationPipesDrippingSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "10. Do you ever see pipes dripping (condensation)? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  SeeCondensationPipesDrippingSelection =
+                                                  LosePowerHowOftenSelection =
                                                       index;
                                                 });
                                               },
                                               value:
-                                              SeeCondensationPipesDrippingSelection,
+                                              LosePowerHowOftenSelection,
                                             ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _EverSeePipesDrippingCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _EverSeePipesDrippingCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "10. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  RepairsTryAndFixSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "11. Have you done any repairs to try and fix these problems? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  RepairsTryAndFixSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value: RepairsTryAndFixSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _AnyRepairsToTryAndFixCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _AnyRepairsToTryAndFixCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "11. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  LivingPlanSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "12. How long do you plan on living here?* Are you planning to sell*",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  LivingPlanSelection = index;
-                                                });
-                                              },
-                                              value: LivingPlanSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  SellPlaningSelection == 0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "12. How long do you plan on living here?* Are you planning to sell*",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  SellPlaningSelection = index;
-                                                });
-                                              },
-                                              value: SellPlaningSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  labelText:
-                                                  "13. What are your plans for the basement once it is dry?",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  PlansForBasementOnceSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              PlansForBasementOnceSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            DropdownButtonFormField(
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  HomeTestedForRadonSelection ==
-                                                      0
-                                                      ? "Select another value"
-                                                      : null,
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText:
-                                                  "14. Has your home been tested for radon in the past 2 years? *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                              items: List.generate(
-                                                  YesNoArray.length, (index) {
-                                                return DropdownMenuItem(
-                                                    value: index,
-                                                    child: Text(
-                                                        YesNoArray[index]
-                                                            .DisplayText));
-                                              }),
-                                              onChanged: (index) {
-                                                setState(() {
-                                                  HomeTestedForRadonSelection =
-                                                      index;
-                                                });
-                                              },
-                                              value:
-                                              HomeTestedForRadonSelection,
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _TestedForRadonInThePast2YearsCommentController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  errorText:
-                                                  _TestedForRadonInThePast2YearsCommentController
-                                                      .text.isNotEmpty
-                                                      ? null
-                                                      : "* Required",
-                                                  errorStyle:
-                                                  customTextFieldErrorStyle(),
-                                                  labelText: "14. Comment *",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child:
-                                                  DropdownButtonFormField(
-                                                    decoration: new InputDecoration(
-                                                        errorText:
-                                                        LosePowerSelection == 0
-                                                            ? "Select another value"
-                                                            : null,
-                                                        errorStyle:
-                                                        customTextFieldErrorStyle(),
-                                                        labelText:
-                                                        "15. Do you lose power? *",
-                                                        labelStyle:
-                                                        customTextStyle(),
-                                                        hintText: "e.g. hint",
-                                                        hintStyle:
-                                                        customHintStyle(),
-                                                        alignLabelWithHint:
-                                                        false,
-                                                        isDense: true),
-                                                    items: List.generate(
-                                                        LosePowerArray.length,
-                                                            (index) {
-                                                          return DropdownMenuItem(
-                                                              value: index,
-                                                              child: Text(
-                                                                  LosePowerArray[
-                                                                  index]
-                                                                      .DisplayText));
-                                                        }),
-                                                    onChanged: (index) {
-                                                      setState(() {
-                                                        LosePowerSelection =
-                                                            index;
-                                                      });
-                                                    },
-                                                    value: LosePowerSelection,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 24,
-                                                ),
-                                                Expanded(
-                                                  child:
-                                                  DropdownButtonFormField(
-                                                    decoration: new InputDecoration(
-                                                        errorText:
-                                                        LosePowerHowOftenSelection ==
-                                                            0
-                                                            ? "Select another value"
-                                                            : null,
-                                                        errorStyle:
-                                                        customTextFieldErrorStyle(),
-                                                        labelText:
-                                                        "If so how often? *",
-                                                        labelStyle:
-                                                        customTextStyle(),
-                                                        hintText: "e.g. hint",
-                                                        hintStyle:
-                                                        customHintStyle(),
-                                                        alignLabelWithHint:
-                                                        false,
-                                                        isDense: true),
-                                                    items: List.generate(
-                                                        LosePowerArray.length,
-                                                            (index) {
-                                                          return DropdownMenuItem(
-                                                              value: index,
-                                                              child: Text(
-                                                                  LosePowerArray[
-                                                                  index]
-                                                                      .DisplayText));
-                                                        }),
-                                                    onChanged: (index) {
-                                                      setState(() {
-                                                        LosePowerHowOftenSelection =
-                                                            index;
-                                                      });
-                                                    },
-                                                    value:
-                                                    LosePowerHowOftenSelection,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 4,
-                                            ),
-                                            new TextField(
-                                              controller:
-                                              _BasementEvaluationOtherController,
-                                              obscureText: false,
-                                              onChanged: (val) {
-                                                setState(() {});
-                                              },
-                                              cursorColor: Colors.black,
-                                              keyboardType: TextInputType.text,
-                                              maxLines: 1,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText: "16. Other",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 4,
-                                            spreadRadius: 2,
-                                            offset: Offset(
-                                              0,
-                                              0,
-                                            ),
-                                          )
+                                          ),
                                         ],
                                       ),
-                                      margin: EdgeInsets.all(4),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Container(
-                                              width: 200,
-                                              margin: EdgeInsets.only(
-                                                  top: 8, bottom: 8),
-                                              child: Divider(
-                                                color: Colors.grey,
-                                                thickness: .5,
-                                              ),
-                                            ),
-                                            new TextField(
-                                              controller: _NotesController,
-                                              obscureText: false,
-                                              cursorColor: Colors.black,
-                                              keyboardType:
-                                              TextInputType.multiline,
-                                              maxLines: null,
-                                              minLines: 3,
-                                              style: customTextStyle(),
-                                              decoration: new InputDecoration(
-                                                  labelText: "Notes",
-                                                  labelStyle: customTextStyle(),
-                                                  hintText: "e.g. hint",
-                                                  hintStyle: customHintStyle(),
-                                                  alignLabelWithHint: false,
-                                                  isDense: true),
-                                            ),
-                                          ],
-                                        ),
+                                      SizedBox(
+                                        height: 4,
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 32,
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: InkWell(
-                                        onTap: () {
-                                          showSaving();
-
-                                          // saveInspectionReport();
+                                      new TextField(
+                                        controller:
+                                        _BasementEvaluationOtherController,
+                                        obscureText: false,
+                                        onChanged: (val) {
+                                          setState(() {});
                                         },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(36)),
-                                            color: Colors.black,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black38,
-                                                blurRadius: 4,
-                                                spreadRadius: 4,
-                                                offset: Offset(
-                                                  0,
-                                                  0,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          padding: EdgeInsets.only(
-                                              left: 48,
-                                              right: 48,
-                                              top: 18,
-                                              bottom: 18),
-                                          margin: EdgeInsets.only(
-                                              right: 16, bottom: 16),
-                                          child: Text(
-                                            "Submit",
-                                            style: customButtonTextStyle(),
-                                          ),
+                                        cursorColor: Colors.black,
+                                        keyboardType: TextInputType.text,
+                                        maxLines: 1,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText: "16. Other",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(4)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 4,
+                                      spreadRadius: 2,
+                                      offset: Offset(
+                                        0,
+                                        0,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.all(4),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Container(
+                                        width: 200,
+                                        margin: EdgeInsets.only(
+                                            top: 8, bottom: 8),
+                                        child: Divider(
+                                          color: Colors.grey,
+                                          thickness: .5,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              } catch (error) {
-                                return Center(
-                                  child: Text(
-                                    "Something went wrong...",
-                                    style: listTextStyle(),
+                                      new TextField(
+                                        controller: _NotesController,
+                                        obscureText: false,
+                                        cursorColor: Colors.black,
+                                        keyboardType:
+                                        TextInputType.multiline,
+                                        maxLines: null,
+                                        minLines: 3,
+                                        style: customTextStyle(),
+                                        decoration: new InputDecoration(
+                                            labelText: "Notes",
+                                            labelStyle: customTextStyle(),
+                                            hintText: "e.g. hint",
+                                            hintStyle: customHintStyle(),
+                                            alignLabelWithHint: false,
+                                            isDense: true),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              }
-                            } else {
-                              return Container();
-                            }
-                          } catch (error) {
-                            return Center(
-                              child: Text(
-                                "Something went wrong...",
-                                style: listTextStyle(),
+                                ),
                               ),
-                            );
-                          }
-                        },
-                      );
-                    } else {
+                              SizedBox(
+                                height: 32,
+                              ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: InkWell(
+                                  onTap: () {
+                                    showSaving();
+                                    // saveInspectionReport();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(36)),
+                                      color: Colors.black,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black38,
+                                          blurRadius: 4,
+                                          spreadRadius: 4,
+                                          offset: Offset(
+                                            0,
+                                            0,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    padding: EdgeInsets.only(
+                                        left: 48,
+                                        right: 48,
+                                        top: 18,
+                                        bottom: 18),
+                                    margin: EdgeInsets.only(
+                                        right: 16, bottom: 16),
+                                    child: Text(
+                                      "Submit",
+                                      style: customButtonTextStyle(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        } catch (error) {
+                          return Center(
+                            child: Text(
+                              "Something went wrong...",
+                              style: listTextStyle(),
+                            ),
+                          );
+                        }
+                      } else {
+                        return Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+                    } catch (error) {
                       return Center(
-                        child: Text("Loading"),
+                        child: Text(
+                          "Something went wrong...",
+                          style: listTextStyle(),
+                        ),
                       );
                     }
                   },
@@ -2591,7 +2575,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
     var result = await http.get(BASE_URL+API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
-      var map = json.decode(result.body)['datalist'];
+      var map = json.decode(result.body)['data'];
       List<DropDownSingleItem> _lists =
       List.generate(map.length, (index) {
         return DropDownSingleItem.fromMap(map[index]);
@@ -2632,22 +2616,6 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
         }
       }
       return _lists;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return [];
-    }
-  }
-
-  Future getData() async {
-    Map<String, String> headers = {
-      'Authorization': widget.login.accessToken,
-      'CustomerId': widget.customer.CustomerId,
-    };
-
-    var result = await http.get(BASE_URL+API_GET_BASEMENT_INSPECTION, headers: headers);
-    if (result.statusCode == 200) {
-      return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);

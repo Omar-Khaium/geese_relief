@@ -1,21 +1,26 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/model/organaization_model.dart';
 import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/ui/fragment_organization_list.dart';
+import 'package:flutter_grate_app/ui/ui_dashboard.dart';
 import 'package:flutter_grate_app/ui/ui_forgret_password.dart';
+import 'package:flutter_grate_app/widgets/OrganizationList.dart';
+import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../utils.dart';
-import 'ui_dashboard.dart';
 
 class LogInUI extends StatefulWidget {
   Login login;
@@ -37,6 +42,7 @@ class _LogInUIState extends State<LogInUI> {
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
 
+  List<Organization> _list = [];
   DBHelper dbHelper = new DBHelper();
   Login login;
   LoggedInUser loggedInUser;
@@ -57,13 +63,23 @@ class _LogInUIState extends State<LogInUI> {
           Icons.error_outline);
     } else {
       await getData(login);
+
       setState(() {
         _isLoading = false;
       });
+
+       /*Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => new DashboardUI(login, loggedInUser)
+          )
+      );*/
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => new DashboardUI(login, loggedInUser)));
+              builder: (context) => new OrganizationListUi(login,loggedInUser)
+          )
+      );
     }
   }
 
@@ -85,16 +101,92 @@ class _LogInUIState extends State<LogInUI> {
       'grant_type': 'password'
     };
     HttpClient client = new HttpClient();
-    client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    client.badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => true);
 
+    var url = 'https://api.gratecrm.com/token';
     try {
-      http.post(BASE_URL+API_TOKEN, body: data).then((response) {
+      http.post(url, body: data).then((response) {
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
           login.accessToken = map['token_type'] + " " + map['access_token'];
           login.validity = map['expires_in'];
           login.isAuthenticated = true;
           saveToDatabase();
+          //showPopUp();
+
+            /*showDialog<void>(
+              context: context,
+              barrierDismissible: true, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                    backgroundColor: Colors.white,
+                    title: FutureBuilder(
+                      future: getOrganizationData(),
+                      builder: (context, snapshot) {
+                        try {
+                          if (snapshot.hasData) {
+                            var map = json.decode(snapshot.data.body);
+                            var organizationMap = map['orglist'];
+                            if (organizationMap == null) {
+                              _list = [];
+                            } else {
+                              _list = List.generate(organizationMap.length, (index) {
+                                return Organization.fromMap(organizationMap[index]);
+                              });
+                            }
+                            try {
+                              return Container(
+                                width: 300,
+                                height: 300,
+                                color: Colors.white,
+                                child: new ListView.builder(
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemBuilder: (BuildContext context, index) {
+                                    return Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Container(
+                                          height: 50,
+                                          color: Colors.white,
+                                          child: Table(
+                                            children: [
+                                              TableRow(children: [
+                                                _list[index].image,
+                                                Text(_list[index].text)
+                                              ]),
+                                            ],
+                                          )),
+                                    );
+                                  },
+                                ),
+                              );
+                            } catch (error) {
+                              return Center(
+                                child: Text(
+                                  "Something went wrong...",
+                                  style: listTextStyle(),
+                                ),
+                              );
+                            }
+                          } else {
+                            return ShimmerCustomerDetailsFragment();
+                          }
+                        } catch (error) {
+                          return Center(
+                            child: Text(
+                              "Something went wrong...",
+                              style: listTextStyle(),
+                            ),
+                          );
+                        }
+                      },
+                    ));
+              },
+            );*/
+
+
         } else {
           Flushbar(
             flushbarPosition: FlushbarPosition.TOP,
@@ -471,7 +563,8 @@ class _LogInUIState extends State<LogInUI> {
       'username': login.username
     };
 
-    var result = await http.get(BASE_URL+API_USER_BY_USERNAME, headers: headers);
+    var url = "https://api.gratecrm.com/GetUserByUserName";
+    var result = await http.get(url, headers: headers);
     if (result.statusCode == 200) {
       loggedInUser = LoggedInUser.fromMap(json.decode(result.body));
       await saveLoggedInUserToDatabase(loggedInUser);
@@ -483,8 +576,33 @@ class _LogInUIState extends State<LogInUI> {
     }
   }
 
+  getOrganizationData() async {
+    try{
+      Map<String, String> headers = {
+        'Authorization': widget.login.accessToken,
+      };
+
+      var url = "https://api.gratecrm.com/GetOrganizationList";
+      var result = await http.get(url, headers: headers);
+      if (result.statusCode == 200) {
+        Map map = json.decode(result.body);
+        print(map['orglist'][0]['text']);
+        return result;
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return {};
+      }
+    }
+    catch(error){
+      print(error);
+    }
+
+  }
+
   saveLoggedInUserToDatabase(LoggedInUser loggedInUser) async {
     await dbHelper.deleteAll(DBInfo.TABLE_CURRENT_USER);
     await dbHelper.save(loggedInUser, DBInfo.TABLE_CURRENT_USER);
   }
+
 }

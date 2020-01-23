@@ -63,7 +63,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   List<DropDownSingleItem> TypeArray = [];
   int TypeDropdown = 0;
 
-
   static String ACCESS_TOKEN = "";
   var _future;
 

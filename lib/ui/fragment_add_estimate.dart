@@ -584,6 +584,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                 setState(() {
                                                   _productList.removeAt(index);
                                                   estimateTotalCalculation();
+
                                                 });
                                               },
                                             ),
@@ -1634,7 +1635,9 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     bool resultStatus = map['result'];
     Navigator.of(context).pop();
     if (sentmail) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SendMailFragment(map,estimateId,widget.login,widget.customer)));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SendMailFragment(
+              map, estimateId, widget.login, widget.customer)));
     } else {
       showAPIResponse(
           context,
@@ -1841,5 +1844,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     });
     estimateTotalCalculation();
   }
+
 
 }

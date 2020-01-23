@@ -235,7 +235,8 @@ class _SendMailFragmentState extends State<SendMailFragment> {
         'body': _BodyEmailController.text.toString(),
       };
 
-      http.post(BASE_URL+API_SEND_EMAIL, headers: data).then((response) {
+      var url = "https://api.gratecrm.com/SendEmailEstimate";
+      http.post(url, headers: data).then((response) {
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
           http.get(map['EmailUrl']).then((responseResults){
