@@ -35,10 +35,10 @@ class UpdateEstimateFragment extends StatefulWidget {
 
   UpdateEstimateFragment(
       {Key key,
-        this.login,
-        this.loggedInUser,
-        this.customer,
-        this.backToCustomerDetailsFromEstimate})
+      this.login,
+      this.loggedInUser,
+      this.customer,
+      this.backToCustomerDetailsFromEstimate})
       : super(key: key);
 
   @override
@@ -55,7 +55,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   TextEditingController _discountController = new TextEditingController();
   TextEditingController _noteController = new TextEditingController();
   TextEditingController _EstimateDiscountController =
-  new TextEditingController();
+      new TextEditingController();
   bool _discountModeIsPercentage = true;
   bool _EstimateDiscountModeIsPercentage = false;
   GlobalKey _columnKey = GlobalKey();
@@ -95,7 +95,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
 
   _openCamera() async {
     File cameraOutput =
-    (await ImagePicker.pickImage(source: ImageSource.camera));
+        (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
       _imageFile = cameraOutput;
     });
@@ -124,7 +124,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
 
   @override
   void initState() {
-
     _future = getEstimateData();
     _Drawing = DrawingPlaceholder();
     _PMSignature = SignaturePlaceholder();
@@ -140,10 +139,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-
           return new ListView(
-            padding:
-            EdgeInsets.only(top: 16, left: 32, right: 32, bottom: 16),
+            padding: EdgeInsets.only(top: 16, left: 32, right: 32, bottom: 16),
             shrinkWrap: false,
             scrollDirection: Axis.vertical,
             children: <Widget>[
@@ -158,9 +155,9 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                         child: Row(
                           children: <Widget>[
                             CustomBackButton(
-                              onTap: () => widget
-                                  .backToCustomerDetailsFromEstimate(
-                                  widget.customer),
+                              onTap: () =>
+                                  widget.backToCustomerDetailsFromEstimate(
+                                      widget.customer),
                             ),
                             SizedBox(
                               width: 16,
@@ -198,7 +195,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Container(
                                           width: 256,
@@ -208,14 +205,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                               border: Border.all(
                                                   width: 1.0,
                                                   color: Colors.black26),
-                                              borderRadius:
-                                              BorderRadius.all(
-                                                  Radius.circular(
-                                                      5.0))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5.0))),
                                           padding: EdgeInsets.all(8),
                                           child: Row(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Icon(Icons.email),
                                               SizedBox(
@@ -223,17 +218,14 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                               ),
                                               Text(
                                                 widget.customer.Email,
-                                                style:
-                                                estimateTextStyle(),
-                                                overflow:
-                                                TextOverflow.ellipsis,
+                                                style: estimateTextStyle(),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),
                                         ),
                                         Container(
-                                          margin:
-                                          EdgeInsets.only(left: 8),
+                                          margin: EdgeInsets.only(left: 8),
                                           width: 144,
                                           decoration: new BoxDecoration(
                                               color: Colors.grey.shade200,
@@ -241,26 +233,21 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                               border: Border.all(
                                                   width: 1.0,
                                                   color: Colors.black26),
-                                              borderRadius:
-                                              BorderRadius.all(
-                                                  Radius.circular(
-                                                      5.0))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5.0))),
                                           padding: EdgeInsets.all(8),
                                           child: Row(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              Icon(
-                                                  MdiIcons.calendarMonth),
+                                              Icon(MdiIcons.calendarMonth),
                                               SizedBox(
                                                 width: 8,
                                               ),
                                               Text(
                                                 formattedDate.toString(),
-                                                style:
-                                                estimateTextStyle(),
-                                                overflow:
-                                                TextOverflow.ellipsis,
+                                                style: estimateTextStyle(),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),
@@ -276,7 +263,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
                                           width: 256,
@@ -287,107 +274,91 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                               border: Border.all(
                                                   width: 1.0,
                                                   color: Colors.black26),
-                                              borderRadius:
-                                              BorderRadius.all(
-                                                  Radius.circular(
-                                                      5.0))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5.0))),
                                           padding: EdgeInsets.all(8),
-                                          child:
-                                          DropdownButtonHideUnderline(
+                                          child: DropdownButtonHideUnderline(
                                             child: DropdownButton<String>(
-                                              items: _days.map((String
-                                              dropDownStringItem) {
-                                                return DropdownMenuItem<
-                                                    String>(
-                                                  value:
-                                                  dropDownStringItem,
+                                              items: _days.map(
+                                                  (String dropDownStringItem) {
+                                                return DropdownMenuItem<String>(
+                                                  value: dropDownStringItem,
                                                   child: Text(
                                                     dropDownStringItem,
-                                                    style:
-                                                    estimateTextStyle(),
-                                                    overflow: TextOverflow
-                                                        .ellipsis,
+                                                    style: estimateTextStyle(),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 );
                                               }).toList(),
-                                              onChanged: (String
-                                              newValueSelected) {
+                                              onChanged:
+                                                  (String newValueSelected) {
                                                 setState(() {
                                                   this._currentValueSelected =
                                                       newValueSelected;
                                                   switch (
-                                                  _currentValueSelected) {
+                                                      _currentValueSelected) {
                                                     case "After 15 days":
                                                       {
                                                         nextDate = DateFormat(
-                                                            'MM/dd/yyyy')
+                                                                'MM/dd/yyyy')
                                                             .format(DateTime
-                                                            .now()
-                                                            .add(Duration(
-                                                            days:
-                                                            15)));
+                                                                    .now()
+                                                                .add(Duration(
+                                                                    days: 15)));
                                                       }
                                                       break;
                                                     case "After 30 days":
                                                       {
                                                         nextDate = DateFormat(
-                                                            'MM/dd/yyyy')
+                                                                'MM/dd/yyyy')
                                                             .format(DateTime
-                                                            .now()
-                                                            .add(Duration(
-                                                            days:
-                                                            30)));
+                                                                    .now()
+                                                                .add(Duration(
+                                                                    days: 30)));
                                                       }
                                                       break;
                                                     case "After 60 days":
                                                       {
                                                         nextDate = DateFormat(
-                                                            'MM/dd/yyyy')
+                                                                'MM/dd/yyyy')
                                                             .format(DateTime
-                                                            .now()
-                                                            .add(Duration(
-                                                            days:
-                                                            60)));
+                                                                    .now()
+                                                                .add(Duration(
+                                                                    days: 60)));
                                                       }
                                                       break;
                                                   }
                                                 });
                                               },
-                                              value:
-                                              _currentValueSelected,
+                                              value: _currentValueSelected,
                                             ),
                                           ),
                                         ),
                                         Container(
                                           width: 144,
-                                          margin:
-                                          EdgeInsets.only(left: 8),
+                                          margin: EdgeInsets.only(left: 8),
                                           decoration: new BoxDecoration(
                                               color: Colors.grey.shade200,
                                               shape: BoxShape.rectangle,
                                               border: Border.all(
                                                   width: 1.0,
                                                   color: Colors.black26),
-                                              borderRadius:
-                                              BorderRadius.all(
-                                                  Radius.circular(
-                                                      5.0))),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5.0))),
                                           padding: EdgeInsets.all(8),
                                           child: Row(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                                CrossAxisAlignment.center,
                                             children: <Widget>[
-                                              Icon(
-                                                  MdiIcons.calendarMonth),
+                                              Icon(MdiIcons.calendarMonth),
                                               SizedBox(
                                                 width: 8,
                                               ),
                                               Text(
                                                 nextDate,
-                                                style:
-                                                estimateTextStyle(),
-                                                overflow:
-                                                TextOverflow.ellipsis,
+                                                style: estimateTextStyle(),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ],
                                           ),
@@ -425,8 +396,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                         child: RaisedButton(
                           highlightElevation: 2,
                           shape: RoundedRectangleBorder(
-                              borderRadius:
-                              new BorderRadius.circular(36.0),
+                              borderRadius: new BorderRadius.circular(36.0),
                               side: BorderSide(color: Colors.white12)),
                           disabledColor: Colors.black,
                           color: Colors.black,
@@ -435,8 +405,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                           padding: EdgeInsets.only(
                               left: 16, right: 16, top: 12, bottom: 12),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Icon(Icons.add),
                               Text(
@@ -467,169 +436,163 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                   strokeWidth: .5,
                   child: _productList.length == 0
                       ? Container(
-                    padding: EdgeInsets.only(top: 16, bottom: 16),
-                    child: Center(
-                      child: Text("No Products Found!"),
-                    ),
-                  )
-                      : ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return Divider(
-                          thickness: .75,
-                        );
-                      },
-                      physics: ScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: _productList.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          padding: EdgeInsets.all(16),
-                          child: Table(
-                            columnWidths: {
-                              0: FlexColumnWidth(3.5),
-                              1: FlexColumnWidth(1),
-                              2: FlexColumnWidth(.5),
-                            },
-                            defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                            children: [
-                              TableRow(children: [
-                                TableCell(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Icon(MdiIcons.cubeOutline),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              _productList[index]
-                                                  .Name,
-                                              style: listTextStyle(),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Icon(MdiIcons.text),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Flexible(
-                                            child: Text(
-                                              _productList[index]
-                                                  .Description,
-                                              style: listTextStyle(),
-                                              overflow: TextOverflow
-                                                  .ellipsis,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Icon(
-                                              MdiIcons.calendarClock),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Text(
-                                            _productList[index].Date,
-                                            style: listTextStyle(),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                TableCell(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisSize:
-                                        MainAxisSize.min,
-                                        children: <Widget>[
-                                          Icon(MdiIcons.layers),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Text(
-                                            "${_productList[index].Quantity.replaceAllMapped(reg, mathFunc)}",
-                                            style: listTextStyle(),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisSize:
-                                        MainAxisSize.min,
-                                        children: <Widget>[
-                                          Icon(MdiIcons
-                                              .cashUsdOutline),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Text(
-                                            "${_productList[index].Rate.replaceAllMapped(reg, mathFunc)}",
-                                            style: listTextStyle(),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                TableCell(
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      CircleAvatar(
-                                        backgroundColor:
-                                        Colors.grey.shade300,
-                                        child: IconButton(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Colors.black,
-                                            size: 18,
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              _productList
-                                                  .removeAt(index);
-                                              estimateTotalCalculation();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ])
-                            ],
+                          padding: EdgeInsets.only(top: 16, bottom: 16),
+                          child: Center(
+                            child: Text("No Products Found!"),
                           ),
-                        );
-                      }),
+                        )
+                      : ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              thickness: .75,
+                            );
+                          },
+                          physics: ScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _productList.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              padding: EdgeInsets.all(16),
+                              child: Table(
+                                columnWidths: {
+                                  0: FlexColumnWidth(3.5),
+                                  1: FlexColumnWidth(1),
+                                  2: FlexColumnWidth(.5),
+                                },
+                                defaultVerticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                children: [
+                                  TableRow(children: [
+                                    TableCell(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(MdiIcons.cubeOutline),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  _productList[index].Name,
+                                                  style: listTextStyle(),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(MdiIcons.text),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  _productList[index]
+                                                      .Description,
+                                                  style: listTextStyle(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(MdiIcons.calendarClock),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              Text(
+                                                _productList[index].Date,
+                                                style: listTextStyle(),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Icon(MdiIcons.layers),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              Text(
+                                                "${_productList[index].Quantity.replaceAllMapped(reg, mathFunc)}",
+                                                style: listTextStyle(),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Icon(MdiIcons.cashUsdOutline),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              Text(
+                                                "${_productList[index].Rate.replaceAllMapped(reg, mathFunc)}",
+                                                style: listTextStyle(),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          CircleAvatar(
+                                            backgroundColor:
+                                                Colors.grey.shade300,
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.delete,
+                                                color: Colors.black,
+                                                size: 18,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _productList.removeAt(index);
+                                                  estimateTotalCalculation();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ])
+                                ],
+                              ),
+                            );
+                          }),
                 ),
               ),
               Column(
@@ -649,15 +612,15 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                 shape: BoxShape.rectangle,
                                 border: Border.all(
                                     width: 1.0, color: Colors.black26),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(5.0))),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5.0))),
                             child: InkWell(
                               child: _imageFile == null
                                   ? Icon(Icons.camera_enhance)
                                   : Image.file(
-                                _imageFile,
-                                fit: BoxFit.cover,
-                              ),
+                                      _imageFile,
+                                      fit: BoxFit.cover,
+                                    ),
                               onTap: _openCamera,
                             ),
                           ),
@@ -667,7 +630,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                         width: 360,
                         child: Table(
                           defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
+                              TableCellVerticalAlignment.middle,
                           columnWidths: {
                             0: FlexColumnWidth(1),
                             1: FlexColumnWidth(2),
@@ -677,15 +640,14 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Text("Retail"),
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Container(
-                                  margin: EdgeInsets.only(
-                                      top: 12, bottom: 12),
+                                  margin: EdgeInsets.only(top: 12, bottom: 12),
                                   child: Divider(
                                     color: Colors.black,
                                     thickness: .5,
@@ -694,7 +656,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
@@ -705,12 +667,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Text("Discount"),
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: TextField(
                                   controller: _EstimateDiscountController,
                                   onChanged: (val) {
@@ -719,8 +681,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                     });
                                   },
                                   autofocus: false,
-                                  keyboardType:
-                                  TextInputType.numberWithOptions(
+                                  keyboardType: TextInputType.numberWithOptions(
                                       signed: true, decimal: true),
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
@@ -732,7 +693,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                       onPressed: () {
                                         setState(() {
                                           _EstimateDiscountModeIsPercentage =
-                                          !_EstimateDiscountModeIsPercentage;
+                                              !_EstimateDiscountModeIsPercentage;
                                           estimateTotalCalculation();
                                         });
                                       },
@@ -742,13 +703,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                     "\$ ${estimateDiscountTotal.toStringAsFixed(2) == "0.00" ? "" : "-"} ${estimateDiscountTotal.toStringAsFixed(2).replaceAllMapped(reg, mathFunc)}",
-                                    style:
-                                    TextStyle(color: discountColor()),
+                                    style: TextStyle(color: discountColor()),
                                   ),
                                 ),
                               ),
@@ -756,19 +716,17 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Text(
                                   "Subtotal",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Container(
-                                  margin: EdgeInsets.only(
-                                      top: 12, bottom: 12),
+                                  margin: EdgeInsets.only(top: 12, bottom: 12),
                                   child: Divider(
                                     color: Colors.black,
                                     thickness: 1,
@@ -777,13 +735,13 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                     "\$ ${estimateMainSubtotal.toStringAsFixed(2).replaceAllMapped(reg, mathFunc)}",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
@@ -791,34 +749,31 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Text("Tax"),
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Container(
                                   decoration: new BoxDecoration(
                                       color: Colors.grey.shade200,
                                       shape: BoxShape.rectangle,
                                       border: Border.all(
-                                          width: 1.0,
-                                          color: Colors.black26),
+                                          width: 1.0, color: Colors.black26),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0))),
-                                  padding:
-                                  EdgeInsets.only(left: 8, right: 8),
+                                  padding: EdgeInsets.only(left: 8, right: 8),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       items: _TaxType.map(
-                                              (String dropDownStringItem) {
-                                            return DropdownMenuItem<String>(
-                                              value: dropDownStringItem,
-                                              child: Text(dropDownStringItem),
-                                            );
-                                          }).toList(),
-                                      onChanged:
-                                          (String newValueSelected) {
+                                          (String dropDownStringItem) {
+                                        return DropdownMenuItem<String>(
+                                          value: dropDownStringItem,
+                                          child: Text(dropDownStringItem),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String newValueSelected) {
                                         setState(() {
                                           this._TaxTypeSelectedValue =
                                               newValueSelected;
@@ -833,7 +788,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
@@ -846,19 +801,17 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                             TableRow(children: [
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Text(
                                   "Estimate Toal",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Container(
-                                  margin: EdgeInsets.only(
-                                      top: 12, bottom: 12),
+                                  margin: EdgeInsets.only(top: 12, bottom: 12),
                                   child: Divider(
                                     color: Colors.black,
                                     thickness: 1,
@@ -867,13 +820,13 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               ),
                               TableCell(
                                 verticalAlignment:
-                                TableCellVerticalAlignment.middle,
+                                    TableCellVerticalAlignment.middle,
                                 child: Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                     "\$ ${estimateTotalAmount.toStringAsFixed(2).replaceAllMapped(reg, mathFunc)}",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
@@ -923,8 +876,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width,
-                            height:
-                            MediaQuery.of(context).size.height - 200,
+                            height: MediaQuery.of(context).size.height - 200,
                             color: Colors.grey.shade100,
                             child: InkWell(
                               child: _Drawing,
@@ -934,8 +886,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return DrawingDialog(
-                                          picture:
-                                          _generateDrawingPicture);
+                                          picture: _generateDrawingPicture);
                                     },
                                   ),
                                 );
@@ -1009,8 +960,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                             height: 256,
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Expanded(
                                   child: InkWell(
@@ -1021,7 +971,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                           builder: (context) {
                                             return SignatureDialog(
                                                 picture:
-                                                _generatePMSignaturePicture);
+                                                    _generatePMSignaturePicture);
                                           },
                                         ),
                                       );
@@ -1048,13 +998,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                               color: Colors.grey.shade100,
                                               child: Padding(
                                                 padding:
-                                                const EdgeInsets.all(
-                                                    8.0),
+                                                    const EdgeInsets.all(8.0),
                                                 child: Center(
                                                   child: ListRowItem(
                                                     icon: Icons.event,
                                                     text:
-                                                    "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
+                                                        "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
                                                   ),
                                                 ),
                                               ),
@@ -1077,7 +1026,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                           builder: (context) {
                                             return SignatureDialog(
                                                 picture:
-                                                _generateHOSignaturePicture);
+                                                    _generateHOSignaturePicture);
                                           },
                                         ),
                                       );
@@ -1104,13 +1053,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                               color: Colors.grey.shade100,
                                               child: Padding(
                                                 padding:
-                                                const EdgeInsets.all(
-                                                    8.0),
+                                                    const EdgeInsets.all(8.0),
                                                 child: Center(
                                                   child: ListRowItem(
                                                     icon: Icons.event,
                                                     text:
-                                                    "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
+                                                        "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
                                                   ),
                                                 ),
                                               ),
@@ -1145,8 +1093,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                           child: RaisedButton(
                             highlightElevation: 2,
                             shape: RoundedRectangleBorder(
-                                borderRadius:
-                                new BorderRadius.circular(36.0),
+                                borderRadius: new BorderRadius.circular(36.0),
                                 side: BorderSide(color: Colors.white12)),
                             disabledColor: Colors.black,
                             color: Colors.black,
@@ -1157,7 +1104,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               "Update and Send",
                               style: customButtonTextStyle(),
                             ),
-                            onPressed: (){
+                            onPressed: () {
                               preparePdf();
                             },
                           ),
@@ -1168,8 +1115,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                           child: RaisedButton(
                             highlightElevation: 2,
                             shape: RoundedRectangleBorder(
-                                borderRadius:
-                                new BorderRadius.circular(36.0),
+                                borderRadius: new BorderRadius.circular(36.0),
                                 side: BorderSide(color: Colors.white12)),
                             disabledColor: Colors.black,
                             color: Colors.black,
@@ -1240,34 +1186,34 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                   padding: EdgeInsets.all(8),
                                   child: TypeAheadField(
                                     textFieldConfiguration:
-                                    TextFieldConfiguration(
-                                        controller: _productNameController,
-                                        autofocus: true,
-                                        keyboardType: TextInputType.text,
-                                        maxLines: 1,
-                                        decoration: new InputDecoration(
-                                          labelText: "Product",
-                                          focusedBorder:
-                                          UnderlineInputBorder(
-                                              borderSide:
-                                              BorderSide.none),
-                                          enabledBorder:
-                                          UnderlineInputBorder(
-                                              borderSide:
-                                              BorderSide.none),
-                                          icon: new Icon(
-                                            MdiIcons.cube,
-                                            color: Colors.grey,
-                                          ),
-                                          hintStyle: customHintStyle(),
-                                          isDense: true,
-                                        )),
+                                        TextFieldConfiguration(
+                                            controller: _productNameController,
+                                            autofocus: true,
+                                            keyboardType: TextInputType.text,
+                                            maxLines: 1,
+                                            decoration: new InputDecoration(
+                                              labelText: "Product",
+                                              focusedBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide:
+                                                          BorderSide.none),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                      borderSide:
+                                                          BorderSide.none),
+                                              icon: new Icon(
+                                                MdiIcons.cube,
+                                                color: Colors.grey,
+                                              ),
+                                              hintStyle: customHintStyle(),
+                                              isDense: true,
+                                            )),
                                     suggestionsCallback: (pattern) async {
                                       return await getSuggestions(pattern);
                                     },
                                     itemBuilder: (context, suggestion) {
                                       Product product =
-                                      Product.fromMap(suggestion, true);
+                                          Product.fromMap(suggestion, true);
                                       return ListTile(
                                         leading: Icon(MdiIcons.cubeOutline),
                                         title: Text(product.name),
@@ -1354,7 +1300,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Container(
                                       height: 224,
@@ -1393,7 +1339,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                   key: _columnKey,
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Container(
                                       decoration: new BoxDecoration(
@@ -1478,7 +1424,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                             ),
                                             onPressed: () {
                                               _discountModeIsPercentage =
-                                              !_discountModeIsPercentage;
+                                                  !_discountModeIsPercentage;
                                               setState(() {});
                                             },
                                           ),
@@ -1649,8 +1595,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
             ),
           );
         },
-        fullscreenDialog: true
-    ));
+        fullscreenDialog: true));
   }
 
   void showSaving() async {
@@ -1709,8 +1654,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
         'Key': pattern.trim()
       };
 
-      var url = "https://api.rmrcloud.com/GetEquipmentListByKey";
-      var result = await http.get(url, headers: headers);
+      var result =
+          await http.get(BASE_URL + API_EQUIPMENT_LIST, headers: headers);
       if (result.statusCode == 200) {
         return json.decode(result.body)['EquipmentList'];
       } else {
@@ -1723,16 +1668,16 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
 
   Future<double> calculatePrice() async {
     int quantity =
-    _quantityController.text == null || _quantityController.text.isEmpty
-        ? 0
-        : int.parse(_quantityController.text);
+        _quantityController.text == null || _quantityController.text.isEmpty
+            ? 0
+            : int.parse(_quantityController.text);
     double rate = _rateController.text == null || _rateController.text.isEmpty
         ? 0
         : double.parse(_rateController.text);
     double discount =
-    _discountController.text == null || _discountController.text.isEmpty
-        ? 0
-        : double.parse(_discountController.text);
+        _discountController.text == null || _discountController.text.isEmpty
+            ? 0
+            : double.parse(_discountController.text);
     return _discountModeIsPercentage
         ? ((quantity * rate) * (1 - (discount / 100)))
         : ((quantity * rate) - discount);
@@ -1741,7 +1686,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   Future estimateTotalCalculation() async {
     setState(() {
       double discount = _EstimateDiscountController.text == null ||
-          _EstimateDiscountController.text.isEmpty
+              _EstimateDiscountController.text.isEmpty
           ? 0
           : double.parse(_EstimateDiscountController.text);
       estimateBaseSubTotal = getCurrentBaseSubtotal();
@@ -1750,7 +1695,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
           : discount;
       estimateMainSubtotal = estimateBaseSubTotal - estimateDiscountTotal;
       estimateTaxTotal = (estimateMainSubtotal *
-          (_TaxTypeSelectedValue == _TaxType[0] ? 8.25 : 0)) /
+              (_TaxTypeSelectedValue == _TaxType[0] ? 8.25 : 0)) /
           100;
       estimateTotalAmount = estimateMainSubtotal - estimateTaxTotal;
     });
@@ -1795,9 +1740,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var url = "https://api.rmrcloud.com/CreateEstimate";
-    var result =
-    await http.post(url, headers: headers, body: json.encode(body));
+    var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
+        headers: headers, body: json.encode(body));
     print(json.encode(body));
     if (result.statusCode == 200) {
       return json.decode(result.body)['result'];
@@ -1819,7 +1763,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   Future uploadCameraImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1827,7 +1770,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64.encode(_imageFile.readAsBytesSync())
     };
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(API_CREATE_ESTIMATE + API_UPLOAD_FILE,
+        headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _CameraImagePath = map['filePath'];
@@ -1838,7 +1782,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   Future uploadDrawingImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1846,7 +1789,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64Drawing
     };
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(API_CREATE_ESTIMATE + API_UPLOAD_FILE,
+        headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _drawingImagePath = map['filePath'];
@@ -1857,7 +1801,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   }
 
   Future uploadHOSignatureImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1865,7 +1808,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64HOSignature
     };
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(API_CREATE_ESTIMATE + API_UPLOAD_FILE,
+        headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _HOSignatureImagePath = map['filePath'];
@@ -1881,21 +1825,35 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       'EstimateId': widget.customer.EstimateId
     };
 
-    var url = "https://api.rmrcloud.com/GetEstimateById";
-    var result = await http.get(url, headers: headers);
-    if (result.statusCode == 200) {
-      Map mapForEditData = json.decode(result.body);
-      _productList.clear();
-      _productList.addAll(List.generate(
-          mapForEditData['EstimateDetails'].length, (index) {
-        return Product.fromMap(
-            mapForEditData['EstimateDetails'][index], false);
-      }));
-      return json.decode(result.body);
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return "";
+    var result = await http.get(BASE_URL + API_GET_ESTIMATE, headers: headers);
+    try {
+      if (result.statusCode == 200) {
+        Map mapForEditData = json.decode(result.body);
+        _productList.clear();
+        _productList.addAll(
+            List.generate(mapForEditData['EstimateDetails'].length, (index) {
+          return Product.fromMap(
+              mapForEditData['EstimateDetails'][index], false);
+        }));
+        formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
+        nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
+        estimateTaxTotal = mapForEditData['Estimate']['Tax'];
+        estimateDiscountTotal = mapForEditData['Estimate']['DiscountAmount'];
+        estimateBaseSubTotal = mapForEditData['Estimate']['Amount'];
+        estimateTotalAmount = estimateBaseSubTotal - estimateDiscountTotal;
+        estimateMainSubtotal = estimateTotalAmount-estimateTaxTotal;
+        _EstimateDiscountModeIsPercentage =
+            mapForEditData['Estimate']['DiscountType'] == 'amount'
+                ? false
+                : true;
+        return json.decode(result.body);
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return "";
+      }
+    } catch (error) {
+      print(error.message);
     }
   }
 

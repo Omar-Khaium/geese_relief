@@ -50,7 +50,7 @@ class Product {
     price = map['${isAutoComplete ? 'SupplierCost' : 'TotalPrice'}'];
     discount = map['DiscountAmount']== null ? 0 : map['DiscountAmount'];
     discountPercent = map['DiscountPercent']== null ? 0 : map['DiscountPercent'];
-    discountAsPercentage = map['DiscountType']== null ? true : map['DiscountType'];
+    discountAsPercentage = map['DiscountType']== 'amount' ? false : true;
     date = map['CreatedDate'];
   }
 

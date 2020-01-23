@@ -2613,8 +2613,7 @@ class _UpdateBasementReportFragmentState
           'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
     };
 
-    var url = "https://api.rmrcloud.com/GetLookupbyKey";
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(BASE_URL+API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['datalist'];
       List<DropDownSingleItem> _lists = List.generate(map.length, (index) {
@@ -2669,8 +2668,7 @@ class _UpdateBasementReportFragmentState
       'CustomerId': widget.customer.CustomerId,
     };
 
-    var url = "https://api.rmrcloud.com/GetCustomerInspectionByCustomerId";
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(BASE_URL+API_GET_BASEMENT_INSPECTION, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body);
       widget.basementInspection =
@@ -2813,8 +2811,6 @@ class _UpdateBasementReportFragmentState
 
   Future saveInspectionReport() async {
     try {
-      var url = "https://api.rmrcloud.com/SaveCustomerInspection";
-
       headers['Authorization'] = widget.login.accessToken;
       headers['CustomerId'] = widget.customer.CustomerId;
       headers['companyId'] = widget.loggedInUser.CompanyGUID;
@@ -2920,7 +2916,7 @@ class _UpdateBasementReportFragmentState
       headers['HomeOwnerSignatureDate'] = "";
       headers['InspectionPhoto'] = "";
 
-      http.post(url, headers: headers).then((response) {
+      http.post(BASE_URL+API_SAVE_BASEMENT_INSPECTION, headers: headers).then((response) {
         try {
           if (response.statusCode == 200) {
             Map map = json.decode(response.body);

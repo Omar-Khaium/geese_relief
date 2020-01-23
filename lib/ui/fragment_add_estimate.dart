@@ -1653,8 +1653,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         'Key': pattern.trim()
       };
 
-      var url = "https://api.rmrcloud.com/GetEquipmentListByKey";
-      var result = await http.get(url, headers: headers);
+      var result = await http.get(BASE_URL+API_EQUIPMENT_LIST, headers: headers);
       if (result.statusCode == 200) {
         return json.decode(result.body)['EquipmentList'];
       } else {
@@ -1716,8 +1715,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
 
-    var url = "https://api.rmrcloud.com/GenerateEstimate";
-    var result = await http.post(url, headers: headers);
+    var result = await http.post(BASE_URL+API_GENERATE_ESTIMATE, headers: headers);
     if (result.statusCode == 200) {
       estimateIntId = json.decode(result.body)['Invoice']['Id'];
       estimateId = json.decode(result.body)['Invoice']['InvoiceId'];
@@ -1762,9 +1760,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var url = "https://api.rmrcloud.com/CreateEstimate";
     var result =
-        await http.post(url, headers: headers, body: json.encode(body));
+        await http.post(BASE_URL+API_CREATE_ESTIMATE, headers: headers, body: json.encode(body));
     if (result.statusCode == 200) {
       return json.decode(result.body);
     } else {
@@ -1785,7 +1782,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   }
 
   Future uploadCameraImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1793,7 +1789,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64.encode(_imageFile.readAsBytesSync())
     };
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(BASE_URL+API_UPLOAD_FILE, headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _CameraImagePath = map['filePath'];
@@ -1804,7 +1800,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   }
 
   Future uploadDrawingImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1812,7 +1807,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64Drawing
     };
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(BASE_URL+API_UPLOAD_FILE, headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _drawingImagePath = map['filePath'];
@@ -1823,7 +1818,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   }
 
   Future uploadHOSignatureImage() async {
-    var url = "https://api.rmrcloud.com/UploadImageFile";
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1831,7 +1825,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64HOSignature
     };
-    var result = await http.post(url, headers: headers, body: body);
+    var result = await http.post(BASE_URL+API_UPLOAD_FILE, headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _HOSignatureImagePath = map['filePath'];

@@ -87,9 +87,8 @@ class _LogInUIState extends State<LogInUI> {
     HttpClient client = new HttpClient();
     client.badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
 
-    var url = 'https://api.rmrcloud.com/token';
     try {
-      http.post(url, body: data).then((response) {
+      http.post(BASE_URL+API_TOKEN, body: data).then((response) {
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
           login.accessToken = map['token_type'] + " " + map['access_token'];
@@ -472,8 +471,7 @@ class _LogInUIState extends State<LogInUI> {
       'username': login.username
     };
 
-    var url = "https://api.rmrcloud.com/GetUserByUserName";
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(BASE_URL+API_USER_BY_USERNAME, headers: headers);
     if (result.statusCode == 200) {
       loggedInUser = LoggedInUser.fromMap(json.decode(result.body));
       await saveLoggedInUserToDatabase(loggedInUser);

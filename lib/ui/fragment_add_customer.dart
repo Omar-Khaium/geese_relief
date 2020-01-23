@@ -63,7 +63,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   List<DropDownSingleItem> TypeArray = [];
   int TypeDropdown = 0;
 
-  var url = 'https://api.rmrcloud.com/SaveCustomer';
 
   static String ACCESS_TOKEN = "";
   var _future;
@@ -91,7 +90,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         'ZipCode': '${_zipController.text}',
         'CompanyId': widget.loggedInUser.CompanyGUID,
       };
-      http.post(url, headers: data).then((response) {
+      http.post(BASE_URL+API_SAVE_CUSTOMER, headers: data).then((response) {
         widget.isLoading(false);
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
@@ -690,8 +689,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       'Key': 'CustomerType'
     };
 
-    var url = "https://api.rmrcloud.com/GetLookupbyKey";
-    var result = await http.get(url, headers: headers);
+    var result = await http.get(BASE_URL+API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['data'];
       List<DropDownSingleItem> lists = List.generate(map.length, (index) {

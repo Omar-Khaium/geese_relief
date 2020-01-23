@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
+import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:http/http.dart' as http;
@@ -13,19 +14,18 @@ class ForgetPasswordUI extends StatefulWidget {
 }
 
 class ForgetPasswordUIState extends State<ForgetPasswordUI> {
+
   TextEditingController _usernameController = new TextEditingController();
   bool _isLoading = false;
   bool _usernameValidator = true;
   Color _usernameIconColor = Colors.grey;
 
   Future<String> makeRequest() async {
-    Map data = {
-      'username': '${_usernameController.text}',
-      'grant_type': 'password'
+    Map<String, String> data = {
+      'EmailAddress': '${_usernameController.text}'
     };
 
-    var url = 'https://api.rmrcloud.com/token';
-    http.post(url, body: data).then((response) {
+    await http.post(BASE_URL+API_FORGET_PASSWORD, headers: data).then((response) {
       if (response.statusCode == 200) {
         Map map = json.decode(response.body);
         print(map['access_token']);

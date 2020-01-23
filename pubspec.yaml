@@ -30,7 +30,8 @@ dependencies:
   async:
   dotted_border:
   flutter_pdfview:
-  flutter_html: ^0.11.1
+  flutter_html:
+  cached_network_image:
 
 dev_dependencies:
   flutter_test:

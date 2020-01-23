@@ -235,8 +235,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
         'body': _BodyEmailController.text.toString(),
       };
 
-      var url = "https://api.rmrcloud.com/SendEmailEstimate";
-      http.post(url, headers: data).then((response) {
+      http.post(BASE_URL+API_SEND_EMAIL, headers: data).then((response) {
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
           http.get(map['EmailUrl']).then((responseResults){

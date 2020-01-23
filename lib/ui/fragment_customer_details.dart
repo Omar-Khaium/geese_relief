@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
@@ -125,7 +127,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         });
   }
 
-
   //-------------Image---------------
 
   @override
@@ -206,26 +207,56 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     child: Container(
                                                       child: _imageFile != null
                                                           ? Image.file(
-                                                        _imageFile,
-                                                        width: 150,
-                                                        height: 140,
-                                                        fit: BoxFit.cover,
-                                                      )
+                                                              _imageFile,
+                                                              width: 128,
+                                                              height: 128,
+                                                              fit: BoxFit.cover,
+                                                            )
                                                           : (widget.customer
-                                                          .ProfileImage !=
-                                                          null && widget.customer.ProfileImage.isNotEmpty
-                                                          ? Image.network(
-                                                          widget.customer
-                                                              .ProfileImage,
-                                                          height: 128,
-                                                          width: 128,
-                                                          fit: BoxFit
-                                                              .cover)
-                                                          : Icon(
-                                                        Icons.person,
-                                                        size: 142,
-                                                      )),
-                                                      color: Colors.grey.shade100,
+                                                                          .ProfileImage !=
+                                                                      null &&
+                                                                  widget
+                                                                      .customer
+                                                                      .ProfileImage
+                                                                      .isNotEmpty
+                                                              ? Container(
+                                                                  height: 128,
+                                                                  width: 128,
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl: widget
+                                                                        .customer
+                                                                        .ProfileImage,
+                                                                    imageBuilder:
+                                                                        (context,
+                                                                                imageProvider) =>
+                                                                            Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        image: DecorationImage(
+                                                                            image:
+                                                                                imageProvider,
+                                                                            fit:
+                                                                                BoxFit.cover,),
+                                                                      ),
+                                                                    ),
+                                                                    placeholder:
+                                                                        (context,
+                                                                                url) =>
+                                                                            CupertinoActivityIndicator(),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        Icon(Icons
+                                                                            .error),
+                                                                  ),
+                                                                )
+                                                              : Icon(
+                                                                  Icons.person,
+                                                                  size: 142,
+                                                                )),
+                                                      color:
+                                                          Colors.grey.shade100,
                                                     )),
                                                 Padding(
                                                   padding: EdgeInsets.all(4),
@@ -338,15 +369,15 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               elevation: 8,
                                               onPressed: () {
-                                                if(widget.customer.HasInspectionReport){
-                                                  widget.goToUpdateBasementReport(
-                                                      widget.customer);
-                                                }
-                                                else{
+                                                if (widget.customer
+                                                    .HasInspectionReport) {
+                                                  widget
+                                                      .goToUpdateBasementReport(
+                                                          widget.customer);
+                                                } else {
                                                   widget.goToAddBasementReport(
                                                       widget.customer);
                                                 }
-
                                               },
                                               color: Colors.black,
                                               child: Padding(
@@ -579,8 +610,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     width: 16,
                                                   ),
                                                   Text(
-                                                    "${_list[index].Price==null || _list[index].Price=="0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}"
-                                                    ,
+                                                    "${_list[index].Price == null || _list[index].Price == "0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}",
                                                     style: listTextStyle(),
                                                   )
                                                 ],
@@ -589,18 +619,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                           ),
                                           Row(
                                             children: <Widget>[
-                                              CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.grey.shade300,
-                                                child: Icon(
-                                                  Icons.email,
-                                                  color: Colors.black,
-                                                  size: 18,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 8,
-                                              ),
                                               CircleAvatar(
                                                 backgroundColor:
                                                     Colors.grey.shade300,
@@ -693,8 +711,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       'PageSize': '10',
     };
 
-    var url = "https://api.rmrcloud.com/GetCustomerByIdWithEstimateList";
-    var result = await http.get(url, headers: headers);
+    var result =
+        await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
       return result;
@@ -715,8 +733,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       "filepath": _base64Image
     };
 
-    var url = "https://api.rmrcloud.com/CustomerImageUpload";
-    http.post(url, headers: headers, body: body).then((response) {
+    http
+        .post(BASE_URL + API_CUSTOMER_UPLOAD, headers: headers, body: body)
+        .then((response) {
       try {
         if (response.statusCode == 200) {
           return response;
@@ -738,8 +757,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         'EstimateId': _list[index].Id,
         'CompanyId': widget.loggedInUser.CompanyGUID,
       };
-      var url = "https://api.rmrcloud.com/EstimateDuplicate";
-      var result = await http.post(url, headers: headers);
+
+      var result =
+          await http.post(BASE_URL + API_DUPLICATE_ESTIMATE, headers: headers);
       if (result.statusCode == 200) {
         Map map = json.decode(result.body);
         return map['Result'];
@@ -868,8 +888,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
       'EstimateId': _list[index].Id
     };
 
-    var url = "https://api.rmrcloud.com/DeleteEstimate";
-    var result = await http.delete(url, headers: headers);
+    var result =
+        await http.delete(BASE_URL + API_DELETE_ESTIMATE, headers: headers);
     return json.decode(result.body)['result'];
   }
 }
