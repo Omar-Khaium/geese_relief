@@ -640,7 +640,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               InkWell(
                                                 onTap: () {
-                                                  deleteDialog(index);
+                                                  showDialog(context: context, builder: (context)=> deleteMessage(index));
                                                 },
                                                 child: CircleAvatar(
                                                   backgroundColor:
@@ -839,13 +839,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         setState(() {});
       }
       Navigator.of(context).pop();
-      showAPIResponse(
-          context,
-          status ? "Deleted Successfully!" : "Failed to Delete!",
-          Color(status ? COLOR_SUCCESS : COLOR_DANGER));
+      showDialog(context: context, builder: (context)=> deleteSuccess());
     } catch (error) {
       Navigator.of(context).pop();
-      showAPIResponse(context, "Failed to Delete!", Color(COLOR_DANGER));
+      showDialog(context: context, builder: (context)=> deleteFailed());
     }
   }
 
@@ -891,5 +888,196 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     var result =
         await http.delete(BASE_URL + API_DELETE_ESTIMATE, headers: headers);
     return json.decode(result.body)['result'];
+  }
+
+  deleteMessage(index) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      child: SimpleDialog(
+        contentPadding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 400,
+                height: 400,
+                child: Image.asset(
+                  "images/delete.jpg",
+                  fit: BoxFit.cover,
+                  scale: 1.5,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                          BorderRadius.only(bottomLeft: Radius.circular(8)),
+                          color: Colors.black,
+                        ),
+                        height: 48,
+                        child: Center(
+                          child: Text(
+                            "Cancel",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onTap: ()=>Navigator.of(context).pop(),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                          BorderRadius.only(bottomRight: Radius.circular(8)),
+                          color: Colors.deepOrange,
+                        ),
+                        height: 48,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              "Delete",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  .copyWith(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      onTap: (){
+                        Navigator.of(context).pop();
+                        deleteDialog(index);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  deleteSuccess() {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      child: SimpleDialog(
+        contentPadding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 400,
+                height: 400,
+                child: Image.asset(
+                  "images/success.gif",
+                  fit: BoxFit.cover,
+                  scale: 1.5,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                          BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                          color: Colors.black,
+                        ),
+                        height: 48,
+                        child: Center(
+                          child: Text(
+                            "Close",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onTap: ()=>Navigator.of(context).pop(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  deleteFailed() {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      child: SimpleDialog(
+        contentPadding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 400,
+                height: 400,
+                child: Image.asset(
+                  "images/error.gif",
+                  fit: BoxFit.cover,
+                  scale: 1.5,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                          BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                          color: Colors.black,
+                        ),
+                        height: 48,
+                        child: Center(
+                          child: Text(
+                            "Close",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onTap: ()=>Navigator.of(context).pop(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
