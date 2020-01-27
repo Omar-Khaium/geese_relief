@@ -213,7 +213,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                                     Colors.redAccent.shade200,
                                               ),
                                               onPressed: () {
-                                                deleteCustomer(index);
+                                                showDialog(context: context, builder: (context) => getDeleteDialog(context));
                                               },
                                             ),
                                           )

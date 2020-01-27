@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -58,6 +61,82 @@ String formatDate(String date) {
 final COLOR_DANGER = 0xE54F42;
 final COLOR_SUCCESS = 0x38CC76;
 final COLOR_WARNING = 0xFFA628;
+
+getDeleteDialog(context) {
+  return BackdropFilter(
+    filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+    child: SimpleDialog(
+      contentPadding: EdgeInsets.all(0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      children: <Widget>[
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+              width: 400,
+              height: 400,
+              child: Image.asset(
+                "images/delete.jpg",
+                fit: BoxFit.cover,
+                scale: 1.5,
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Expanded(
+                  child: InkWell(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.only(bottomLeft: Radius.circular(6)),
+                        color: Colors.black,
+                      ),
+                      height: 45,
+                      child: Center(
+                        child: Text(
+                          "Cancel",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .copyWith(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.only(bottomRight: Radius.circular(6)),
+                      color: Colors.deepOrange,
+                    ),
+                    height: 45,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          "Delete",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .button
+                              .copyWith(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
 //var currencyFormat = new NumberFormat.currency(locale: "en_US", name: "USD", decimalDigits: 2);
 var currencyFormat = new NumberFormat("#,###.##", "en_US");

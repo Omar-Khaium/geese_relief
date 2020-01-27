@@ -537,6 +537,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _OutsideRelativeHumidityController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -570,6 +571,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _OutsideTemperatureController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -603,6 +605,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _1stFloorRelativeHumidityController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -629,6 +632,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _1stFloorTemperatureController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -751,7 +755,8 @@ class _UpdateBasementReportFragmentState
                                                     new TextField(
                                                       controller:
                                                           _BasementRelativeHumidityController,
-                                                      obscureText: false,
+                                              autofocus: false,
+                                              obscureText: false,
                                                       onChanged: (val) {
                                                         setState(() {});
                                                       },
@@ -780,7 +785,8 @@ class _UpdateBasementReportFragmentState
                                                     new TextField(
                                                       controller:
                                                           _BasementTemperatureController,
-                                                      obscureText: false,
+                                              autofocus: false,
+                                              obscureText: false,
                                                       onChanged: (val) {
                                                         setState(() {});
                                                       },
@@ -854,6 +860,7 @@ class _UpdateBasementReportFragmentState
                                             ),
                                             new TextField(
                                               controller: _Other1Controller,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -875,6 +882,7 @@ class _UpdateBasementReportFragmentState
                                             ),
                                             new TextField(
                                               controller: _Other2Controller,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1470,6 +1478,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _VisualBasementInspectionOtherController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1571,6 +1580,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _NoticedSmellsCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1637,6 +1647,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _NoticedMoldsCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1739,6 +1750,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _SufferFromRespiratoryCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1805,6 +1817,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _ChildrenPlayInTheBasementCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1871,6 +1884,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _HavePetsCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -1937,6 +1951,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _NoticedBugsCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2000,6 +2015,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _GetWaterCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2095,6 +2111,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _EverSeePipesDrippingCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2160,6 +2177,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _AnyRepairsToTryAndFixCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2324,6 +2342,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _TestedForRadonInThePast2YearsCommentController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2445,6 +2464,7 @@ class _UpdateBasementReportFragmentState
                                             new TextField(
                                               controller:
                                                   _BasementEvaluationOtherController,
+                                              autofocus: false,
                                               obscureText: false,
                                               onChanged: (val) {
                                                 setState(() {});
@@ -2504,6 +2524,7 @@ class _UpdateBasementReportFragmentState
                                             ),
                                             new TextField(
                                               controller: _NotesController,
+                                              autofocus: false,
                                               obscureText: false,
                                               cursorColor: Colors.black,
                                               keyboardType:
@@ -2578,7 +2599,7 @@ class _UpdateBasementReportFragmentState
                             }
                             else {
                               return Center(
-                                child: Text("Loading"),
+                                child: CupertinoActivityIndicator(),
                               );
                             }
                           } catch (error) {
@@ -2615,7 +2636,7 @@ class _UpdateBasementReportFragmentState
 
     var result = await http.get(BASE_URL+API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
-      var map = json.decode(result.body)['datalist'];
+      var map = json.decode(result.body)['data'];
       List<DropDownSingleItem> _lists = List.generate(map.length, (index) {
         return DropDownSingleItem.fromMap(map[index]);
       });
