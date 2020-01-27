@@ -9,9 +9,11 @@ import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/data.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RecommendedLevel extends StatefulWidget {
   final Login login;
+  int selectedLevel = 3;
   final LoggedInUser loggedInUser;
   final CustomerDetails customer;
   final ValueChanged<CustomerDetails> backToCustomerDetails;
@@ -34,9 +36,16 @@ var widgetAspectRatio = cardAspectRatio * 1.15;
 class _RecommendedLevelState extends State<RecommendedLevel> {
   var currentPage = recommendations.length - 1.0;
 
+  updateRecommendedLevel(int level) {
+    setState(() {
+      widget.customer.RecommendedLevel = level.toDouble();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    PageController controller = PageController(initialPage: recommendations.length - 1);
+    PageController controller =
+        PageController(initialPage: recommendations.length - 1);
     controller.addListener(() {
       setState(() {
         currentPage = controller.page;
@@ -76,19 +85,28 @@ class _RecommendedLevelState extends State<RecommendedLevel> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: <Widget>[
-                        CardScrollWidget(currentPage),
+                        CardScrollWidget(currentPage,
+                            widget.customer.RecommendedLevel.toInt()),
                         Positioned.fill(
                           child: PageView.builder(
                             itemCount: recommendations.length,
                             controller: controller,
                             reverse: true,
                             itemBuilder: (context, index) {
-                              return InkWell(child: Container(), onTap: ()=>Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                    new RecommendedLevelDetails(loggedInUser: widget.loggedInUser, login:  widget.login, index: index,customer: widget.customer,),
-                                  )),);
+                              return InkWell(
+                                child: Container(),
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          new RecommendedLevelDetails(
+                                        loggedInUser: widget.loggedInUser,
+                                        login: widget.login,
+                                        index: index,
+                                        customer: widget.customer,
+                                      ),
+                                    )),
+                              );
                             },
                           ),
                         )
@@ -107,8 +125,9 @@ class _RecommendedLevelState extends State<RecommendedLevel> {
 
 class CardScrollWidget extends StatefulWidget {
   var currentPage;
+  int selectedLevel;
 
-  CardScrollWidget(this.currentPage);
+  CardScrollWidget(this.currentPage, this.selectedLevel);
 
   @override
   _CardScrollWidgetState createState() => _CardScrollWidgetState();
@@ -174,6 +193,17 @@ class _CardScrollWidgetState extends State<CardScrollWidget> {
                       fit: StackFit.expand,
                       children: <Widget>[
                         recommendations[i],
+                        Positioned(
+                          right: 36,
+                          top: 40,
+                          child: i + 1 == widget.selectedLevel
+                              ? Icon(
+                                  MdiIcons.checkDecagram,
+                                  size: 48,
+                                  color: Colors.green.shade200,
+                                )
+                              : Container(),
+                        )
                       ],
                     ),
                   ),

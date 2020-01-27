@@ -324,7 +324,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                 SizedBox(
                   width: 16,
                 ),
-                Text("Basement Inspection Report", style: fragmentTitleStyle()),
+                Text("Basement Inspection Report",style: fragmentTitleStyle()),
               ],
             ),
           ),

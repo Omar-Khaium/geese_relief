@@ -9,6 +9,7 @@ import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
+import 'package:flutter_grate_app/widgets/PDFScreen.dart';
 import 'package:flutter_grate_app/widgets/UsFormatter.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -60,6 +61,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   TextEditingController _cityController = new TextEditingController();
   TextEditingController _stateController = new TextEditingController();
   TextEditingController _zipController = new TextEditingController();
+
   List<DropDownSingleItem> TypeArray = [];
   int TypeDropdown = 0;
 
@@ -87,7 +89,9 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         'City': '${_cityController.text}',
         'State': '${_stateController.text}',
         'ZipCode': '${_zipController.text}',
-        'CompanyId': widget.loggedInUser.CompanyGUID,
+        'IsLead': 'false',
+        "LeadSource":"-1",
+        "Id": "0",
       };
       http.post(BASE_URL+API_SAVE_CUSTOMER, headers: data).then((response) {
         widget.isLoading(false);

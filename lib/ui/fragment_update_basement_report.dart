@@ -238,66 +238,6 @@ class _UpdateBasementReportFragmentState
   void initState() {
     super.initState();
     _futureDropDown = getDropDownData();
-    _futureGetData = getData();
-
-    /*CurrentOutsideConditionsSelection = 2;
-    HeatSelection = 1;
-    AirSelection = 1;
-    BasementDehumidifierSelection = 1;
-    GroundWaterSelection = 1;
-    GroundWaterRatingSelection = 1;
-    IronBacteriaSelection = 1;
-    IronBacteriaRatingSelection = 1;
-    CondensationSelection = 1;
-    CondensationRatingSelection = 1;
-    WallCracksSelection = 1;
-    WallCracksRatingSelection = 1;
-    FloorCracksSelection = 1;
-    FloorCracksRatingSelection = 1;
-    ExistingSumpPumpSelection = 1;
-    ExistingDrainageSystemSelection = 1;
-    ExistingRadonSystemSelection = 1;
-    DryerVentToCodeSelection = 1;
-    FoundationTypeSelection = 1;
-    BulkheadSelection = 1;
-    NoticedSmellsOrOdorsSelection = 1;
-    NoticedMoldOrMildewSelection = 1;
-    BasementGoDownSelection = 1;
-    HomeSufferForRespiratoryProblemsSelection = 1;
-    ChildrenPlayInBasementSelection = 1;
-    PetsGoInBasementSelection = 1;
-    NoticedBugsOrRodentsSelection = 1;
-    GetWaterSelection = 1;
-    RemoveWaterSelection = 1;
-    SeeCondensationPipesDrippingSelection = 1;
-    RepairsTryAndFixSelection = 1;
-    LivingPlanSelection = 1;
-    SellPlaningSelection = 1;
-    PlansForBasementOnceSelection = 1;
-    HomeTestedForRadonSelection = 1;
-    LosePowerSelection = 1;
-    LosePowerHowOftenSelection = 1;
-    _OutsideRelativeHumidityController.text = "44";
-    _OutsideTemperatureController.text = "dwd";
-    _1stFloorRelativeHumidityController.text = "wwdww";
-    _1stFloorTemperatureController.text = "poopo";
-    _BasementRelativeHumidityController.text = "poopo";
-    _BasementTemperatureController.text = "poopo";
-    _Other1Controller.text = "poopo";
-    _Other2Controller.text = "poopo";
-    _VisualBasementInspectionOtherController.text = "poopo";
-    _NoticedSmellsCommentController.text = "poopo";
-    _NoticedMoldsCommentController.text = "poopo";
-    _SufferFromRespiratoryCommentController.text = "poopo";
-    _ChildrenPlayInTheBasementCommentController.text = "poopo";
-    _HavePetsCommentController.text = "poopo";
-    _NoticedBugsCommentController.text = "poopo";
-    _GetWaterCommentController.text = "poopo";
-    _EverSeePipesDrippingCommentController.text = "poopo";
-    _AnyRepairsToTryAndFixCommentController.text = "poopo";
-    _TestedForRadonInThePast2YearsCommentController.text = "poopo";
-    _BasementEvaluationOtherController.text = "poopo";
-    _NotesController.text = "poopo";*/
   }
 
   @override
@@ -755,8 +695,8 @@ class _UpdateBasementReportFragmentState
                                                     new TextField(
                                                       controller:
                                                           _BasementRelativeHumidityController,
-                                              autofocus: false,
-                                              obscureText: false,
+                                                      autofocus: false,
+                                                      obscureText: false,
                                                       onChanged: (val) {
                                                         setState(() {});
                                                       },
@@ -785,8 +725,8 @@ class _UpdateBasementReportFragmentState
                                                     new TextField(
                                                       controller:
                                                           _BasementTemperatureController,
-                                              autofocus: false,
-                                              obscureText: false,
+                                                      autofocus: false,
+                                                      obscureText: false,
                                                       onChanged: (val) {
                                                         setState(() {});
                                                       },
@@ -2375,7 +2315,7 @@ class _UpdateBasementReportFragmentState
                                                 Expanded(
                                                   child:
                                                       DropdownButtonFormField(
-                                                        isDense: true,
+                                                    isDense: true,
                                                     decoration: new InputDecoration(
                                                         errorText:
                                                             LosePowerSelection == 0
@@ -2418,7 +2358,7 @@ class _UpdateBasementReportFragmentState
                                                 Expanded(
                                                   child:
                                                       DropdownButtonFormField(
-                                                        isDense: true,
+                                                    isDense: true,
                                                     decoration: new InputDecoration(
                                                         errorText:
                                                             LosePowerHowOftenSelection == 0
@@ -2551,9 +2491,8 @@ class _UpdateBasementReportFragmentState
                                       alignment: Alignment.centerRight,
                                       child: InkWell(
                                         onTap: () {
-                                          showSaving();
-
-                                          // saveInspectionReport();
+                                          //showSaving();
+                                          saveInspectionReport();
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -2596,8 +2535,7 @@ class _UpdateBasementReportFragmentState
                                   ),
                                 );
                               }
-                            }
-                            else {
+                            } else {
                               return Center(
                                 child: CupertinoActivityIndicator(),
                               );
@@ -2634,9 +2572,12 @@ class _UpdateBasementReportFragmentState
           'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
     };
 
-    var result = await http.get(BASE_URL+API_GET_LOOK_UP, headers: headers);
+    var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
+      _futureGetData = getData();
+
       var map = json.decode(result.body)['data'];
+
       List<DropDownSingleItem> _lists = List.generate(map.length, (index) {
         return DropDownSingleItem.fromMap(map[index]);
       });
@@ -2689,7 +2630,8 @@ class _UpdateBasementReportFragmentState
       'CustomerId': widget.customer.CustomerId,
     };
 
-    var result = await http.get(BASE_URL+API_GET_BASEMENT_INSPECTION, headers: headers);
+    var result = await http.get(BASE_URL + API_GET_BASEMENT_INSPECTION,
+        headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body);
       widget.basementInspection =
@@ -2708,85 +2650,109 @@ class _UpdateBasementReportFragmentState
         GroundWaterSelection = checkIndex(
             map['CustomerInspectionList']['GroundWater'], YesNoArray);
         GroundWaterRatingSelection = checkIndex(
-            map['CustomerInspectionList']['GroundWaterRating'].toString(), RatingArray);
+            map['CustomerInspectionList']['GroundWaterRating'].toString(),
+            RatingArray);
         IronBacteriaSelection = checkIndex(
-            map['CustomerInspectionList']['IronBacteria'].toString(), YesNoArray);
+            map['CustomerInspectionList']['IronBacteria'].toString(),
+            YesNoArray);
         IronBacteriaRatingSelection = checkIndex(
-            map['CustomerInspectionList']['IronBacteriaRating'].toString(), RatingArray);
+            map['CustomerInspectionList']['IronBacteriaRating'].toString(),
+            RatingArray);
         CondensationSelection = checkIndex(
-            map['CustomerInspectionList']['Condensation'].toString(), YesNoArray);
+            map['CustomerInspectionList']['Condensation'].toString(),
+            YesNoArray);
         CondensationRatingSelection = checkIndex(
-            map['CustomerInspectionList']['CondensationRating'].toString(), RatingArray);
-        WallCracksSelection =
-            checkIndex(map['CustomerInspectionList']['WallCracks'].toString(), YesNoArray);
+            map['CustomerInspectionList']['CondensationRating'].toString(),
+            RatingArray);
+        WallCracksSelection = checkIndex(
+            map['CustomerInspectionList']['WallCracks'].toString(), YesNoArray);
         WallCracksRatingSelection = checkIndex(
-            map['CustomerInspectionList']['WallCracksRating'].toString(), RatingArray);
+            map['CustomerInspectionList']['WallCracksRating'].toString(),
+            RatingArray);
         FloorCracksSelection = checkIndex(
-            map['CustomerInspectionList']['FloorCracks'].toString(), YesNoArray);
+            map['CustomerInspectionList']['FloorCracks'].toString(),
+            YesNoArray);
         FloorCracksRatingSelection = checkIndex(
-            map['CustomerInspectionList']['FloorCracksRating'].toString(), RatingArray);
+            map['CustomerInspectionList']['FloorCracksRating'].toString(),
+            RatingArray);
         ExistingSumpPumpSelection = checkIndex(
             map['CustomerInspectionList']['ExistingSumpPump'], YesNoArray);
         ExistingDrainageSystemSelection = checkIndex(
             map['CustomerInspectionList']['ExistingDrainageSystem'].toString(),
             YesNoArray);
         ExistingRadonSystemSelection = checkIndex(
-            map['CustomerInspectionList']['ExistingRadonSystem'].toString(), YesNoArray);
+            map['CustomerInspectionList']['ExistingRadonSystem'].toString(),
+            YesNoArray);
         DryerVentToCodeSelection = checkIndex(
-            map['CustomerInspectionList']['DryerVentToCode'].toString(), YesNoArray);
+            map['CustomerInspectionList']['DryerVentToCode'].toString(),
+            YesNoArray);
         FoundationTypeSelection = checkIndex(
             map['CustomerInspectionList']['FoundationType'],
             FoundationTypeArray);
-        BulkheadSelection =
-            checkIndex(map['CustomerInspectionList']['Bulkhead'].toString(), YesNoArray);
+        BulkheadSelection = checkIndex(
+            map['CustomerInspectionList']['Bulkhead'].toString(), YesNoArray);
         NoticedSmellsOrOdorsSelection = checkIndex(
-            map['CustomerInspectionList']['NoticedSmellsOrOdors'].toString(), YesNoArray);
+            map['CustomerInspectionList']['NoticedSmellsOrOdors'].toString(),
+            YesNoArray);
         NoticedMoldOrMildewSelection = checkIndex(
-            map['CustomerInspectionList']['NoticedMoldOrMildew'].toString(), YesNoArray);
+            map['CustomerInspectionList']['NoticedMoldOrMildew'].toString(),
+            YesNoArray);
         BasementGoDownSelection = checkIndex(
-            map['CustomerInspectionList']['BasementGoDown'].toString(), YesNoArray);
+            map['CustomerInspectionList']['BasementGoDown'].toString(),
+            YesNoArray);
         HomeSufferForRespiratoryProblemsSelection = checkIndex(
-            map['CustomerInspectionList']['HomeSufferForRespiratory'].toString(),
+            map['CustomerInspectionList']['HomeSufferForRespiratory']
+                .toString(),
             YesNoArray);
         ChildrenPlayInBasementSelection = checkIndex(
             map['CustomerInspectionList']['ChildrenPlayInBasement'].toString(),
             YesNoArray);
         PetsGoInBasementSelection = checkIndex(
-            map['CustomerInspectionList']['PetsGoInBasement'].toString(), YesNoArray);
+            map['CustomerInspectionList']['PetsGoInBasement'].toString(),
+            YesNoArray);
         NoticedBugsOrRodentsSelection = checkIndex(
-            map['CustomerInspectionList']['NoticedBugsOrRodents'].toString(), YesNoArray);
-        GetWaterSelection =
-            checkIndex(map['CustomerInspectionList']['GetWater'].toString(), YesNoArray);
+            map['CustomerInspectionList']['NoticedBugsOrRodents'].toString(),
+            YesNoArray);
+        GetWaterSelection = checkIndex(
+            map['CustomerInspectionList']['GetWater'].toString(), YesNoArray);
         RemoveWaterSelection = checkIndex(
-            map['CustomerInspectionList']['RemoveWater'].toString(), YesNoArray);
+            map['CustomerInspectionList']['RemoveWater'].toString(),
+            YesNoArray);
         SeeCondensationPipesDrippingSelection = checkIndex(
             map['CustomerInspectionList']['SeeCondensationPipesDripping'],
             YesNoArray);
         RepairsTryAndFixSelection = checkIndex(
-            map['CustomerInspectionList']['RepairsProblems'].toString(), YesNoArray);
-        LivingPlanSelection =
-            checkIndex(map['CustomerInspectionList']['LivingPlan'].toString(), YesNoArray);
+            map['CustomerInspectionList']['RepairsProblems'].toString(),
+            YesNoArray);
+        LivingPlanSelection = checkIndex(
+            map['CustomerInspectionList']['LivingPlan'].toString(), YesNoArray);
         SellPlaningSelection = checkIndex(
-            map['CustomerInspectionList']['SellPlaning'].toString(), YesNoArray);
+            map['CustomerInspectionList']['SellPlaning'].toString(),
+            YesNoArray);
         PlansForBasementOnceSelection = checkIndex(
-            map['CustomerInspectionList']['PlansForBasementOnce'].toString(), YesNoArray);
+            map['CustomerInspectionList']['PlansForBasementOnce'].toString(),
+            YesNoArray);
         HomeTestedForRadonSelection = checkIndex(
-            map['CustomerInspectionList']['HomeTestForPastRadon'].toString(), YesNoArray);
+            map['CustomerInspectionList']['HomeTestForPastRadon'].toString(),
+            YesNoArray);
         LosePowerSelection = checkIndex(
-            map['CustomerInspectionList']['HomeTestForPastRadon'],
+            map['CustomerInspectionList']['LosePower'],
             LosePowerArray);
         LosePowerHowOftenSelection = checkIndex(
             map['CustomerInspectionList']['LosePowerHowOften'],
-            LosePowerHowOftenArray);
-        _OutsideRelativeHumidityController.text = "${map['CustomerInspectionList']['OutsideRelativeHumidity']}";
+            LosePowerArray);
+        _OutsideRelativeHumidityController.text =
+            "${map['CustomerInspectionList']['OutsideRelativeHumidity']}";
         _OutsideTemperatureController.text =
             map['CustomerInspectionList']['OutsideTemperature'].toString();
-        _1stFloorRelativeHumidityController.text =
-            map['CustomerInspectionList']['FirstFloorRelativeHumidity'].toString();
+        _1stFloorRelativeHumidityController.text = map['CustomerInspectionList']
+                ['FirstFloorRelativeHumidity']
+            .toString();
         _1stFloorTemperatureController.text =
             map['CustomerInspectionList']['FirstFloorTemperature'].toString();
-        _BasementRelativeHumidityController.text =
-            map['CustomerInspectionList']['BasementRelativeHumidity'].toString();
+        _BasementRelativeHumidityController.text = map['CustomerInspectionList']
+                ['BasementRelativeHumidity']
+            .toString();
         _BasementTemperatureController.text =
             map['CustomerInspectionList']['BasementTemperature'].toString();
         _Other1Controller.text =
@@ -2810,15 +2776,15 @@ class _UpdateBasementReportFragmentState
         _GetWaterCommentController.text =
             map['CustomerInspectionList']['GetWaterComment'];
         _EverSeePipesDrippingCommentController.text =
-            map['CustomerInspectionList']['SeeCondensationPipesDrippingComment'];
+            map['CustomerInspectionList']
+                ['SeeCondensationPipesDrippingComment'];
         _AnyRepairsToTryAndFixCommentController.text =
             map['CustomerInspectionList']['RepairsProblemsComment'];
         _TestedForRadonInThePast2YearsCommentController.text =
             map['CustomerInspectionList']['HomeTestForPastRadonComment'];
         _BasementEvaluationOtherController.text =
             map['CustomerInspectionList']['CustomerBasementOther'];
-        _NotesController.text =
-            map['CustomerInspectionList']['Notes'];
+        _NotesController.text = map['CustomerInspectionList']['Notes'];
       } catch (error) {
         print(error);
       }
@@ -2942,7 +2908,10 @@ class _UpdateBasementReportFragmentState
           if (response.statusCode == 200) {
             Map map = json.decode(response.body);
             print("Successfully Inserted");
-          } else {}
+            showAPIResponse(context, "Inspection Created", Colors.green.shade600);
+          } else {
+            showAPIResponse(context, "Something Went Wrong", Colors.red.shade600);
+          }
         } catch (error) {
           showAPIResponse(context, "Error :" + error.toString(), null);
         }
@@ -2956,7 +2925,7 @@ class _UpdateBasementReportFragmentState
     message = "Please wait...";
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return new BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),

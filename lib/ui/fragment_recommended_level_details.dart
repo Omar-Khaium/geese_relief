@@ -18,6 +18,8 @@ class RecommendedLevelDetails extends StatefulWidget {
   final CustomerDetails customer;
   final int index;
   final ValueChanged<String> backToRecommendedLevel;
+  final ValueChanged<int> updateRecommendedLevel;
+  bool _isSelected=true;
 
   RecommendedLevelDetails(
       {Key key,
@@ -25,7 +27,8 @@ class RecommendedLevelDetails extends StatefulWidget {
       this.loggedInUser,
       this.index,
       this.customer,
-      this.backToRecommendedLevel})
+      this.backToRecommendedLevel,
+      this.updateRecommendedLevel})
       : super(key: key);
 
   @override
@@ -408,6 +411,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
     Navigator.of(context).pop();
     showAPIResponse(context, status ? "Successful!" : "Failed!",
         Color(status ? COLOR_SUCCESS : COLOR_DANGER));
+    widget.updateRecommendedLevel(widget.index);
   }
 
   Future _save() async {

@@ -103,7 +103,14 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       _imageFile = cameraOutput;
     });
   }
-
+  _openGallery(BuildContext context) async {
+    File pickFromGallery =
+    (await ImagePicker.pickImage(source: ImageSource.gallery));
+    setState(() {
+      _imageFile = pickFromGallery;
+    });
+    Navigator.of(context).pop();
+  }
   _generateDrawingPicture(PictureDetails picture) {
     _Drawing = PlaceImageFromPicture(picture);
     picture.toPNG().then((val) {
@@ -625,7 +632,9 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       _imageFile,
                                       fit: BoxFit.cover,
                                     ),
-                              onTap: _openCamera,
+                              onTap: (){
+                                _showDialog(context);
+                              },
                             ),
                           ),
                         ],
@@ -1845,5 +1854,43 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     estimateTotalCalculation();
   }
 
+  Future<void> _showDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Make A choice"),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: ListBody(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: GestureDetector(
+                        child: Text("Gallery"),
+                        onTap: () {
+                          widget.customer.ProfileImage = null;
+                          _openGallery(context);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: GestureDetector(
+                        child: Text("Camera"),
+                        onTap: () {
+                          widget.customer.ProfileImage = null;
+                          _openCamera();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
 
 }
