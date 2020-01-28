@@ -37,7 +37,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
-      'PageSize': '10'
+      'PageSize': '10',
+      'ResultType': 'Customer'
     };
 
     var result =

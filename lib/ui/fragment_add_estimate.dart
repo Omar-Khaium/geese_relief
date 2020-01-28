@@ -1402,54 +1402,40 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                     SizedBox(
                                       height: 8,
                                     ),
-                                    Container(
-                                      decoration: new BoxDecoration(
-                                          color: Colors.grey.shade200,
-                                          shape: BoxShape.rectangle,
-                                          border: Border.all(
-                                              width: 1.0,
-                                              color: Colors.black26),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5.0))),
-                                      padding: EdgeInsets.all(8),
-                                      child: TextFormField(
-                                        controller: _discountController,
-                                        style: customTextStyle(),
-                                        onChanged: (val) {
+                                    TextField(
+                                      controller: _discountController,
+                                      onChanged: (val) {
+                                        setState(() {
                                           calculatePrice().then((price) {
                                             _priceController.text =
                                                 double.parse(price.toString())
                                                     .toStringAsFixed(2);
                                           });
-                                        },
-                                        cursorColor: Colors.black87,
-                                        keyboardType: TextInputType.number,
-                                        maxLines: 1,
-                                        autofocus: true,
-                                        decoration: new InputDecoration(
-                                          labelText: _discountModeIsPercentage
-                                              ? "Percentage"
-                                              : "Amount",
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide.none),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide.none),
-                                          icon: IconButton(
-                                            icon: Icon(
+                                        });
+                                      },
+                                      autofocus: false,
+                                      keyboardType: TextInputType.numberWithOptions(
+                                          signed: true, decimal: true),
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        filled: true,
+                                        fillColor: Colors.grey.shade200,
+                                        prefixIcon: IconButton(
+                                          icon: Icon(
                                               _discountModeIsPercentage
-                                                  ? MdiIcons.filePercent
-                                                  : MdiIcons.cashRefund,
-                                              color: Colors.grey,
-                                              size: 18,
-                                            ),
-                                            onPressed: () {
+                                                  ? MdiIcons.sale
+                                                  : MdiIcons.cashUsd),
+                                          onPressed: () {
+                                            setState(() {
                                               _discountModeIsPercentage =
-                                                  !_discountModeIsPercentage;
-                                              setState(() {});
-                                            },
-                                          ),
-                                          hintStyle: customHintStyle(),
-                                          isDense: true,
+                                              !_discountModeIsPercentage;
+                                              calculatePrice().then((price) {
+                                                _priceController.text =
+                                                    double.parse(price.toString())
+                                                        .toStringAsFixed(2);
+                                              });
+                                            });
+                                          },
                                         ),
                                       ),
                                     ),

@@ -53,7 +53,6 @@ class CustomerDetailsFragment extends StatefulWidget {
 }
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
-//  var _future;
   List<Estimate> _list = [];
   var _base64Image;
 
@@ -84,7 +83,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
 
   @override
   void initState() {
-//    _future = getData();
     super.initState();
   }
 
@@ -102,7 +100,14 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: GestureDetector(
-                        child: Text("Gallery"),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Icon(Icons.photo_camera),
+                            SizedBox(width: 12,),
+                            Text("Gallery"),
+                          ],
+                        ),
                         onTap: () {
                           widget.customer.ProfileImage = null;
                           _openGallery(context);
