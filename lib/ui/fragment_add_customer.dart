@@ -5,11 +5,12 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
+import 'package:flutter_grate_app/model/product.dart';
+import 'package:flutter_grate_app/model/zip_model.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_login.dart';
-import 'package:flutter_grate_app/widgets/PDFScreen.dart';
 import 'package:flutter_grate_app/widgets/UsFormatter.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -40,6 +41,7 @@ class AddCustomerFragment extends StatefulWidget {
 class _AddCustomerState extends State<AddCustomerFragment> {
   DBHelper dbHelper = new DBHelper();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Zip zipDatas;
 
   @override
   void initState() {
@@ -68,7 +70,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
 
   static String ACCESS_TOKEN = "";
   var _future;
-
+  Product selectedProduct;
   final _UsNumberTextInputFormatter = UsNumberTextInputFormatter();
 
   // ignore: missing_return
@@ -91,10 +93,10 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         'State': '${_stateController.text}',
         'ZipCode': '${_zipController.text}',
         'IsLead': 'false',
-        "LeadSource":"-1",
+        "LeadSource": "-1",
         "Id": "0",
       };
-      http.post(BASE_URL+API_SAVE_CUSTOMER, headers: data).then((response) {
+      http.post(BASE_URL + API_SAVE_CUSTOMER, headers: data).then((response) {
         widget.isLoading(false);
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
@@ -137,7 +139,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-
           return Column(
             children: <Widget>[
               SizedBox(
@@ -555,92 +556,58 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             ),
                             Expanded(
                               flex: 2,
-                              child: TextFormField(
-                                style: customTextStyle(),
-                                controller: _zipController,
-                                textInputAction: TextInputAction.search,
-                                cursorColor: Colors.black87,
-                                onChanged: (val) {
-                                  setState(() {});
-                                },
-                                keyboardType: TextInputType.number,
-                                maxLines: 1,
-                                decoration: new InputDecoration(
-                                  labelText: "Zip",
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black87)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                                  icon: new Icon(
-                                    MdiIcons.zipBox,
-                                    color: Colors.grey,
-                                  ),
-                                  errorText: _zipController.text.isNotEmpty
-                                      ? null
-                                      : "* Required",
-                                  hintStyle: customHintStyle(),
-                                  isDense: true,
-                                ),
-                              ),
-                              /*TypeAheadField(
+                              child:
+                              TypeAheadField(
                                 textFieldConfiguration:
                                 TextFieldConfiguration(
                                     controller: _zipController,
                                     autofocus: true,
-                                    keyboardType: TextInputType.text,
+                                    keyboardType: TextInputType.number,
                                     maxLines: 1,
                                     decoration: new InputDecoration(
                                       labelText: "Zip",
-                                      focusedBorder:
-                                      UnderlineInputBorder(
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black87)),
+                                      enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                          BorderSide.none),
-                                      enabledBorder:
-                                      UnderlineInputBorder(
-                                          borderSide:
-                                          BorderSide.none),
+                                          BorderSide(color: Colors.grey)),
                                       icon: new Icon(
-                                        MdiIcons.cube,
+                                        MdiIcons.zipBox,
                                         color: Colors.grey,
                                       ),
                                       hintStyle: customHintStyle(),
                                       isDense: true,
                                     )),
                                 suggestionsCallback: (pattern) async {
-                                  return await getZipData();
+                                  return await getZipData(pattern);
                                 },
                                 itemBuilder: (context, suggestion) {
-                                  Product product =
-                                  Product.fromMap(suggestion, true);
+                                  Zip zip =suggestion;
                                   return ListTile(
-                                    leading: Icon(MdiIcons.cubeOutline),
-                                    title: Text(product.name),
-                                    subtitle: Text(product.description),
-                                    trailing: Text(
-                                        '\$ ${product.rate.toStringAsFixed(2)}'),
+                                    leading: Icon(MdiIcons.zipBoxOutline),
+                                    title: Text(zip.zipCode),
+                                    subtitle: Row(
+                                      children: <Widget>[
+                                        Text(zip.city + ","),
+                                        Text(zip.state),
+                                      ],
+                                    ),
                                   );
                                 },
                                 onSuggestionSelected: (suggestion) {
-                                  selectedProduct =
-                                      Product.fromMap(suggestion, true);
-                                  _productNameController.text =
-                                      selectedProduct.name;
-                                  _descriptionController.text =
-                                      selectedProduct.description;
-                                  _quantityController.text = "1";
-                                  _rateController.text = selectedProduct
-                                      .rate
-                                      .toStringAsFixed(2);
-                                  _discountController.text = "0.0";
-                                  _priceController.text = selectedProduct
-                                      .rate
-                                      .toStringAsFixed(2);
+                                  zipDatas = suggestion;
+                                  setState((){
+                                    _zipController.text = zipDatas.zipCode;
+                                    _cityController.text = zipDatas.city;
+                                    _stateController.text = zipDatas.state;
+                                  });
+
                                 },
                                 hideSuggestionsOnKeyboardHide: true,
                                 hideOnError: true,
-                              ),*/
+                              ),
+
                             ),
                           ],
                         ),
@@ -750,7 +717,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       'Key': 'CustomerType'
     };
 
-    var result = await http.get(BASE_URL+API_GET_LOOK_UP, headers: headers);
+    var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['data'];
       List<DropDownSingleItem> lists = List.generate(map.length, (index) {
@@ -770,19 +737,51 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       return [];
     }
   }
-  Future getZipData() async {
-    Map<String, String> headers = {
-      'key': _zipController.text,
-    };
+  Future getSuggestions(String pattern) async {
+    if (pattern.isNotEmpty) {
+      Map<String, String> headers = {
+        'Authorization': widget.login.accessToken,
+        'Key': pattern.trim()
+      };
 
-    var result = await http.get(BASE_URL+API_GET_ZIP, headers: headers);
-    if (result.statusCode == 200) {
-      var map = json.decode(result.body)['data'];
-      return result;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return [];
+      var result = await http.get(BASE_URL+API_EQUIPMENT_LIST, headers: headers);
+      if (result.statusCode == 200) {
+        return json.decode(result.body)['EquipmentList'];
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return [];
+      }
+    }
+  }
+  Future getZipData(String pattern) async {
+
+    if(pattern.isNotEmpty) {
+      Map<String, String> headers = {
+        'key': _zipController.text,
+        'appname': "GrateApp",
+      };
+
+      var result = await http.get(
+          "http://zipcodelookup.rmrcloud.com/1.0/GetCityZipCodeLookupList",
+          headers: headers);
+      if (result.statusCode == 200) {
+        try {
+          var map = json.decode(result.body);
+          List<Zip> _zipList = List.generate(map.length, (index) {
+            return Zip.fromMap(map[index]);
+          });
+          return _zipList;
+        }
+        catch(error){
+          return [];
+        }
+
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return [];
+      }
     }
   }
 }
