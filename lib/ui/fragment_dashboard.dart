@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/customer_model.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/customer_list_shimmer.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
@@ -15,8 +16,9 @@ import 'package:http/http.dart' as http;
 class DashboardFragment extends StatefulWidget {
   ValueChanged<String> goToCustomerDetails;
   Login login;
+  LoggedInUser loggedInUser;
 
-  DashboardFragment({Key key, this.login, this.goToCustomerDetails})
+  DashboardFragment({Key key, this.login, this.goToCustomerDetails,this.loggedInUser})
       : super(key: key);
 
   @override
@@ -125,8 +127,15 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                 "Dashboard",
                 style: fragmentTitleStyle(),
               )),
+          Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                widget.loggedInUser.CompanyName,
+                style: new TextStyle(fontWeight: FontWeight.bold,color: Colors.grey,fontSize: 20),
+              )),
+
           SizedBox(
-            height: 32,
+            height: 30,
           ),
           Expanded(
             child: FutureBuilder(

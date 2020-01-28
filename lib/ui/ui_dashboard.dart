@@ -13,18 +13,16 @@ import 'package:flutter_grate_app/ui/fragment_change_password.dart';
 import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
 import 'package:flutter_grate_app/ui/fragment_logout.dart';
-import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
 import 'package:flutter_grate_app/ui/fragment_update_basement_report.dart';
-import 'package:flutter_grate_app/widgets/MediaPlayer.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-import '../utils.dart';
 import 'fragment_recommended_level.dart';
 import 'fragment_update_estimate.dart';
 
 class DashboardUI extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
+
 
   DashboardUI(this.login, this.loggedInUser);
 
@@ -45,7 +43,7 @@ class _DashboardUIState extends State<DashboardUI>
       switch (index) {
         case 0:
           fragment = new DashboardFragment(
-              login: widget.login, goToCustomerDetails: _goToCustomerDetails);
+              login: widget.login, goToCustomerDetails: _goToCustomerDetails,loggedInUser: widget.loggedInUser,);
           break;
         case 1:
           fragment = AddCustomerFragment(
@@ -143,6 +141,7 @@ class _DashboardUIState extends State<DashboardUI>
           customer: customer);
     });
   }
+
   _goToUpdateBasementInspectionReport(CustomerDetails customer) {
     setState(() {
       fragment = UpdateBasementReportFragment(
@@ -152,6 +151,7 @@ class _DashboardUIState extends State<DashboardUI>
           customer: customer);
     });
   }
+
   _goToAddRecommendedLevel(CustomerDetails customer) {
     setState(() {
       fragment = RecommendedLevel(
@@ -179,7 +179,8 @@ class _DashboardUIState extends State<DashboardUI>
   @override
   void initState() {
     super.initState();
-    fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails,);
+    fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails,
+    loggedInUser: widget.loggedInUser,);
   }
 
   @override

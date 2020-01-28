@@ -8,7 +8,6 @@ import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_dashboard.dart';
-import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
 
@@ -176,6 +175,7 @@ class _OrganizationListUiState extends State<OrganizationListUi> {
         widget.loggedInUser.CompanyGUID= _list[index].value;
         widget.loggedInUser.CompanyName= _list[index].text;
         Navigator.of(context).pop();
+
         Navigator.push(
             context,
             MaterialPageRoute(

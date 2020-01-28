@@ -13,6 +13,7 @@ import 'package:flutter_grate_app/widgets/PDFScreen.dart';
 import 'package:flutter_grate_app/widgets/UsFormatter.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -583,6 +584,63 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                   isDense: true,
                                 ),
                               ),
+                              /*TypeAheadField(
+                                textFieldConfiguration:
+                                TextFieldConfiguration(
+                                    controller: _zipController,
+                                    autofocus: true,
+                                    keyboardType: TextInputType.text,
+                                    maxLines: 1,
+                                    decoration: new InputDecoration(
+                                      labelText: "Zip",
+                                      focusedBorder:
+                                      UnderlineInputBorder(
+                                          borderSide:
+                                          BorderSide.none),
+                                      enabledBorder:
+                                      UnderlineInputBorder(
+                                          borderSide:
+                                          BorderSide.none),
+                                      icon: new Icon(
+                                        MdiIcons.cube,
+                                        color: Colors.grey,
+                                      ),
+                                      hintStyle: customHintStyle(),
+                                      isDense: true,
+                                    )),
+                                suggestionsCallback: (pattern) async {
+                                  return await getZipData();
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  Product product =
+                                  Product.fromMap(suggestion, true);
+                                  return ListTile(
+                                    leading: Icon(MdiIcons.cubeOutline),
+                                    title: Text(product.name),
+                                    subtitle: Text(product.description),
+                                    trailing: Text(
+                                        '\$ ${product.rate.toStringAsFixed(2)}'),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  selectedProduct =
+                                      Product.fromMap(suggestion, true);
+                                  _productNameController.text =
+                                      selectedProduct.name;
+                                  _descriptionController.text =
+                                      selectedProduct.description;
+                                  _quantityController.text = "1";
+                                  _rateController.text = selectedProduct
+                                      .rate
+                                      .toStringAsFixed(2);
+                                  _discountController.text = "0.0";
+                                  _priceController.text = selectedProduct
+                                      .rate
+                                      .toStringAsFixed(2);
+                                },
+                                hideSuggestionsOnKeyboardHide: true,
+                                hideOnError: true,
+                              ),*/
                             ),
                           ],
                         ),
@@ -705,6 +763,21 @@ class _AddCustomerState extends State<AddCustomerFragment> {
             break;
         }
       }
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return [];
+    }
+  }
+  Future getZipData() async {
+    Map<String, String> headers = {
+      'key': _zipController.text,
+    };
+
+    var result = await http.get(BASE_URL+API_GET_ZIP, headers: headers);
+    if (result.statusCode == 200) {
+      var map = json.decode(result.body)['data'];
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

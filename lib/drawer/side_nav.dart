@@ -84,8 +84,7 @@ class SideNavUIState extends State<SideNavUI>
                               backgroundColor: Colors.black,
                               child: Text(
                                 widget.loggedInUser.UserName
-                                    .substring(0, 1)
-                                    .toUpperCase(),
+                                    .substring(0, 1).toUpperCase(),
                                 style: customButtonTextStyle(),
                               ),
                             )

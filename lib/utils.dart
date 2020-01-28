@@ -205,6 +205,7 @@ const String API_CREATE_ESTIMATE = "CreateEstimate";
 const String API_UPLOAD_FILE = "UploadImageFile";
 const String API_GET_ESTIMATE = "GetEstimateById";
 const String API_GET_LOOK_UP = "GetLookupbyKey";
+const String API_GET_ZIP = "GetCityZipCodeLookupList";
 const String API_GET_BASEMENT_INSPECTION = "GetCustomerInspectionByCustomerId";
 const String API_SAVE_BASEMENT_INSPECTION = "SaveCustomerInspection";
 const String API_SAVE_RECOMMENDED_LEVEL = "RecommendedLevel";
