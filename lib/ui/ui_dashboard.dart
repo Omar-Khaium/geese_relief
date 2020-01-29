@@ -80,7 +80,7 @@ class _DashboardUIState extends State<DashboardUI>
     setState(() {
       _keySideNav.currentState.updateSelection(value);
       fragment = new DashboardFragment(
-          login: widget.login, goToCustomerDetails: _goToCustomerDetails);
+          login: widget.login, goToCustomerDetails: _goToCustomerDetails, loggedInUser: widget.loggedInUser,);
     });
   }
 

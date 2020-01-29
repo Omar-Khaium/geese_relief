@@ -14,11 +14,12 @@ import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
 
 class DashboardFragment extends StatefulWidget {
-  ValueChanged<String> goToCustomerDetails;
-  Login login;
-  LoggedInUser loggedInUser;
+  final ValueChanged<String> goToCustomerDetails;
+  final Login login;
+  final LoggedInUser loggedInUser;
 
-  DashboardFragment({Key key, this.login, this.goToCustomerDetails,this.loggedInUser})
+  DashboardFragment(
+      {Key key, this.login, this.goToCustomerDetails, this.loggedInUser})
       : super(key: key);
 
   @override
@@ -32,6 +33,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   bool _showPaginationShimmer = false;
   ScrollController _scrollController;
   int _pageNo = 0;
+  int _totalSize = 0;
+
 
   var _future;
 
@@ -48,10 +51,11 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     if (result.statusCode == 200) {
       var map = json.decode(result.body);
       var _customersMap = map['data']['CustomerList'];
+      _totalSize = map['data']['TotalCustomerCount']['Counter'];
       arrayList = List.generate(_customersMap.length, (index) {
         return Customer.fromMap(_customersMap[index]);
       });
-
+      setState(() {});
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
@@ -64,7 +68,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
-      'PageSize': '10'
+      'PageSize': '10',
+      'ResultType': 'Customer'
     };
 
     var result =
@@ -105,9 +110,6 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       });
       await fetchData();
       setState(() {
-        arrayList = arrayList;
-      });
-      setState(() {
         _showPaginationShimmer = false;
       });
     }
@@ -122,20 +124,37 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       child: Column(
         children: <Widget>[
           Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Dashboard",
-                style: fragmentTitleStyle(),
-              )),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                widget.loggedInUser.CompanyName,
-                style: new TextStyle(fontWeight: FontWeight.bold,color: Colors.grey,fontSize: 20),
-              )),
-
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Dashboard",
+              style: fragmentTitleStyle(),
+            ),
+          ),
           SizedBox(
-            height: 30,
+            height: 8,
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                widget.loggedInUser.CompanyName,
+                style: new TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                    fontSize: 16),
+              ),
+              Text(
+                "${arrayList.length} out of $_totalSize",
+                style: new TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black,
+                    fontSize: 16),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16,
           ),
           Expanded(
             child: FutureBuilder(
@@ -143,155 +162,158 @@ class _DashboardFragmentState extends State<DashboardFragment> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   try {
-                    return ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      controller: _scrollController,
-                      children: <Widget>[
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(),
-                          itemCount: arrayList.length,
-                          itemBuilder: (context, index) {
-                            customer = arrayList[index];
-                            return InkWell(
-                              onTap: () {
-                                widget.goToCustomerDetails(arrayList[index].Id);
-                              },
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Column(
+                    return RefreshIndicator(
+                      onRefresh: _refresh,
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        controller: _scrollController,
+                        children: <Widget>[
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: ScrollPhysics(),
+                            itemCount: arrayList.length,
+                            itemBuilder: (context, index) {
+                              customer = arrayList[index];
+                              return InkWell(
+                                onTap: () {
+                                  widget.goToCustomerDetails(arrayList[index].Id);
+                                },
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              ListRowItem(
+                                                icon: Icons.person,
+                                                text: customer.Name,
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              ListRowItem(
+                                                icon: Icons.phone,
+                                                text: customer.ContactNum,
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              ListRowItem(
+                                                icon: Icons.email,
+                                                text: customer.Email,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              ListRowItem(
+                                                icon: Icons.pin_drop,
+                                                text: customer.Address,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
                                           mainAxisSize: MainAxisSize.min,
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: <Widget>[
-                                            ListRowItem(
-                                              icon: Icons.person,
-                                              text: customer.Name,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            ListRowItem(
-                                              icon: Icons.phone,
-                                              text: customer.ContactNum,
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            ListRowItem(
-                                              icon: Icons.email,
-                                              text: customer.Email,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            ListRowItem(
-                                              icon: Icons.pin_drop,
-                                              text: customer.Address,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          InkWell(
-                                            onTap: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      deleteMessage(index));
-                                            },
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.grey.shade300,
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.black,
-                                                size: 18,
+                                            InkWell(
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        deleteMessage(index));
+                                              },
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.grey.shade300,
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  color: Colors.black,
+                                                  size: 18,
+                                                ),
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Divider(),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          _showPaginationShimmer
+                              ? Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              ShimmerItemCustomer(250),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              ShimmerItemCustomer(125),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              ShimmerItemCustomer(175),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Divider(),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        _showPaginationShimmer
-                            ? Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            ShimmerItemCustomer(250),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            ShimmerItemCustomer(125),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            ShimmerItemCustomer(175),
-                                          ],
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            ShimmerItemMultiLineCustomer(300),
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              ShimmerItemMultiLineCustomer(300),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                ],
-                              )
-                            : Container(),
-                        SizedBox(
-                          height: 8,
-                        ),
-                      ],
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                  ],
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 8,
+                          ),
+                        ],
+                      ),
                     );
                   } catch (error) {
                     return Container();
@@ -549,5 +571,10 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     } else {
       showDialog(context: context, builder: (context) => alertFailed());
     }
+  }
+
+  Future<void> _refresh() async {
+    _pageNo = 0;
+    await getData();
   }
 }

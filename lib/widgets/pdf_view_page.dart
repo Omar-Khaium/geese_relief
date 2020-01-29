@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+//import 'package:flutter_pdfview/flutter_pdfview.dart';
 class PdfViewPage extends StatefulWidget {
   final String path;
 
@@ -12,14 +12,14 @@ class _PdfViewPageState extends State<PdfViewPage> {
   int _totalPages = 0;
   int _currentPage = 0;
   bool pdfReady = false;
-  PDFViewController _pdfViewController;
+//  PDFViewController _pdfViewController;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          PDFView(
+          /*PDFView(
             filePath: widget.path,
             autoSpacing: true,
             enableSwipe: true,
@@ -42,7 +42,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
               setState(() {});
             },
             onPageError: (page, e) {},
-          ),
+          )*/ Container(),
           !pdfReady
               ? Center(
             child: CircularProgressIndicator(),
@@ -59,7 +59,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
             label: Text("Go to ${_currentPage - 1}"),
             onPressed: () {
               _currentPage -= 1;
-              _pdfViewController.setPage(_currentPage);
+//              _pdfViewController.setPage(_currentPage);
             },
           )
               : Offstage(),
@@ -69,7 +69,7 @@ class _PdfViewPageState extends State<PdfViewPage> {
             label: Text("Go to ${_currentPage + 1}"),
             onPressed: () {
               _currentPage += 1;
-              _pdfViewController.setPage(_currentPage);
+//              _pdfViewController.setPage(_currentPage);
             },
           )
               : Offstage(),

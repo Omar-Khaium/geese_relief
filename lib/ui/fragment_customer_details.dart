@@ -132,8 +132,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         });
   }
 
-  //-------------Image---------------
-
   @override
   Widget build(BuildContext context) {
     return Container(
