@@ -100,6 +100,8 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         widget.isLoading(false);
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
+          showMessage(context, "Success!", "Customer Added Successfully",
+              Colors.green.shade600, null);
           widget.backToDashboard(0);
         } else {
           Flushbar(
@@ -556,14 +558,15 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             ),
                             Expanded(
                               flex: 2,
-                              child:
-                              TypeAheadField(
-                                textFieldConfiguration:
-                                TextFieldConfiguration(
+                              child: TypeAheadField(
+                                textFieldConfiguration: TextFieldConfiguration(
                                     controller: _zipController,
                                     autofocus: true,
                                     keyboardType: TextInputType.number,
                                     maxLines: 1,
+                                    onChanged: (val) {
+                                      setState(() {});
+                                    },
                                     decoration: new InputDecoration(
                                       labelText: "Zip",
                                       focusedBorder: UnderlineInputBorder(
@@ -571,19 +574,23 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                               color: Colors.black87)),
                                       enabledBorder: UnderlineInputBorder(
                                           borderSide:
-                                          BorderSide(color: Colors.grey)),
+                                              BorderSide(color: Colors.grey)),
                                       icon: new Icon(
                                         MdiIcons.zipBox,
                                         color: Colors.grey,
                                       ),
                                       hintStyle: customHintStyle(),
+                                      errorText: _stateController.text.isNotEmpty
+                                          ? null
+                                          : "* Required",
                                       isDense: true,
                                     )),
                                 suggestionsCallback: (pattern) async {
-                                  return await getZipData(pattern);
+
+                                  return _zipController.text.length>=3 ? await getZipData(pattern):Container();
                                 },
                                 itemBuilder: (context, suggestion) {
-                                  Zip zip =suggestion;
+                                  Zip zip = suggestion;
                                   return ListTile(
                                     leading: Icon(MdiIcons.zipBoxOutline),
                                     title: Text(zip.zipCode),
@@ -597,17 +604,18 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 },
                                 onSuggestionSelected: (suggestion) {
                                   zipDatas = suggestion;
-                                  setState((){
-                                    _zipController.text = zipDatas.zipCode;
-                                    _cityController.text = zipDatas.city;
-                                    _stateController.text = zipDatas.state;
-                                  });
+
+                                    setState(() {
+                                      _zipController.text = zipDatas.zipCode;
+                                      _cityController.text = zipDatas.city;
+                                      _stateController.text = zipDatas.state;
+                                    });
+
 
                                 },
                                 hideSuggestionsOnKeyboardHide: true,
                                 hideOnError: true,
                               ),
-
                             ),
                           ],
                         ),
@@ -716,7 +724,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       'Authorization': widget.login.accessToken,
       'Key': 'CustomerType'
     };
-
     var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
     if (result.statusCode == 200) {
       var map = json.decode(result.body)['data'];
@@ -737,9 +744,9 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       return [];
     }
   }
-  Future getZipData(String pattern) async {
 
-    if(pattern.isNotEmpty) {
+  Future getZipData(String pattern) async {
+    if (pattern.isNotEmpty) {
       Map<String, String> headers = {
         'key': _zipController.text,
         'appname': "GrateApp",
@@ -755,11 +762,9 @@ class _AddCustomerState extends State<AddCustomerFragment> {
             return Zip.fromMap(map[index]);
           });
           return _zipList;
-        }
-        catch(error){
+        } catch (error) {
           return [];
         }
-
       } else {
         showMessage(context, "Network error!", json.decode(result.body),
             Colors.redAccent, Icons.warning);
