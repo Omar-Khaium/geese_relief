@@ -29,7 +29,7 @@ dependencies:
   image_picker:
   async:
   dotted_border:
-  flutter_pdfview:
+#  flutter_pdfview:
   flutter_html:
   cached_network_image:
   url_launcher:

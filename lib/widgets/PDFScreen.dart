@@ -6,7 +6,7 @@ import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+//import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -204,7 +204,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
           Expanded(
             flex: 1,
             child:widget.urlPDFPath.isNotEmpty ?
-            PDFView(
+            /*PDFView(
               filePath: widget.urlPDFPath,
               autoSpacing: true,
               enableSwipe: true,
@@ -214,7 +214,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
               onError: (e) {
                 print(e);
               } ,
-          ):Center(
+          )*/ Container() :Center(
               child: CircularProgressIndicator(),
             )
           )
