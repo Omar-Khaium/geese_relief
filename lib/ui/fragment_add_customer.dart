@@ -737,23 +737,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
       return [];
     }
   }
-  Future getSuggestions(String pattern) async {
-    if (pattern.isNotEmpty) {
-      Map<String, String> headers = {
-        'Authorization': widget.login.accessToken,
-        'Key': pattern.trim()
-      };
-
-      var result = await http.get(BASE_URL+API_EQUIPMENT_LIST, headers: headers);
-      if (result.statusCode == 200) {
-        return json.decode(result.body)['EquipmentList'];
-      } else {
-        showMessage(context, "Network error!", json.decode(result.body),
-            Colors.redAccent, Icons.warning);
-        return [];
-      }
-    }
-  }
   Future getZipData(String pattern) async {
 
     if(pattern.isNotEmpty) {

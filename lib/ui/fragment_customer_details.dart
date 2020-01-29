@@ -91,7 +91,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Make A choice"),
+            title: Text("Make a choice"),
             content: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(16),
@@ -117,7 +117,14 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                     Padding(
                       padding: EdgeInsets.all(16),
                       child: GestureDetector(
-                        child: Text("Camera"),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Icon(Icons.photo_camera),
+                            SizedBox(width: 12,),
+                            Text("Camera"),
+                          ],
+                        ),
                         onTap: () {
                           widget.customer.ProfileImage = null;
                           _openCamera(context);
