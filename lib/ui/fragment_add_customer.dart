@@ -187,6 +187,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 controller: _firstNameController,
                                 style: customTextStyle(),
                                 cursorColor: Colors.black87,
+                                autofocus: false,
                                 onChanged: (val) {
                                   setState(() {});
                                 },
@@ -224,6 +225,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 keyboardType: TextInputType.text,
                                 controller: _lastNameController,
                                 maxLines: 1,
+                                autofocus: false,
                                 textInputAction: TextInputAction.next,
                                 onChanged: (val) {
                                   setState(() {});
@@ -261,11 +263,12 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.next,
                           maxLines: 1,
+                          autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
                           decoration: new InputDecoration(
-                            labelText: "Business Type",
+                            labelText: "Business Name",
                             focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black87)),
                             enabledBorder: UnderlineInputBorder(
@@ -290,7 +293,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               errorText: TypeDropdown == 0
                                   ? "Select another value"
                                   : null,
-                              labelText: "Type",
+                              labelText: "Business Type",
                               labelStyle: customTextStyle(),
                               hintText: "e.g. hint",
                               hintStyle: customHintStyle(),
@@ -325,6 +328,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 maxLines: 1,
+                                autofocus: false,
                                 inputFormatters: <TextInputFormatter>[
                                   WhitelistingTextInputFormatter.digitsOnly,
                                   _UsNumberTextInputFormatter,
@@ -363,6 +367,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 },
                                 keyboardType: TextInputType.number,
                                 maxLines: 1,
+                                autofocus: false,
                                 textInputAction: TextInputAction.next,
                                 style: customTextStyle(),
                                 inputFormatters: <TextInputFormatter>[
@@ -402,6 +407,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           maxLines: 1,
+                          autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
@@ -433,6 +439,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           cursorColor: Colors.black87,
                           style: customTextStyle(),
                           controller: _emailController,
+                          autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
@@ -465,6 +472,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           controller: _streetController,
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.next,
+                          autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
@@ -495,6 +503,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           controller: _cityController,
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.next,
+                          autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
@@ -527,6 +536,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 style: customTextStyle(),
                                 cursorColor: Colors.black87,
                                 controller: _stateController,
+                                autofocus: false,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 onChanged: (val) {
@@ -561,7 +571,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               child: TypeAheadField(
                                 textFieldConfiguration: TextFieldConfiguration(
                                     controller: _zipController,
-                                    autofocus: true,
+                                    autofocus: false,
                                     keyboardType: TextInputType.number,
                                     maxLines: 1,
                                     onChanged: (val) {

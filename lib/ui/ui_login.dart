@@ -42,7 +42,6 @@ class _LogInUIState extends State<LogInUI> {
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
 
-  List<Organization> _list = [];
   DBHelper dbHelper = new DBHelper();
   Login login;
   LoggedInUser loggedInUser;
@@ -68,12 +67,7 @@ class _LogInUIState extends State<LogInUI> {
         _isLoading = false;
       });
 
-       /*Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => new DashboardUI(login, loggedInUser)
-          )
-      );*/
+
       Navigator.push(
           context,
           MaterialPageRoute(

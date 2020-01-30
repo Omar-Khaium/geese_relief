@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/BasementInspection.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
+import 'package:flutter_grate_app/sqflite/db_helper.dart';
+import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
@@ -87,6 +90,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
 //-------------Image---------------
   File _imageFile;
+  BasementReport basementReport;
+  bool _isLoading = false;
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
@@ -187,6 +192,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       YesNoArray = [],
       RatingArray = [];
 
+  DBHelper dbHelper = new DBHelper();
   int CurrentOutsideConditionsSelection = 0,
       HeatSelection = 0,
       AirSelection = 0,
@@ -2499,8 +2505,9 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 alignment: Alignment.centerRight,
                                 child: InkWell(
                                   onTap: () {
-                                    showSaving();
-                                    // saveInspectionReport();
+                                    if(_1stFloorRelativeHumidityController.text.isNotEmpty){
+                                      showSaving();
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -2736,8 +2743,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
             Map map = json.decode(response.body);
             print("Successfully Inserted");
             showAPIResponse(context, "Inspection Created", Colors.green.shade600);
+
+
+
+            Navigator.of(context).pop();
           } else {
             showAPIResponse(context, "Something Went Wrong", Colors.red.shade600);
+            Navigator.of(context).pop();
           }
         } catch (error) {
           showAPIResponse(context, "Error :" + error.toString(), null);
@@ -2775,8 +2787,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       message = "Uploading Basement Information...";
     });
 
-    bool resultStatus = await saveInspectionReport();
-    Navigator.of(context).pop();
+    bool resultStatus = _checkConnectivity();
     showAPIResponse(
         context,
         resultStatus
@@ -2786,5 +2797,125 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     setState(() {});
     //if(resultStatus) widget.backToCustomerDetailsFromEstimate(widget.customer);
   }
+
+  saveToDatabase() async {
+    BasementReport basementreport = await dbHelper.saveBasementReport(basementReport);
+
+    if (basementreport == null) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      showMessage(
+          context,
+          "Offline Database ERROR!",
+          "Failed to save in offline-database.",
+          Colors.redAccent,
+          Icons.error_outline);
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+
+
+     widget.backToCustomerDetails(widget.customer);
+    }
+  }
+  _checkConnectivity() async{
+
+    var result =await Connectivity().checkConnectivity();
+    if(result==ConnectivityResult.none){
+      showSaving();
+      saveToDatabase();
+      Navigator.pop(context);
+
+    }
+    else{
+      showSaving();
+      saveInspectionReport();
+      Navigator.pop(context);
+    }
+  }
+
+ /* void showPopup(){
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            backgroundColor: Colors.white,
+            contentPadding: EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            content: Container(
+              width: 600,
+              height: 600,
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  Image.asset('images/no_internet.gif',fit: BoxFit.cover),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 64,
+                            child: OutlineButton(
+                              highlightElevation: 2,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                              child: Text(
+                                "No,Thanks",
+                                style: new TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontFamily: "Roboto"),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 64,
+                            child: RaisedButton(
+                              highlightElevation: 2,
+                              disabledColor: Colors.black,
+                              color: Colors.black,
+                              elevation: 2,
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                              child: Text(
+                                "Sync",
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontFamily: "Roboto"),
+                              ),
+                              onPressed: () {
+                                saveInspectionReport();
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+        );
+      },
+    );
+  }*/
 
 }

@@ -25,6 +25,7 @@ dependencies:
   painter:
   popup_menu:
   flutter_typeahead:
+  connectivity: ^0.4.6+2
   video_player:
   image_picker:
   async:

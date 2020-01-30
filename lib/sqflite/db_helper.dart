@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
@@ -31,6 +32,7 @@ class DBHelper {
     await db.execute(DBInfo.CREATE_TABLE_LOGIN);
     await db.execute(DBInfo.CREATE_TABLE_CUSTOMER);
     await db.execute(DBInfo.CREATE_TABLE_CURRENT_USER);
+    await db.execute(DBInfo.CREATE_TABLE_BASEMENT_INSPECTION);
   }
 
   Future<dynamic> save(dynamic entity, String table) async {
@@ -63,6 +65,17 @@ class DBHelper {
 
       login.id = await dbClient.insert(DBInfo.TABLE_LOGIN, login.toMap());
       return login;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  Future<dynamic> saveBasementReport(BasementReport basementReport) async {
+    var dbClient = await db;
+    try {
+      basementReport.id = await dbClient.insert(DBInfo.TABLE_BASEMENT_INSPECTION, basementReport.toMap());
+      return basementReport;
     } catch (error) {
       print(error);
       return null;
