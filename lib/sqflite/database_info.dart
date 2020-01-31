@@ -25,7 +25,7 @@ class DBInfo{
   static const String CURRENT_USER_ID = "id";
   static const String INSPECTION_ID = "id";
   static const String CURRENT_USER_INT_ID = "UserID";
-  static const String INSPECTION_DATA = "InspectionData";
+  static const String INSPECTION_DATA = "header";
   static const String CURRENT_USER_GUID = "UserGUID";
   static const String CURRENT_USER_NAME = "UserName";
   static const String CURRENT_USER_PHOTO = "ProfilePicture";

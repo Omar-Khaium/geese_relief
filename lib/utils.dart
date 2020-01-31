@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 void showMessage(BuildContext context, String title, String message,
     Color color, IconData icon) {
@@ -219,3 +222,26 @@ const String API_DUPLICATE_ESTIMATE = "EstimateDuplicate";
 const String API_DELETE_ESTIMATE = "DeleteEstimate";
 const String API_GENERATE_ESTIMATE = "GenerateEstimate";
 const String API_SEND_EMAIL = "SendEmailEstimate";
+
+Future<bool> saveInspectionReport(String header,BuildContext context, Login login) async {
+  try {
+    Map<String,String> map=new Map<String ,String>.from(json.decode(header));
+    http
+        .post(BASE_URL + API_SAVE_BASEMENT_INSPECTION, headers: map)
+        .then((response) {
+      try {
+        if (response.statusCode == 200) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+
+        return false;
+      }
+    });
+  } catch (error) {
+    print(error);
+    return false;
+  }
+}

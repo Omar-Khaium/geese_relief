@@ -13,5 +13,8 @@ class BasementReport{
     return map;
   }
 
-
+  BasementReport.fromMap(Map<String, dynamic> map) {
+    id = map['id'];
+    header = map['header'];
+  }
 }

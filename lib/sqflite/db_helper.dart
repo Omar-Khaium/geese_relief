@@ -106,6 +106,21 @@ class DBHelper {
     return login;
   }
 
+  Future< List<BasementReport>> getBasementData() async {
+    var dbClient = await db;
+    List<Map> maps = await dbClient.query(DBInfo.TABLE_BASEMENT_INSPECTION,
+        columns: [
+          DBInfo.INSPECTION_ID,
+          DBInfo.INSPECTION_DATA,
+        ],
+        distinct: true);
+    List<BasementReport> _list= [];
+    maps.forEach((map){
+      _list.add(BasementReport.fromMap(map));
+    });
+    return _list;
+  }
+
   Future<LoggedInUser> getAllFromLoggedInUser() async {
     var dbClient = await db;
     List<Map> maps = await dbClient.query(DBInfo.TABLE_CURRENT_USER,

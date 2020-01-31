@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/drawer/side_nav.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
+import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/fragment_add_basement_report.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_grate_app/ui/fragment_logout.dart';
 import 'package:flutter_grate_app/ui/fragment_update_basement_report.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import '../utils.dart';
 import 'fragment_recommended_level.dart';
 import 'fragment_update_estimate.dart';
 
@@ -181,6 +183,8 @@ class _DashboardUIState extends State<DashboardUI>
     super.initState();
     fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails,
     loggedInUser: widget.loggedInUser,);
+     _checkBasementData();
+
   }
 
   @override
@@ -216,5 +220,98 @@ class _DashboardUIState extends State<DashboardUI>
         ),
       ),
     );
+  }
+
+  void _checkBasementData() async {
+    List<BasementReport> basementsDatas=await dbHelper.getBasementData();
+    if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
+      showPopup(basementsDatas[0].header);
+    }
+    else{
+
+    }
+  }
+  void showPopup( String header){
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            backgroundColor: Colors.white,
+            contentPadding: EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            content: Container(
+              width: 600,
+              height: 600,
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  Image.asset('images/no_internet.gif',fit: BoxFit.cover),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 64,
+                            child: OutlineButton(
+                              highlightElevation: 2,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                              child: Text(
+                                "No,Thanks",
+                                style: new TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontFamily: "Roboto"),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 64,
+                            child: RaisedButton(
+                              highlightElevation: 2,
+                              disabledColor: Colors.black,
+                              color: Colors.black,
+                              elevation: 2,
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                              child: Text(
+                                "Sync",
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontFamily: "Roboto"),
+                              ),
+                              onPressed: () {
+                                _syncBaseData(header);
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+        );
+      },
+    );
+  }
+  _syncBaseData(String header) async{
+    bool result= await saveInspectionReport(header,context, widget.login);
   }
 }

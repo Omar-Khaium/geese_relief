@@ -2505,9 +2505,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 alignment: Alignment.centerRight,
                                 child: InkWell(
                                   onTap: () {
-                                    if(_1stFloorRelativeHumidityController.text.isNotEmpty){
-                                      showSaving();
-                                    }
+                                    showSaving();
+
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -2743,10 +2742,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
             Map map = json.decode(response.body);
             print("Successfully Inserted");
             showAPIResponse(context, "Inspection Created", Colors.green.shade600);
-
-
-
             Navigator.of(context).pop();
+
           } else {
             showAPIResponse(context, "Something Went Wrong", Colors.red.shade600);
             Navigator.of(context).pop();
@@ -2786,52 +2783,149 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     setState(() {
       message = "Uploading Basement Information...";
     });
-
-    bool resultStatus = _checkConnectivity();
-    showAPIResponse(
-        context,
-        resultStatus
-            ? "Basement Inspection Saved Successfully!"
-            : "Failed to Save!",
-        Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
-    setState(() {});
-    //if(resultStatus) widget.backToCustomerDetailsFromEstimate(widget.customer);
+    _checkConnectivity();
   }
 
   saveToDatabase() async {
-    BasementReport basementreport = await dbHelper.saveBasementReport(basementReport);
+    try {
+      headers['Authorization'] = widget.login.accessToken;
+      headers['CustomerId'] = widget.customer.CustomerId;
+      headers['companyId'] = widget.loggedInUser.CompanyGUID;
+      headers['CurrentOutsideConditions'] =
+          CurrentOutsideConditionsArray[CurrentOutsideConditionsSelection]
+              .DataValue;
+      headers['OutsideRelativeHumidity'] =
+          _OutsideRelativeHumidityController.text;
+      headers['OutsideTemperature'] = _OutsideTemperatureController.text;
+      headers['FirstFloorRelativeHumidity'] =
+          _1stFloorRelativeHumidityController.text;
+      headers['FirstFloorTemperature'] = _1stFloorTemperatureController.text;
+      headers['RelativeOther1'] = _Other1Controller.text;
+      headers['RelativeOther2'] = _Other2Controller.text;
+      headers['Heat'] = HeatArray[HeatSelection].DataValue;
+      headers['Air'] = AirArray[AirSelection].DataValue;
+      headers['BasementRelativeHumidity'] =
+          _BasementRelativeHumidityController.text;
+      headers['BasementTemperature'] = _BasementTemperatureController.text;
+      headers['BasementDehumidifier'] =
+          BasementDehumidifierArray[BasementDehumidifierSelection].DataValue;
+      headers['GroundWater'] = YesNoArray[GroundWaterSelection].DataValue;
+      headers['GroundWaterRating'] =
+          RatingArray[GroundWaterRatingSelection].DataValue;
+      headers['IronBacteria'] = YesNoArray[IronBacteriaSelection].DataValue;
+      headers['IronBacteriaRating'] =
+          RatingArray[IronBacteriaRatingSelection].DataValue;
+      headers['Condensation'] = YesNoArray[CondensationSelection].DataValue;
+      headers['CondensationRating'] =
+          RatingArray[CondensationRatingSelection].DataValue;
+      headers['WallCracks'] = YesNoArray[WallCracksSelection].DataValue;
+      headers['WallCracksRating'] =
+          RatingArray[WallCracksRatingSelection].DataValue;
+      headers['FloorCracks'] = YesNoArray[FloorCracksSelection].DataValue;
+      headers['FloorCracksRating'] =
+          RatingArray[FloorCracksRatingSelection].DataValue;
+      headers['ExistingSumpPump'] =
+          YesNoArray[ExistingSumpPumpSelection].DataValue;
+      headers['ExistingDrainageSystem'] =
+          YesNoArray[ExistingDrainageSystemSelection].DataValue;
+      headers['ExistingRadonSystem'] =
+          YesNoArray[ExistingRadonSystemSelection].DataValue;
+      headers['DryerVentToCode'] =
+          YesNoArray[DryerVentToCodeSelection].DataValue;
+      headers['FoundationType'] =
+          FoundationTypeArray[FoundationTypeSelection].DataValue;
+      headers['Bulkhead'] = YesNoArray[BulkheadSelection].DataValue;
+      headers['VisualBasementOther'] =
+          _VisualBasementInspectionOtherController.text;
+      headers['NoticedSmellsOrOdors'] =
+          YesNoArray[NoticedSmellsOrOdorsSelection].DataValue;
+      headers['NoticedSmellsOrOdorsComment'] =
+          _NoticedSmellsCommentController.text;
+      headers['NoticedMoldOrMildew'] =
+          YesNoArray[NoticedMoldOrMildewSelection].DataValue;
+      headers['NoticedMoldOrMildewComment'] =
+          _NoticedMoldsCommentController.text;
+      headers['BasementGoDown'] = YesNoArray[BasementGoDownSelection].DataValue;
+      headers['HomeSufferForRespiratory'] =
+          YesNoArray[HomeSufferForRespiratoryProblemsSelection].DataValue;
+      headers['HomeSufferForrespiratoryComment'] =
+          _SufferFromRespiratoryCommentController.text;
+      headers['ChildrenPlayInBasement'] =
+          YesNoArray[ChildrenPlayInBasementSelection].DataValue;
+      headers['ChildrenPlayInBasementComment'] =
+          _ChildrenPlayInTheBasementCommentController.text;
+      headers['PetsGoInBasement'] =
+          YesNoArray[PetsGoInBasementSelection].DataValue;
+      headers['PetsGoInBasementComment'] = _HavePetsCommentController.text;
+      headers['NoticedBugsOrRodents'] =
+          YesNoArray[NoticedBugsOrRodentsSelection].DataValue;
+      headers['NoticedBugsOrRodentsComment'] =
+          _NoticedBugsCommentController.text;
+      headers['GetWater'] = YesNoArray[GetWaterSelection].DataValue;
+      headers['GetWaterComment'] = _GetWaterCommentController.text;
+      headers['RemoveWater'] = RemoveWaterArray[RemoveWaterSelection].DataValue;
+      headers['SeeCondensationPipesDripping'] =
+          YesNoArray[SeeCondensationPipesDrippingSelection].DataValue;
+      headers['SeeCondensationPipesDrippingComment'] =
+          _EverSeePipesDrippingCommentController.text;
+      headers['RepairsProblems'] =
+          YesNoArray[RepairsTryAndFixSelection].DataValue;
+      headers['RepairsProblemsComment'] =
+          _AnyRepairsToTryAndFixCommentController.text;
+      headers['LivingPlan'] = YesNoArray[LivingPlanSelection].DataValue;
+      headers['SellPlaning'] = YesNoArray[SellPlaningSelection].DataValue;
+      headers['PlansForBasementOnce'] =
+          YesNoArray[PlansForBasementOnceSelection].DataValue;
+      headers['HomeTestForPastRadon'] =
+          YesNoArray[HomeTestedForRadonSelection].DataValue;
+      headers['HomeTestForPastRadonComment'] =
+          _TestedForRadonInThePast2YearsCommentController.text;
+      headers['LosePower'] = LosePowerArray[LosePowerSelection].DataValue;
+      headers['LosePowerHowOften'] =
+          LosePowerArray[LosePowerHowOftenSelection].DataValue;
+      headers['CustomerBasementOther'] =
+          _BasementEvaluationOtherController.text;
+      headers['Drawing'] = "";
+      headers['Notes'] = _NotesController.text;
+      headers['PMSignature'] = "";
+      headers['PMSignatureDate'] = "";
+      headers['HomeOwnerSignature'] = "";
+      headers['HomeOwnerSignatureDate'] = "";
+      headers['InspectionPhoto'] = "";
+      basementReport=new BasementReport(null, json.encode(headers));
+      BasementReport basementreport = await dbHelper.saveBasementReport(
+          basementReport);
 
-    if (basementreport == null) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (basementreport == null) {
+        showMessage(
+            context,
+            "Offline Database ERROR!",
+            "Failed to save in offline-database.",
+            Colors.redAccent,
+            Icons.error_outline);
+      } else {
+        showMessage(
+            context,
+            "Success!",
+            "Offline Database Saved Successfully!",
+            Colors.greenAccent,
+            Icons.done);
 
-      showMessage(
-          context,
-          "Offline Database ERROR!",
-          "Failed to save in offline-database.",
-          Colors.redAccent,
-          Icons.error_outline);
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-
-
-     widget.backToCustomerDetails(widget.customer);
+        widget.backToCustomerDetails(widget.customer);
+      }
+    }
+    catch(error){
+      print(error);
     }
   }
   _checkConnectivity() async{
-
     var result =await Connectivity().checkConnectivity();
     if(result==ConnectivityResult.none){
-      showSaving();
       saveToDatabase();
       Navigator.pop(context);
 
     }
     else{
-      showSaving();
       saveInspectionReport();
       Navigator.pop(context);
     }
