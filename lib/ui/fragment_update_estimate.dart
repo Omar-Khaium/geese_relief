@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/model/ProductImage.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/product.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
@@ -32,6 +34,7 @@ class UpdateEstimateFragment extends StatefulWidget {
   LoggedInUser loggedInUser;
   CustomerDetails customer;
   ValueChanged<CustomerDetails> backToCustomerDetailsFromEstimate;
+
 
   UpdateEstimateFragment(
       {Key key,
@@ -61,6 +64,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   GlobalKey _columnKey = GlobalKey();
   Widget _Drawing = Container();
   List<Product> _productList = [];
+  List<ProductImage> _productListForImage = [];
   Product selectedProduct;
 
   Widget _PMSignature = Container();
@@ -69,7 +73,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   String base64PMSignature = "";
   String base64HOSignature = "";
   String _drawingImagePath = "";
-  String _PMSignatureImagePath = "";
   String _HOSignatureImagePath = "";
   String _CameraImagePath = "";
   var base64 = const Base64Codec();
@@ -615,12 +618,39 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0))),
                             child: InkWell(
-                              child: _imageFile == null
-                                  ? Icon(Icons.camera_enhance)
-                                  : Image.file(
-                                      _imageFile,
-                                      fit: BoxFit.cover,
-                                    ),
+                              child:
+                              _imageFile!=null ? Image.file(
+                                _imageFile,
+                                fit: BoxFit.cover,
+                              ) : (_productListForImage[1].ImageLoc!=null && _productListForImage[1].ImageLoc.isNotEmpty) ? Container(
+                                height: 128,
+                                width: 128,
+                                child:
+                                Image.network(_productListForImage[1].ImageLoc.toString()
+                                  /*imageUrl: _productListForImage[1].ImageLoc.toString(),
+                                  imageBuilder:
+                                      (context,
+                                      imageProvider) =>
+                                      Container(
+                                        decoration:
+                                        BoxDecoration(
+                                          image: DecorationImage(
+                                            image:
+                                            imageProvider,
+                                            fit: BoxFit.cover,),
+                                        ),
+                                      ),
+                                  placeholder:
+                                      (context,
+                                      url) =>
+                                      CupertinoActivityIndicator(),
+                                  errorWidget: (context,
+                                      url,
+                                      error) =>
+                                      Icon(Icons
+                                          .error),
+                                ),*/
+                              )):Icon(Icons.person,size: 142,),
                               onTap: _openCamera,
                             ),
                           ),
@@ -1821,6 +1851,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
           return Product.fromMap(
               mapForEditData['EstimateDetails'][index], false);
         }));
+        _productListForImage.addAll(
+            List.generate(mapForEditData['EstimateImage'].length, (index) {
+          return ProductImage.fromMap(
+              mapForEditData['EstimateImage'][index]);
+        }));
+       // widget._productListForImage = ProductImage.fromMap(json.decode(result.body['EstimateImage'][]));
         formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
         nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
         estimateTaxTotal = mapForEditData['Estimate']['Tax'];

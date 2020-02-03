@@ -2741,11 +2741,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
           if (response.statusCode == 200) {
             Map map = json.decode(response.body);
             print("Successfully Inserted");
-            showAPIResponse(context, "Inspection Created", Colors.green.shade600);
+            showAPIResponse(context, "Inspection Created", Colors.green);
             Navigator.of(context).pop();
 
           } else {
-            showAPIResponse(context, "Something Went Wrong", Colors.red.shade600);
+            showAPIResponse(context, "Something Went Wrong", Colors.red);
             Navigator.of(context).pop();
           }
         } catch (error) {
