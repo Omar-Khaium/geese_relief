@@ -35,7 +35,6 @@ class UpdateEstimateFragment extends StatefulWidget {
   CustomerDetails customer;
   ValueChanged<CustomerDetails> backToCustomerDetailsFromEstimate;
 
-
   UpdateEstimateFragment(
       {Key key,
       this.login,
@@ -91,6 +90,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   double estimateMainSubtotal = 0.0;
   double estimateTaxTotal = 0.0;
   double estimateTotalAmount = 0.0;
+  String note="";
 
   var _future;
 
@@ -618,39 +618,44 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0))),
                             child: InkWell(
-                              child:
-                              _imageFile!=null ? Image.file(
-                                _imageFile,
-                                fit: BoxFit.cover,
-                              ) : (_productListForImage[1].ImageLoc!=null && _productListForImage[1].ImageLoc.isNotEmpty) ? Container(
-                                height: 128,
-                                width: 128,
-                                child:
-                                Image.network(_productListForImage[1].ImageLoc.toString()
-                                  /*imageUrl: _productListForImage[1].ImageLoc.toString(),
-                                  imageBuilder:
-                                      (context,
-                                      imageProvider) =>
-                                      Container(
-                                        decoration:
-                                        BoxDecoration(
-                                          image: DecorationImage(
-                                            image:
-                                            imageProvider,
-                                            fit: BoxFit.cover,),
+                              child: _imageFile != null
+                                  ? Image.file(
+                                      _imageFile,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : (_productListForImage[1].ImageLoc != null &&
+                                          _productListForImage[1]
+                                              .ImageLoc
+                                              .isNotEmpty)
+                                      ? Container(
+                                          height: 128,
+                                          width: 128,
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                "https://api.gratecrm.com" +
+                                                    _productListForImage[1]
+                                                        .ImageLoc,
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    Container(
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            placeholder: (context, url) =>
+                                                CupertinoActivityIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.person,
+                                          size: 142,
                                         ),
-                                      ),
-                                  placeholder:
-                                      (context,
-                                      url) =>
-                                      CupertinoActivityIndicator(),
-                                  errorWidget: (context,
-                                      url,
-                                      error) =>
-                                      Icon(Icons
-                                          .error),
-                                ),*/
-                              )):Icon(Icons.person,size: 142,),
                               onTap: _openCamera,
                             ),
                           ),
@@ -1424,24 +1429,25 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                         });
                                       },
                                       autofocus: false,
-                                      keyboardType: TextInputType.numberWithOptions(
-                                          signed: true, decimal: true),
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: true, decimal: true),
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(),
                                         filled: true,
                                         fillColor: Colors.grey.shade200,
                                         prefixIcon: IconButton(
-                                          icon: Icon(
-                                              _discountModeIsPercentage
-                                                  ? MdiIcons.sale
-                                                  : MdiIcons.cashUsd),
+                                          icon: Icon(_discountModeIsPercentage
+                                              ? MdiIcons.sale
+                                              : MdiIcons.cashUsd),
                                           onPressed: () {
                                             setState(() {
                                               _discountModeIsPercentage =
-                                              !_discountModeIsPercentage;
+                                                  !_discountModeIsPercentage;
                                               calculatePrice().then((price) {
                                                 _priceController.text =
-                                                    double.parse(price.toString())
+                                                    double.parse(
+                                                            price.toString())
                                                         .toStringAsFixed(2);
                                               });
                                             });
@@ -1846,6 +1852,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
       if (result.statusCode == 200) {
         Map mapForEditData = json.decode(result.body);
         _productList.clear();
+        _productListForImage.clear();
         _productList.addAll(
             List.generate(mapForEditData['EstimateDetails'].length, (index) {
           return Product.fromMap(
@@ -1853,24 +1860,28 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
         }));
         _productListForImage.addAll(
             List.generate(mapForEditData['EstimateImage'].length, (index) {
-          return ProductImage.fromMap(
-              mapForEditData['EstimateImage'][index]);
+          return ProductImage.fromMap(mapForEditData['EstimateImage'][index]);
         }));
-       // widget._productListForImage = ProductImage.fromMap(json.decode(result.body['EstimateImage'][]));
+
+        _Drawing = DrawingPlaceholder(
+            url: "https://api.gratecrm.com" + _productListForImage[2].ImageLoc);
+        _HOSignature = SignaturePlaceholder(
+            url: "https://api.gratecrm.com" + _productListForImage[0].ImageLoc);
         formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
         nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
         estimateTaxTotal = mapForEditData['Estimate']['Tax'];
         estimateDiscountTotal = mapForEditData['Estimate']['DiscountAmount'];
         estimateBaseSubTotal = mapForEditData['Estimate']['Amount'];
+        _noteController.text = mapForEditData['Estimate']['Description'];
         estimateTotalAmount = estimateBaseSubTotal - estimateDiscountTotal;
-        estimateMainSubtotal = estimateTotalAmount-estimateTaxTotal;
+        estimateMainSubtotal = estimateTotalAmount - estimateTaxTotal;
         _EstimateDiscountModeIsPercentage =
             mapForEditData['Estimate']['DiscountType'] == 'amount'
                 ? false
                 : true;
         return json.decode(result.body);
       } else {
-        showMessage(context, "Network error!", json.decode(result.body),
+        showMessage(context,"Network error!",json.decode(result.body),
             Colors.redAccent, Icons.warning);
         return "";
       }

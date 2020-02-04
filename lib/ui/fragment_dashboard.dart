@@ -3,6 +3,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/customer_model.dart';
+import 'package:flutter_grate_app/sqflite/database_info.dart';
+import 'package:flutter_grate_app/sqflite/db_helper.dart';
+import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/utils.dart';
@@ -35,6 +38,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   int _pageNo = 0;
   int _totalSize = 0;
 
+  DBHelper dbHelper = new DBHelper();
 
   var _future;
 
@@ -97,6 +101,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     _scrollController.addListener(_scrollListener);
     _showPaginationShimmer = false;
     _future = getData();
+    _checkBasementData();
     super.initState();
   }
 
@@ -577,4 +582,156 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     _pageNo = 0;
     await getData();
   }
+  //-----------------------Offline DB-----------------------
+  void _checkBasementData() async {
+    List<BasementReport> basementsDatas=await dbHelper.getBasementData();
+    if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
+      showPopup(basementsDatas[0].header.replaceAll("\n", ""),basementsDatas[0].id);
+    }
+    else{
+
+    }
+  }
+  void showPopup( String header,int id){
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            backgroundColor: Colors.white,
+            contentPadding: EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            content: Container(
+              width: 600,
+              height: 600,
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  Image.asset('images/no_internet.gif',fit: BoxFit.cover),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 64,
+                            child: OutlineButton(
+                              highlightElevation: 2,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                              child: Text(
+                                "Discard",
+                                style: new TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontFamily: "Roboto"),
+                              ),
+                              onPressed: () {
+                                DBHelper dbHelper=new DBHelper();
+                                dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Container(
+                            width:MediaQuery.of(context).size.width,
+                            height: 64,
+                            child: RaisedButton(
+                              highlightElevation: 2,
+                              disabledColor: Colors.black,
+                              color: Colors.black,
+                              elevation: 2,
+                              textColor: Colors.white,
+                              padding: EdgeInsets.all(12.0),
+                              child: Text(
+                                "Sync",
+                                style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontFamily: "Roboto"),
+                              ),
+                              onPressed: () {
+                                _syncBaseData(header,id);
+                              },
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+        );
+      },
+    );
+  }
+  _syncBaseData(String header,id) async{
+    showDialog(context: context, builder: (context) => alertLoading());
+    await saveInspectionReport(header,context, widget.login,id);
+    Navigator.of(context).pop();
+  }
+  alertLoading() {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      child: SimpleDialog(
+        contentPadding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 400,
+                height: 400,
+                child: Image.asset(
+                  "images/success.gif",
+                  fit: BoxFit.cover,
+                  scale: 1.5,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8)),
+                          color: Colors.black,
+                        ),
+                        height: 48,
+                        child: Center(
+                          child: Text(
+                            "Close",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+//-----------------------Offline DB-----------------------
 }

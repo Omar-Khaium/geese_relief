@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/sqflite/database_info.dart';
+import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -223,14 +225,15 @@ const String API_DELETE_ESTIMATE = "DeleteEstimate";
 const String API_GENERATE_ESTIMATE = "GenerateEstimate";
 const String API_SEND_EMAIL = "SendEmailEstimate";
 
-Future<bool> saveInspectionReport(String header,BuildContext context, Login login) async {
+Future<bool> saveInspectionReport(String header,BuildContext context, Login login,int id) async {
   try {
     Map<String,String> map=new Map<String ,String>.from(json.decode(header));
-    http
-        .post(BASE_URL + API_SAVE_BASEMENT_INSPECTION, headers: map)
-        .then((response) {
+    var response=await http
+        .post(BASE_URL + API_SAVE_BASEMENT_INSPECTION, headers: map);
       try {
         if (response.statusCode == 200) {
+          DBHelper dbHelper=new DBHelper();
+          await dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
           return true;
         } else {
           return false;
@@ -238,8 +241,8 @@ Future<bool> saveInspectionReport(String header,BuildContext context, Login logi
       } catch (error) {
 
         return false;
-      }
-    });
+
+    };
   } catch (error) {
     print(error);
     return false;

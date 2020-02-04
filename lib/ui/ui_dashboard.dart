@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/drawer/side_nav.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
+import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
@@ -222,16 +224,17 @@ class _DashboardUIState extends State<DashboardUI>
     );
   }
 
+  //-----------------------Offline DB-----------------------
   void _checkBasementData() async {
     List<BasementReport> basementsDatas=await dbHelper.getBasementData();
     if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
-      showPopup(basementsDatas[0].header);
+      showPopup(basementsDatas[0].header.replaceAll("\n", ""),basementsDatas[0].id);
     }
     else{
 
     }
   }
-  void showPopup( String header){
+  void showPopup( String header,int id){
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -264,13 +267,15 @@ class _DashboardUIState extends State<DashboardUI>
                               textColor: Colors.white,
                               padding: EdgeInsets.all(12.0),
                               child: Text(
-                                "No,Thanks",
+                                "Discard",
                                 style: new TextStyle(
                                     color: Colors.black,
                                     fontSize: 22,
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
+                                DBHelper dbHelper=new DBHelper();
+                                 dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -296,7 +301,7 @@ class _DashboardUIState extends State<DashboardUI>
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                _syncBaseData(header);
+                                _syncBaseData(header,id);
                               },
                             ),
                           ),
@@ -311,7 +316,64 @@ class _DashboardUIState extends State<DashboardUI>
       },
     );
   }
-  _syncBaseData(String header) async{
-    bool result= await saveInspectionReport(header,context, widget.login);
+  _syncBaseData(String header,id) async{
+    Navigator.of(context).pop();
+    showDialog(context: context, builder: (context) => alertLoading());
+    await saveInspectionReport(header,context, widget.login,id);
   }
+  alertLoading() {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      child: SimpleDialog(
+        contentPadding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        children: <Widget>[
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 400,
+                height: 400,
+                child: Image.asset(
+                  "images/success.gif",
+                  fit: BoxFit.cover,
+                  scale: 1.5,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8)),
+                          color: Colors.black,
+                        ),
+                        height: 48,
+                        child: Center(
+                          child: Text(
+                            "Close",
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      onTap: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+//-----------------------Offline DB-----------------------
 }
