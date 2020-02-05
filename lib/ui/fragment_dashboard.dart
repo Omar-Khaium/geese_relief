@@ -586,13 +586,13 @@ class _DashboardFragmentState extends State<DashboardFragment> {
   void _checkBasementData() async {
     List<BasementReport> basementsDatas=await dbHelper.getBasementData();
     if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
-      showPopup(basementsDatas[0].header.replaceAll("\n", ""),basementsDatas[0].id);
+      showPopup(basementsDatas);
     }
     else{
 
     }
   }
-  void showPopup( String header,int id){
+  void showPopup(List<BasementReport> list){
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -602,12 +602,14 @@ class _DashboardFragmentState extends State<DashboardFragment> {
             contentPadding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             content: Container(
-              width: 600,
-              height: 600,
+              width: 400,
+              height: 400,
               color: Colors.white,
               child: Stack(
                 children: <Widget>[
-                  Image.asset('images/no_internet.gif',fit: BoxFit.cover),
+                  Align(
+                      alignment: Alignment.center,
+                      child: Image.asset('images/no_internet.gif',fit: BoxFit.cover)),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
@@ -619,21 +621,24 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                           child: Container(
                             width:MediaQuery.of(context).size.width,
                             height: 64,
-                            child: OutlineButton(
+                            child: RaisedButton(
                               highlightElevation: 2,
-                              color: Colors.black,
+                              color: Colors.deepOrange,
                               textColor: Colors.white,
                               padding: EdgeInsets.all(12.0),
                               child: Text(
                                 "Discard",
                                 style: new TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontSize: 22,
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
                                 DBHelper dbHelper=new DBHelper();
-                                dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
+                                for(BasementReport item in list) {
+                                  dbHelper.delete(item.id, DBInfo.TABLE_BASEMENT_INSPECTION);
+                                }
+//                                [0].header.replaceAll("\n", ""),basementsDatas[0].id
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -647,7 +652,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                             child: RaisedButton(
                               highlightElevation: 2,
                               disabledColor: Colors.black,
-                              color: Colors.black,
+                              color: Colors.green,
                               elevation: 2,
                               textColor: Colors.white,
                               padding: EdgeInsets.all(12.0),
@@ -659,7 +664,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                _syncBaseData(header,id);
+                                _syncBaseData(list);
                               },
                             ),
                           ),
@@ -674,9 +679,12 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       },
     );
   }
-  _syncBaseData(String header,id) async{
+  _syncBaseData(List<BasementReport> list) async{
     showDialog(context: context, builder: (context) => alertLoading());
-    await saveInspectionReport(header,context, widget.login,id);
+
+    for(BasementReport item in list) {
+      await saveInspectionReport(item.header.replaceAll("\n", ""),context, widget.login,item.id);
+    }
     Navigator.of(context).pop();
   }
   alertLoading() {
@@ -684,6 +692,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
       child: SimpleDialog(
         contentPadding: EdgeInsets.all(0),
+        backgroundColor:Color(0xFF12C06A),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         children: <Widget>[
           Column(
@@ -695,7 +704,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                 child: Image.asset(
                   "images/success.gif",
                   fit: BoxFit.cover,
-                  scale: 1.5,
+                  height: 400,width: 400,
                 ),
               ),
               Row(
@@ -710,7 +719,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                               bottomRight: Radius.circular(8)),
                           color: Colors.black,
                         ),
-                        height: 48,
+                        height: 54,
                         child: Center(
                           child: Text(
                             "Close",

@@ -104,7 +104,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Icon(Icons.photo_camera),
-                            SizedBox(width: 12,),
+                            SizedBox(
+                              width: 12,
+                            ),
                             Text("Gallery"),
                           ],
                         ),
@@ -121,7 +123,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Icon(Icons.photo_camera),
-                            SizedBox(width: 12,),
+                            SizedBox(
+                              width: 12,
+                            ),
                             Text("Camera"),
                           ],
                         ),
@@ -243,11 +247,13 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                                             Container(
                                                                       decoration:
                                                                           BoxDecoration(
-                                                                        image: DecorationImage(
-                                                                            image:
-                                                                                imageProvider,
-                                                                            fit:
-                                                                                BoxFit.cover,),
+                                                                        image:
+                                                                            DecorationImage(
+                                                                          image:
+                                                                              imageProvider,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                     placeholder:
@@ -522,7 +528,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                             height: 16,
                           ),
                           Expanded(
-                            child: ListView.builder(
+                            child: _list.length==0 ?Image.asset("images/no_data.png",fit: BoxFit.cover,scale: 1,) : ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
@@ -650,7 +656,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               ),
                                               InkWell(
                                                 onTap: () {
-                                                  showDialog(context: context, builder: (context)=> deleteMessage(index));
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          deleteMessage(index));
                                                 },
                                                 child: CircleAvatar(
                                                   backgroundColor:
@@ -849,10 +858,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         setState(() {});
       }
       Navigator.of(context).pop();
-      showDialog(context: context, builder: (context)=> deleteSuccess());
+      showDialog(context: context, builder: (context) => deleteSuccess());
     } catch (error) {
       Navigator.of(context).pop();
-      showDialog(context: context, builder: (context)=> deleteFailed());
+      showDialog(context: context, builder: (context) => deleteFailed());
     }
   }
 
@@ -927,7 +936,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(8)),
+                              BorderRadius.only(bottomLeft: Radius.circular(8)),
                           color: Colors.black,
                         ),
                         height: 48,
@@ -942,21 +951,22 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                           ),
                         ),
                       ),
-                      onTap: ()=>Navigator.of(context).pop(),
+                      onTap: () => Navigator.of(context).pop(),
                     ),
                   ),
                   Expanded(
                     child: InkWell(
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.only(bottomRight: Radius.circular(8)),
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(8)),
                           color: Colors.deepOrange,
                         ),
                         height: 48,
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               "Delete",
                               textAlign: TextAlign.center,
@@ -968,7 +978,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                           ),
                         ),
                       ),
-                      onTap: (){
+                      onTap: () {
                         Navigator.of(context).pop();
                         deleteDialog(index);
                       },
@@ -1009,8 +1019,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                     child: InkWell(
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8)),
                           color: Colors.black,
                         ),
                         height: 48,
@@ -1025,7 +1036,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                           ),
                         ),
                       ),
-                      onTap: ()=>Navigator.of(context).pop(),
+                      onTap: () => Navigator.of(context).pop(),
                     ),
                   ),
                 ],
@@ -1063,8 +1074,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                     child: InkWell(
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                          BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              bottomRight: Radius.circular(8)),
                           color: Colors.black,
                         ),
                         height: 48,
@@ -1079,7 +1091,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                           ),
                         ),
                       ),
-                      onTap: ()=>Navigator.of(context).pop(),
+                      onTap: () => Navigator.of(context).pop(),
                     ),
                   ),
                 ],
