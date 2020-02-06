@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 void showMessage(BuildContext context, String title, String message,
     Color color, IconData icon) {
@@ -167,8 +167,9 @@ errorDialog(context) {
                   child: InkWell(
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8)),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(8),
+                            bottomRight: Radius.circular(8)),
                         color: Colors.black,
                       ),
                       height: 64,
@@ -183,7 +184,7 @@ errorDialog(context) {
                         ),
                       ),
                     ),
-                    onTap: ()=> Navigator.of(context).pop(),
+                    onTap: () => Navigator.of(context).pop(),
                   ),
                 ),
               ],
@@ -225,26 +226,50 @@ const String API_DELETE_ESTIMATE = "DeleteEstimate";
 const String API_GENERATE_ESTIMATE = "GenerateEstimate";
 const String API_SEND_EMAIL = "SendEmailEstimate";
 
-Future<bool> saveInspectionReport(String header,BuildContext context, Login login,int id) async {
+Future<bool> saveInspectionReport(
+    String header, BuildContext context, Login login, int id) async {
   try {
-    Map<String,String> map=new Map<String ,String>.from(json.decode(header));
-    var response=await http
-        .post(BASE_URL + API_SAVE_BASEMENT_INSPECTION, headers: map);
-      try {
-        if (response.statusCode == 200) {
-          DBHelper dbHelper=new DBHelper();
-          await dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error) {
-
+    Map<String, String> map = new Map<String, String>.from(json.decode(header));
+    var response =
+        await http.post(BASE_URL + API_SAVE_BASEMENT_INSPECTION, headers: map);
+    try {
+      if (response.statusCode == 200) {
+        DBHelper dbHelper = new DBHelper();
+        await dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
+        return true;
+      } else {
         return false;
-
-    };
+      }
+    } catch (error) {
+      return false;
+    }
+    ;
   } catch (error) {
     print(error);
     return false;
   }
+}
+
+loadingAlert() {
+  return WillPopScope(
+    onWillPop: () async => false,
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+      child: AlertDialog(
+        titlePadding: EdgeInsets.all(0),
+        contentPadding: EdgeInsets.all(0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        content: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            "images/loading.gif",
+            fit: BoxFit.cover,
+            scale: 1,
+            width: 128,
+            height: 128,
+          ),
+        ),
+      ),
+    ),
+  );
 }

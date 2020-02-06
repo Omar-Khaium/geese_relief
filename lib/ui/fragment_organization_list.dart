@@ -76,6 +76,7 @@ class _OrganizationListUiState extends State<OrganizationListUi> {
                           child: ListTile(
                             onTap: () {
                               resetSelection(index);
+                              showDialog(context: context, builder: (_)=> loadingAlert());
                               saveOrganization(index, widget.login);
                             },
                             leading: Icon(Icons.business),
