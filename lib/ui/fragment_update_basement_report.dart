@@ -2906,11 +2906,10 @@ class _UpdateBasementReportFragmentState
       http.post(BASE_URL+API_SAVE_BASEMENT_INSPECTION, headers: headers).then((response) {
         try {
           if (response.statusCode == 200) {
-            Map map = json.decode(response.body);
-            print("Successfully Inserted");
-            showAPIResponse(context, "Inspection Created", Colors.green.shade600);
+            showAPIResponse(context, "Inspection Created", Colors.green);
+            widget.backToCustomerDetails(widget.customer);
           } else {
-            showAPIResponse(context, "Something Went Wrong", Colors.red.shade600);
+            showAPIResponse(context, "Something Went Wrong", Colors.red);
           }
         } catch (error) {
           showAPIResponse(context, "Error :" + error.toString(), null);

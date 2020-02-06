@@ -631,9 +631,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                           height: 128,
                                           width: 128,
                                           child: CachedNetworkImage(
-                                            imageUrl:
-                                                "https://api.gratecrm.com" +
-                                                    _productListForImage[1]
+                                            imageUrl: _productListForImage[1]
                                                         .ImageLoc,
                                             imageBuilder:
                                                 (context, imageProvider) =>
@@ -1864,9 +1862,9 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
         }));
 
         _Drawing = DrawingPlaceholder(
-            url: "https://api.gratecrm.com" + _productListForImage[2].ImageLoc);
+            url:_productListForImage[2].ImageLoc);
         _HOSignature = SignaturePlaceholder(
-            url: "https://api.gratecrm.com" + _productListForImage[0].ImageLoc);
+            url:_productListForImage[0].ImageLoc);
         formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
         nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
         estimateTaxTotal = mapForEditData['Estimate']['Tax'];
