@@ -1,15 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
-//import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class SendMailFragment extends StatefulWidget {
   Map map;
@@ -20,7 +22,8 @@ class SendMailFragment extends StatefulWidget {
   LoggedInUser loggedInUser;
   CustomerDetails customerId;
 
-  SendMailFragment(this.map,this.estimateId,this.accessToken,this.customerId);
+  SendMailFragment(
+      this.map, this.estimateId, this.accessToken, this.customerId);
 
   @override
   _SendMailFragmentState createState() => _SendMailFragmentState();
@@ -32,7 +35,11 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   TextEditingController _SubjectEmailController = new TextEditingController();
   TextEditingController _BodyEmailController = new TextEditingController();
 
-  String emailUrl="";
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
+
+  String emailUrl = "";
+
   @override
   void initState() {
     super.initState();
@@ -42,9 +49,9 @@ class _SendMailFragmentState extends State<SendMailFragment> {
       });
     });
 
-    _ToEmailController.text=widget.map['EstimateEmailModel']['email'];
-    _SubjectEmailController.text=widget.map['EstimateEmailModel']['subject'];
-    _BodyEmailController.text=widget.map['EstimateEmailModel']['bodycontent'];
+    _ToEmailController.text = widget.map['EstimateEmailModel']['email'];
+    _SubjectEmailController.text = widget.map['EstimateEmailModel']['subject'];
+    _BodyEmailController.text = widget.map['EstimateEmailModel']['bodycontent'];
   }
 
   Future<File> getFileFromUrl(String url) async {
@@ -69,21 +76,24 @@ class _SendMailFragmentState extends State<SendMailFragment> {
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
           backgroundColor: Colors.white,
-          title: Text("Send Mail",style: fragmentTitleStyle(),),
+          title: Text(
+            "Send Mail",
+            style: fragmentTitleStyle(),
+          ),
           iconTheme: IconThemeData(color: Colors.black),
           actions: <Widget>[
-           Padding(
-             padding: EdgeInsets.only(right: 26),
-             child: GestureDetector(
-               onTap: (){
-                 postData();
-               },
-               child: CircleAvatar(
-                 backgroundColor: Colors.grey.shade600,
-                 child:  Icon(Icons.send),
-               ),
-             ),
-           )
+            Padding(
+              padding: EdgeInsets.only(right: 26),
+              child: GestureDetector(
+                onTap: () {
+                  postData();
+                },
+                child: CircleAvatar(
+                  backgroundColor: Colors.grey.shade600,
+                  child: Icon(Icons.send),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -130,7 +140,8 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
                   onChanged: (val) {
-                    setState(() {});},
+                    setState(() {});
+                  },
                   style: customTextStyle(),
                   decoration: new InputDecoration(
                     labelText: "cc",
@@ -175,7 +186,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                   height: 12,
                 ),
                 new TextField(
-                  controller:_BodyEmailController,
+                  controller: _BodyEmailController,
                   obscureText: false,
                   cursorColor: Colors.black,
                   keyboardType: TextInputType.multiline,
@@ -196,41 +207,59 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                       alignLabelWithHint: false,
                       isDense: true),
                 ),
-               /* Html(data: map['EstimateEmailModel']['body'],),*/
+                /* Html(data: map['EstimateEmailModel']['body'],),*/
               ],
             ),
           ),
           VerticalDivider(),
           Expanded(
-            flex: 1,
-            child:widget.urlPDFPath.isNotEmpty ?
-            /*PDFView(
-              filePath: widget.urlPDFPath,
-              autoSpacing: true,
-              enableSwipe: true,
-              pageSnap: true,
-              swipeHorizontal: true,
-              nightMode: false,
-              onError: (e) {
-                print(e);
-              } ,
-          )*/ Container() :Center(
-              child: CircularProgressIndicator(),
-            )
-          )
+              flex: 1,
+              child: widget.urlPDFPath.isNotEmpty
+                  ?
+                  WebView(
+                      initialUrl: widget.urlPDFPath,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onWebViewCreated: (WebViewController webViewController) {
+                        _controller.complete(webViewController);
+                      },
+                      javascriptChannels: <JavascriptChannel>[
+                        _toasterJavascriptChannel(context),
+                      ].toSet(),
+                      onPageStarted: (String url) {
+                        showDialog(
+                            context: context, builder: (_) => loadingAlert());
+                      },
+                      onPageFinished: (String url) {
+                        Navigator.of(context).pop();
+                      },
+                      gestureNavigationEnabled: true,
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    ))
         ],
       ),
     );
   }
 
+  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
+    return JavascriptChannel(
+        name: 'Toaster',
+        onMessageReceived: (JavascriptMessage message) {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(content: Text(message.message)),
+          );
+        });
+  }
+
   Future<String> postData() async {
-    try{
-      Map <String, String> data = {
+    try {
+      Map<String, String> data = {
         'Authorization': widget.accessToken.accessToken,
         'customerid': widget.customerId.CustomerId,
         'invoiceid': widget.estimateId.toString(),
-        'toemail': _ToEmailController.text.toString() ,
-        'ccmail': _CCEmailController.text.toString() ,
+        'toemail': _ToEmailController.text.toString(),
+        'ccmail': _CCEmailController.text.toString(),
         'subject': _SubjectEmailController.text.toString(),
         'body': _BodyEmailController.text.toString(),
       };
@@ -239,16 +268,15 @@ class _SendMailFragmentState extends State<SendMailFragment> {
       http.post(url, headers: data).then((response) {
         if (response.statusCode == 200) {
           Map map = json.decode(response.body);
-          http.get(map['EmailUrl']).then((responseResults){
-            if(responseResults.statusCode==200){
-              showAPIResponse(context, "Email Successfully Sent", Colors.green.shade600);
-            }
-            else {
+          http.get(map['EmailUrl']).then((responseResults) {
+            if (responseResults.statusCode == 200) {
+              showAPIResponse(
+                  context, "Email Successfully Sent", Colors.green.shade600);
+            } else {
               showAPIResponse(context, "Email Not Sent", Colors.red.shade600);
             }
           });
           print(map);
-
         } else {
           Flushbar(
             flushbarPosition: FlushbarPosition.TOP,
@@ -275,12 +303,8 @@ class _SendMailFragmentState extends State<SendMailFragment> {
           widget.accessToken.isAuthenticated = false;
         }
       });
-    }
-    catch (error) {
+    } catch (error) {
       error.toString();
     }
-
   }
-
 }
-
