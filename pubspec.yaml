@@ -31,10 +31,10 @@ dependencies:
   async:
   dotted_border:
   webview_flutter:
-#  flutter_pdfview:
   flutter_html:
   cached_network_image:
   url_launcher:
+  flutter_pdfview:
 
 dev_dependencies:
   flutter_test:

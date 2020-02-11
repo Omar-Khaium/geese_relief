@@ -15,13 +15,7 @@ void showMessage(BuildContext context, String title, String message,
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.GROUNDED,
     backgroundColor: color,
-    icon: Icon(
-      icon,
-      size: 24.0,
-      color: Colors.white,
-    ),
     duration: Duration(seconds: 4),
-    leftBarIndicatorColor: Colors.white70,
     boxShadows: [
       BoxShadow(
         color: color.withOpacity(.5),
@@ -31,7 +25,6 @@ void showMessage(BuildContext context, String title, String message,
     ],
     title: title,
     message: message,
-    shouldIconPulse: false,
   )..show(context);
 }
 
@@ -225,6 +218,7 @@ const String API_DUPLICATE_ESTIMATE = "EstimateDuplicate";
 const String API_DELETE_ESTIMATE = "DeleteEstimate";
 const String API_GENERATE_ESTIMATE = "GenerateEstimate";
 const String API_SEND_EMAIL = "SendEmailEstimate";
+const String API_SEARCH = "GlobalSearchCustomerAndLead";
 
 Future<bool> saveInspectionReport(
     String header, BuildContext context, Login login, int id) async {

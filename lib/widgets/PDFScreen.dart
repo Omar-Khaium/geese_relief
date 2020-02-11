@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:html/dom.dart' as dom;
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -43,6 +46,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   @override
   void initState() {
     super.initState();
+
     getFileFromUrl(widget.map['filepath']).then((f) {
       setState(() {
         widget.urlPDFPath = f.path;
@@ -72,30 +76,32 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
-        child: AppBar(
-          backgroundColor: Colors.white,
-          title: Text(
-            "Send Mail",
-            style: fragmentTitleStyle(),
-          ),
-          iconTheme: IconThemeData(color: Colors.black),
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 26),
-              child: GestureDetector(
-                onTap: () {
-                  postData();
-                },
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey.shade600,
-                  child: Icon(Icons.send),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          "Send Mail",
+          style: Theme.of(context).textTheme.headline.copyWith(
+              color: Colors.grey.shade900, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: IconThemeData(color: Colors.black),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 26),
+            child: GestureDetector(
+              onTap: () {
+                postData();
+              },
+              child: CircleAvatar(
+                backgroundColor: Colors.grey.shade900,
+                child: Icon(
+                  Icons.send,
+                  color: Colors.white,
+                  size: 18,
                 ),
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,7 +191,22 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                 SizedBox(
                   height: 12,
                 ),
-                new TextField(
+                Html(
+                  data: widget.map['EstimateEmailModel']['bodycontent'],
+                  padding: EdgeInsets.all(8.0),
+                  onLinkTap: (url) {
+                    print("Opening $url...");
+                  },
+                  customRender: (node, children) {
+                    if (node is dom.Element) {
+                      switch (node.localName) {
+                        case "custom_tag": // using this, you can handle custom tags in your HTML
+                          return Column(children: children);
+                      }
+                    }
+                  },
+                ),
+                /*new TextField(
                   controller: _BodyEmailController,
                   obscureText: false,
                   cursorColor: Colors.black,
@@ -206,50 +227,34 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                       hintStyle: customHintStyle(),
                       alignLabelWithHint: false,
                       isDense: true),
-                ),
+                ),*/
                 /* Html(data: map['EstimateEmailModel']['body'],),*/
               ],
             ),
           ),
-          VerticalDivider(),
+          VerticalDivider(
+            thickness: 2,
+          ),
           Expanded(
-              flex: 1,
-              child: widget.urlPDFPath.isNotEmpty
-                  ?
-                  WebView(
-                      initialUrl: widget.urlPDFPath,
-                      javascriptMode: JavascriptMode.unrestricted,
-                      onWebViewCreated: (WebViewController webViewController) {
-                        _controller.complete(webViewController);
-                      },
-                      javascriptChannels: <JavascriptChannel>[
-                        _toasterJavascriptChannel(context),
-                      ].toSet(),
-                      onPageStarted: (String url) {
-                        showDialog(
-                            context: context, builder: (_) => loadingAlert());
-                      },
-                      onPageFinished: (String url) {
-                        Navigator.of(context).pop();
-                      },
-                      gestureNavigationEnabled: true,
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ))
+            flex: 1,
+            child: widget.urlPDFPath.isNotEmpty
+                ? PDFView(
+                    filePath: widget.urlPDFPath,
+                    enableSwipe: true,
+                    swipeHorizontal: true,
+                    autoSpacing: false,
+                    pageFling: false,
+                    onError: (error) {
+                      print(error.toString());
+                    },
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
+          )
         ],
       ),
     );
-  }
-
-  JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
-    return JavascriptChannel(
-        name: 'Toaster',
-        onMessageReceived: (JavascriptMessage message) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
-        });
   }
 
   Future<String> postData() async {

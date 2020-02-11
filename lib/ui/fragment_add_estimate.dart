@@ -938,6 +938,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       return DrawingDialog(
                                           picture: _generateDrawingPicture);
                                     },
+                                    fullscreenDialog: true
                                   ),
                                 );
                               },

@@ -198,179 +198,167 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                               ),
                               Container(
                                 margin: EdgeInsets.only(left: 16, right: 16),
-                                padding: EdgeInsets.only(top: 16),
                                 child: Column(
                                   children: <Widget>[
                                     Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                        Stack(
                                           children: <Widget>[
-                                            Stack(
-                                              children: <Widget>[
-                                                ClipRRect(
-                                                    borderRadius:
-                                                        new BorderRadius.all(
-                                                            Radius.circular(
-                                                                12)),
-                                                    child: Container(
-                                                      child: _imageFile != null
-                                                          ? Image.file(
-                                                              _imageFile,
-                                                              width: 128,
+                                            ClipRRect(
+                                                borderRadius:
+                                                    new BorderRadius.all(
+                                                        Radius.circular(
+                                                            12)),
+                                                child: Container(
+                                                  child: _imageFile != null
+                                                      ? Image.file(
+                                                          _imageFile,
+                                                          width: 128,
+                                                          height: 128,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : (widget.customer
+                                                                      .ProfileImage !=
+                                                                  null &&
+                                                              widget
+                                                                  .customer
+                                                                  .ProfileImage
+                                                                  .isNotEmpty
+                                                          ? Container(
                                                               height: 128,
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          : (widget.customer
-                                                                          .ProfileImage !=
-                                                                      null &&
-                                                                  widget
-                                                                      .customer
-                                                                      .ProfileImage
-                                                                      .isNotEmpty
-                                                              ? Container(
-                                                                  height: 128,
-                                                                  width: 128,
-                                                                  child:
-                                                                      CachedNetworkImage(
-                                                                    imageUrl: widget
-                                                                        .customer
-                                                                        .ProfileImage,
-                                                                    imageBuilder:
-                                                                        (context,
-                                                                                imageProvider) =>
-                                                                            Container(
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        image:
-                                                                            DecorationImage(
-                                                                          image:
-                                                                              imageProvider,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                      ),
+                                                              width: 128,
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl: widget
+                                                                    .customer
+                                                                    .ProfileImage,
+                                                                imageBuilder:
+                                                                    (context,
+                                                                            imageProvider) =>
+                                                                        Container(
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    image:
+                                                                        DecorationImage(
+                                                                      image:
+                                                                          imageProvider,
+                                                                      fit: BoxFit
+                                                                          .cover,
                                                                     ),
-                                                                    placeholder:
-                                                                        (context,
-                                                                                url) =>
-                                                                            CupertinoActivityIndicator(),
-                                                                    errorWidget: (context,
-                                                                            url,
-                                                                            error) =>
-                                                                        Icon(Icons
-                                                                            .error),
                                                                   ),
-                                                                )
-                                                              : Icon(
-                                                                  Icons.person,
-                                                                  size: 142,
-                                                                )),
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                    )),
-                                                Padding(
-                                                  padding: EdgeInsets.all(4),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.topCenter,
-                                                    child: CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.grey.shade500,
-                                                      child: GestureDetector(
-                                                        child: Icon(
-                                                          MdiIcons
-                                                              .circleEditOutline,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onTap: () {
-                                                          _showDialog(context);
-                                                        },
-                                                      ),
-                                                    ),
+                                                                ),
+                                                                placeholder:
+                                                                    (context,
+                                                                            url) =>
+                                                                        CupertinoActivityIndicator(),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                              ),
+                                                            )
+                                                          : Icon(
+                                                              Icons.person,
+                                                              size: 142,
+                                                            )),
+                                                  color:
+                                                      Colors.grey.shade100,
+                                                )),
+                                            Positioned(
+                                              top: 4,
+                                              right: 4,
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.black54,
+                                                child: InkWell(
+                                                  child: Icon(
+                                                    MdiIcons
+                                                        .briefcaseEdit,
+                                                    color: Colors.white,
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              width: 26,
-                                            ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  widget.customer.Name,
-                                                  style: new TextStyle(
-                                                      fontSize: 26,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                  onTap: () {
+                                                    _showDialog(context);
+                                                  },
                                                 ),
-                                                SizedBox(
-                                                  height: 16,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.email),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                      widget.customer.Email,
-                                                      style: new TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.call),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                        widget.customer
-                                                            .ContactNum,
-                                                        style: new TextStyle(
-                                                            fontSize: 16)),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.location_on),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                      widget.customer.Address,
-                                                      style: listTextStyle(),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                              ),
                                             )
                                           ],
                                         ),
+                                        SizedBox(
+                                          width: 26,
+                                        ),
+                                        Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              widget.customer.Name,
+                                              style: new TextStyle(
+                                                  fontSize: 26,
+                                                  fontWeight:
+                                                      FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              height: 16,
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Icon(Icons.email),
+                                                SizedBox(
+                                                  width: 6,
+                                                ),
+                                                Text(
+                                                  widget.customer.Email,
+                                                  style: new TextStyle(
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Icon(Icons.call),
+                                                SizedBox(
+                                                  width: 6,
+                                                ),
+                                                Text(
+                                                    widget.customer
+                                                        .ContactNum,
+                                                    style: new TextStyle(
+                                                        fontSize: 16)),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Icon(Icons.location_on),
+                                                SizedBox(
+                                                  width: 6,
+                                                ),
+                                                Text(
+                                                  widget.customer.Address,
+                                                  style: listTextStyle(),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                     Container(

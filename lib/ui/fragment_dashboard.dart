@@ -8,6 +8,7 @@ import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/ui/fragment_search_result.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/customer_list_shimmer.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
@@ -29,7 +30,8 @@ class DashboardFragment extends StatefulWidget {
   _DashboardFragmentState createState() => _DashboardFragmentState();
 }
 
-class _DashboardFragmentState extends State<DashboardFragment> {
+class _DashboardFragmentState extends State<DashboardFragment>
+    with SingleTickerProviderStateMixin {
   List<Customer> arrayList = [];
   Customer customer;
 
@@ -57,14 +59,16 @@ class _DashboardFragmentState extends State<DashboardFragment> {
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange &&
         !_showPaginationShimmer) {
-      setState(() {
-        _showPaginationShimmer = true;
-      });
+      if (_totalSize > arrayList.length) {
+        setState(() {
+          _showPaginationShimmer = true;
+        });
 
-      await fetchData();
-      setState(() {
-        _showPaginationShimmer = false;
-      });
+        await fetchData();
+        setState(() {
+          _showPaginationShimmer = false;
+        });
+      }
     }
   }
 
@@ -86,31 +90,47 @@ class _DashboardFragmentState extends State<DashboardFragment> {
               ),
               Container(
                 width: 256,
-                height: 36,
-                padding: EdgeInsets.only(left: 12, right: 12),
+                height: 48,
+                padding: EdgeInsets.only(left: 16, right: 16),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(36),
-                  color: Colors.grey.shade100
-                ),
-                child: InkWell(
-                  child: TextField(
-                    cursorColor: Colors.black,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.go,
-                    onChanged: (val){},
-                    onSubmitted: (val){
-                      
-                    },
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
-                      disabledBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
-                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
-                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
-                      errorBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
-                      hintText: "Search"
+                    borderRadius: BorderRadius.circular(48),
+                    color: Colors.grey.shade100),
+                child: Center(
+                  child: InkWell(
+                    child: TextField(
+                      cursorColor: Colors.black,
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(color: Colors.grey.shade900, fontSize: 18),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      onChanged: (val) {},
+                      onSubmitted: (val) {
+                        if (val.isNotEmpty) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => SearchResultFragment(
+                                  val, widget.login, redirectToCustomerDetails),
+                              maintainState: true));
+                        }
+                      },
+                      decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                              borderSide: BorderSide(style: BorderStyle.none)),
+                          disabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(style: BorderStyle.none)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(style: BorderStyle.none)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(style: BorderStyle.none)),
+                          errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(style: BorderStyle.none)),
+                          hintText: "Search",
+                          isDense: true),
                     ),
+                    onTap: () {},
                   ),
-                  onTap: (){},
                 ),
               ),
             ],
@@ -323,7 +343,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
-      'PageSize': '10',
+      'PageSize': '30',
       'ResultType': 'Customer'
     };
 
@@ -349,7 +369,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
-      'PageSize': '10',
+      'PageSize': '30',
       'ResultType': 'Customer'
     };
 
@@ -781,5 +801,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       ),
     );
   }
-//-----------------------Offline DB-----------------------
+
+  redirectToCustomerDetails(Customer customer) {
+    widget.goToCustomerDetails(customer.Id);
+  }
 }

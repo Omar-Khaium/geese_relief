@@ -629,7 +629,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                                       _imageFile,
                                       fit: BoxFit.cover,
                                     )
-                                  : (_productListForImage[1].ImageLoc != null &&
+                                  : (_productListForImage.length>1 && _productListForImage[1].ImageLoc != null &&
                                           _productListForImage[1]
                                               .ImageLoc
                                               .isNotEmpty)
@@ -927,6 +927,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                                       return DrawingDialog(
                                           picture: _generateDrawingPicture);
                                     },
+                                    fullscreenDialog: true
                                   ),
                                 );
                               },
@@ -1639,22 +1640,11 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
   void showSendMail() async {
     Map<String, dynamic> result = await showSavingForSendMail();
     Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return SafeArea(
-            child: new Scaffold(
-              appBar: AppBar(
-                title: Text("Proposal"),
-              ),
-              backgroundColor: Colors.white,
-              body: SendMailFragment(
+        builder: (context) => SendMailFragment(
                 result,
                 widget.customer.EstimateId,
                 widget.login,
-                widget.customer,
-              ),
-            ),
-          );
-        },
+                widget.customer),
         fullscreenDialog: true));
   }
 
@@ -1697,7 +1687,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
     }
 
     message = "Saving Estimate...";
-    var result = await CreateEstimate();
+    var result = await CreateEstimate(false);
     bool resultStatus = result['result'];
     Navigator.of(context).pop();
     showAPIResponse(
@@ -1747,15 +1737,15 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
     }
 
     message = "Saving Estimate...";
-    var result = await CreateEstimate();
-    bool resultStatus = result['result'];
+    var result = await CreateEstimate(true);
+    bool resultStatus = result ['result'];
     Navigator.of(context).pop();
     showAPIResponse(
         context,
         resultStatus ? "Estimate saved Successfully!" : "Failed to Save!",
         Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
     setState(() {});
-    return result;
+     return result;
   }
 
   Future getSuggestions(String pattern) async {
@@ -1820,7 +1810,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
     return price;
   }
 
-  Future CreateEstimate() async {
+  Future CreateEstimate(bool sentmail) async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'EstimateId': widget.customer.EstimateIntId.toString(),
@@ -1830,6 +1820,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       'TotalAmount': estimateTotalAmount.toStringAsFixed(2),
       'Amount': estimateMainSubtotal.toStringAsFixed(2),
       'Tax': estimateTaxTotal.toStringAsFixed(2),
+      'TaxType': _TaxTypeSelectedValue,
       'Note': _noteController.text,
       'DiscountPercent': _EstimateDiscountModeIsPercentage
           ? _EstimateDiscountController.text
@@ -1842,6 +1833,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       'Drawingimage': _drawingImagePath,
       'Cameraimage': _CameraImagePath,
       'Signimage': _HOSignatureImagePath,
+      'sentemail': sentmail.toString(),
       'Content-Type': "application/json",
     };
 
@@ -1851,12 +1843,11 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
-        headers: headers, body: json.encode(body));
+    var result =
+    await http.post(BASE_URL+API_CREATE_ESTIMATE, headers: headers, body: json.encode(body));
     if (result.statusCode == 200) {
       return json.decode(result.body);
     } else {
-      Navigator.of(context).pop();
       return false;
     }
   }
@@ -1939,34 +1930,44 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
     var result = await http.get(BASE_URL + API_GET_ESTIMATE, headers: headers);
     try {
       if (result.statusCode == 200) {
-        Map mapForEditData = json.decode(result.body);
-        _productList.clear();
-        _productListForImage.clear();
-        _productList.addAll(
-            List.generate(mapForEditData['EstimateDetails'].length, (index) {
-          return Product.fromMap(
-              mapForEditData['EstimateDetails'][index], false);
-        }));
-        _productListForImage.addAll(
-            List.generate(mapForEditData['EstimateImage'].length, (index) {
-          return ProductImage.fromMap(mapForEditData['EstimateImage'][index]);
-        }));
+        try {
+          Map mapForEditData = json.decode(result.body);
+          _productList.clear();
+          _productListForImage.clear();
+          _productList.addAll(
+              List.generate(mapForEditData['EstimateDetails'].length, (index) {
+                return Product.fromMap(
+                    mapForEditData['EstimateDetails'][index], false);
+              }));
+          _productListForImage.addAll(
+              List.generate(mapForEditData['EstimateImage'].length, (index) {
+                return ProductImage.fromMap(
+                    mapForEditData['EstimateImage'][index]);
+              }));
 
-        _Drawing = DrawingPlaceholder(url: _productListForImage[2].ImageLoc);
-        _HOSignature =
-            SignaturePlaceholder(url: _productListForImage[0].ImageLoc);
-        formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
-        nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
-        estimateTaxTotal = mapForEditData['Estimate']['Tax'];
-        estimateDiscountTotal = mapForEditData['Estimate']['DiscountAmount'];
-        estimateBaseSubTotal = mapForEditData['Estimate']['Amount'];
-        _noteController.text = mapForEditData['Estimate']['Description'];
-        estimateTotalAmount = estimateBaseSubTotal - estimateDiscountTotal;
-        estimateMainSubtotal = estimateTotalAmount - estimateTaxTotal;
-        _EstimateDiscountModeIsPercentage =
-            mapForEditData['Estimate']['DiscountType'] == 'amount'
-                ? false
-                : true;
+          if(_productListForImage.length>2) {
+            _Drawing = DrawingPlaceholder(
+                url: _productListForImage[2].ImageLoc);
+          }
+          if(_productListForImage.length>0) {
+            _HOSignature = SignaturePlaceholder(
+                url: _productListForImage[0].ImageLoc);
+          }
+          formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
+          nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
+          estimateTaxTotal = mapForEditData['Estimate']['Tax'];
+          estimateDiscountTotal = mapForEditData['Estimate']['DiscountAmount'];
+          estimateBaseSubTotal = mapForEditData['Estimate']['Amount'];
+          _noteController.text = mapForEditData['Estimate']['Description'];
+          estimateTotalAmount = estimateBaseSubTotal - estimateDiscountTotal;
+          estimateMainSubtotal = estimateTotalAmount - estimateTaxTotal;
+          _EstimateDiscountModeIsPercentage =
+          mapForEditData['Estimate']['DiscountType'] == 'amount'
+              ? false
+              : true;
+        } catch(error) {
+          print(error);
+        }
         return json.decode(result.body);
       } else {
         showMessage(context, "Network error!", json.decode(result.body),

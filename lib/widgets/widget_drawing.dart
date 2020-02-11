@@ -35,10 +35,14 @@ class _DrawingDialogState extends State<DrawingDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: ModalProgressHUD(
+    return SafeArea(
+      child: new Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          elevation: 8,
+        ),
+        body: ModalProgressHUD(
           child: Container(
             child: Row(
               children: <Widget>[
@@ -56,7 +60,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         height: 12,
                       ),
                       CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.white10,
                         radius: 32,
                         child: IconButton(
                           onPressed: () {
@@ -71,7 +75,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         height: 12,
                       ),
                       CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.white10,
                         radius: 32,
                         child: IconButton(
                           onPressed: () {
@@ -86,7 +90,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         height: 12,
                       ),
                       CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.white10,
                         radius: 32,
                         child: IconButton(
                           onPressed: () => _pickColor(),
@@ -100,7 +104,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         height: 12,
                       ),
                       CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.white10,
                         radius: 32,
                         child: IconButton(
                           onPressed: () {
@@ -115,7 +119,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         height: 12,
                       ),
                       CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.white10,
                         radius: 32,
                         child: IconButton(
                           onPressed: () {
@@ -148,7 +152,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         height: 12,
                       ),
                       CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.white10,
                         radius: 32,
                         child: IconButton(
                           onPressed: () {
@@ -170,7 +174,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: CircleAvatar(
-                            backgroundColor: Colors.white24,
+                            backgroundColor: Colors.white10,
                             radius: 32,
                             child: IconButton(
                               onPressed: () {

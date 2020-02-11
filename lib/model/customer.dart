@@ -11,6 +11,7 @@ class NetworkCustomer{
   String Street;
   String City;
   String State;
+
   String ZipCode;
 
   NetworkCustomer(this.Id, this.CustomerId, this.Title, this.FirstName, this.LastName,
