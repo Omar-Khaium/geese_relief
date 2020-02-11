@@ -36,6 +36,10 @@ class Product {
     return rate==null ? "0.0" : rate.toStringAsFixed(2);
   }
 
+  String get Price {
+    return price==null ? "0.0" : price.toStringAsFixed(2);
+  }
+
   String get Date {
     return date==null ? DateFormat('MM/dd/yyyy').format(DateTime.now()) : date;
   }
@@ -52,6 +56,20 @@ class Product {
     discountPercent = map['DiscountPercent']== null ? 0 : map['DiscountPercent'];
     discountAsPercentage = map['DiscountType']== 'amount' ? false : true;
     date = map['CreatedDate'];
+  }
+
+  Product.fromMapForFavourite(Map<String, dynamic> map, bool isAutoComplete) {
+    id = map['Id'];
+    guid = map['EquipmentId'];
+    name = map['${isAutoComplete ? 'Name' : 'Name'}'];
+    description = map['${isAutoComplete ? 'Description' : 'Description'}'];
+    quantity = map['${isAutoComplete ? 'QuantityAvailable' : 'Quantity'}'];
+    rate = map['${isAutoComplete ? 'Retail' : 'Retail'}'];
+    price = map['${isAutoComplete ? 'Retail' : 'Retail'}'];
+    discount = map['DiscountAmount']== null ? 0 : map['DiscountAmount'];
+    discountPercent = map['DiscountPercent']== null ? 0 : map['DiscountPercent'];
+    discountAsPercentage = map['DiscountType']== 'amount' ? false : true;
+    date = "";
   }
 
   Map<String, dynamic> toJson() =>

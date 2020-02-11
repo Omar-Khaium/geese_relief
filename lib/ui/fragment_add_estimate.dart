@@ -19,6 +19,7 @@ import 'package:flutter_grate_app/widgets/shimmer_estimate.dart';
 import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
+import 'package:flutter_grate_app/widgets/widget_fav_product_list.dart';
 import 'package:flutter_grate_app/widgets/widget_signature.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
@@ -72,7 +73,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   String base64PMSignature = "";
   String base64HOSignature = "";
   String _drawingImagePath = "";
-  String _PMSignatureImagePath = "";
   String _HOSignatureImagePath = "";
   String _CameraImagePath = "";
   var base64 = const Base64Codec();
@@ -103,14 +103,16 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       _imageFile = cameraOutput;
     });
   }
+
   _openGallery(BuildContext context) async {
     File pickFromGallery =
-    (await ImagePicker.pickImage(source: ImageSource.gallery));
+        (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
       _imageFile = pickFromGallery;
     });
     Navigator.of(context).pop();
   }
+
   _generateDrawingPicture(PictureDetails picture) {
     _Drawing = PlaceImageFromPicture(picture);
     picture.toPNG().then((val) {
@@ -466,8 +468,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                               padding: EdgeInsets.all(16),
                               child: Table(
                                 columnWidths: {
-                                  0: FlexColumnWidth(3.5),
-                                  1: FlexColumnWidth(1),
+                                  0: FlexColumnWidth(3),
+                                  1: FlexColumnWidth(1.5),
                                   2: FlexColumnWidth(.5),
                                 },
                                 defaultVerticalAlignment:
@@ -564,9 +566,45 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                 width: 16,
                                               ),
                                               Text(
-                                                "${_productList[index].Rate.replaceAllMapped(reg, mathFunc)}",
+                                                "${_discountController.text == "0" ? _productList[index].Rate.replaceAllMapped(reg, mathFunc) : _productList[index].Rate.replaceAllMapped(reg, mathFunc)}",
                                                 style: listTextStyle(),
-                                              )
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Icon(MdiIcons.cashUsd),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              RichText(
+                                                text: TextSpan(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .body1,
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text:
+                                                            "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}"}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.black)),
+                                                    TextSpan(
+                                                        text:
+                                                            "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.red)),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ],
@@ -591,7 +629,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                                 setState(() {
                                                   _productList.removeAt(index);
                                                   estimateTotalCalculation();
-
                                                 });
                                               },
                                             ),
@@ -632,7 +669,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       _imageFile,
                                       fit: BoxFit.cover,
                                     ),
-                              onTap: (){
+                              onTap: () {
                                 _showDialog(context);
                               },
                             ),
@@ -1180,9 +1217,37 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
             builder: (context, setState) {
               return AlertDialog(
                 backgroundColor: Colors.white,
-                title: Text(
-                  "Add Product/Service",
-                  style: new TextStyle(fontSize: 24, color: Colors.black),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "Add Product/Service",
+                      style: new TextStyle(fontSize: 24, color: Colors.black),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showFavouriteList();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            Icons.add_circle,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "Choose from favourite",
+                            style: new TextStyle(
+                                color: Colors.black, fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 content: SizedBox(
                   width: 600,
@@ -1414,24 +1479,25 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                         });
                                       },
                                       autofocus: false,
-                                      keyboardType: TextInputType.numberWithOptions(
-                                          signed: true, decimal: true),
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              signed: true, decimal: true),
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(),
                                         filled: true,
                                         fillColor: Colors.grey.shade200,
                                         prefixIcon: IconButton(
-                                          icon: Icon(
-                                              _discountModeIsPercentage
-                                                  ? MdiIcons.sale
-                                                  : MdiIcons.cashUsd),
+                                          icon: Icon(_discountModeIsPercentage
+                                              ? MdiIcons.sale
+                                              : MdiIcons.cashUsd),
                                           onPressed: () {
                                             setState(() {
                                               _discountModeIsPercentage =
-                                              !_discountModeIsPercentage;
+                                                  !_discountModeIsPercentage;
                                               calculatePrice().then((price) {
                                                 _priceController.text =
-                                                    double.parse(price.toString())
+                                                    double.parse(
+                                                            price.toString())
                                                         .toStringAsFixed(2);
                                               });
                                             });
@@ -1651,7 +1717,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         'Key': pattern.trim()
       };
 
-      var result = await http.get(BASE_URL+API_EQUIPMENT_LIST, headers: headers);
+      var result =
+          await http.get(BASE_URL + API_EQUIPMENT_LIST, headers: headers);
       if (result.statusCode == 200) {
         return json.decode(result.body)['EquipmentList'];
       } else {
@@ -1712,16 +1779,20 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       'UserId': widget.loggedInUser.UserGUID,
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
-
-    var result = await http.post(BASE_URL+API_GENERATE_ESTIMATE, headers: headers);
-    if (result.statusCode == 200) {
-      estimateIntId = json.decode(result.body)['Invoice']['Id'];
-      estimateId = json.decode(result.body)['Invoice']['InvoiceId'];
-      return estimateId;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return "";
+    try {
+      var result =
+          await http.post(BASE_URL + API_GENERATE_ESTIMATE, headers: headers);
+      if (result.statusCode == 200) {
+        estimateIntId = json.decode(result.body)['Invoice']['Id'];
+        estimateId = json.decode(result.body)['Invoice']['InvoiceId'];
+        return estimateId;
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return "";
+      }
+    } catch (error) {
+      print(error.toString());
     }
   }
 
@@ -1758,8 +1829,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var result =
-        await http.post(BASE_URL+API_CREATE_ESTIMATE, headers: headers, body: json.encode(body));
+    var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
+        headers: headers, body: json.encode(body));
     if (result.statusCode == 200) {
       return json.decode(result.body);
     } else {
@@ -1787,7 +1858,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64.encode(_imageFile.readAsBytesSync())
     };
-    var result = await http.post(BASE_URL+API_UPLOAD_FILE, headers: headers, body: body);
+    var result = await http.post(BASE_URL + API_UPLOAD_FILE,
+        headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _CameraImagePath = map['filePath'];
@@ -1805,7 +1877,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64Drawing
     };
-    var result = await http.post(BASE_URL+API_UPLOAD_FILE, headers: headers, body: body);
+    var result = await http.post(BASE_URL + API_UPLOAD_FILE,
+        headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _drawingImagePath = map['filePath'];
@@ -1823,7 +1896,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       "filename": "file-from-omar.png",
       "filepath": base64HOSignature
     };
-    var result = await http.post(BASE_URL+API_UPLOAD_FILE, headers: headers, body: body);
+    var result = await http.post(BASE_URL + API_UPLOAD_FILE,
+        headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _HOSignatureImagePath = map['filePath'];
@@ -1879,4 +1953,23 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         });
   }
 
+  void showFavouriteList() {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return FavouriteProductListUI(widget.login, _fillProductInformations);
+        },
+        fullscreenDialog: true));
+  }
+
+  _fillProductInformations(Product product) {
+    setState(() {
+      _productNameController.text = product.name;
+      _rateController.text = product.rate.toString();
+      _quantityController.text = "1";
+      _discountController.text = "0";
+      _priceController.text = product.rate.toString();
+
+      selectedProduct = product;
+    });
+  }
 }

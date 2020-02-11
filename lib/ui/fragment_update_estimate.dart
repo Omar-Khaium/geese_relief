@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/ProductImage.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
+import 'package:flutter_grate_app/model/favourite_product_list_model.dart';
 import 'package:flutter_grate_app/model/product.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_grate_app/widgets/shimmer_estimate.dart';
 import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
+import 'package:flutter_grate_app/widgets/widget_fav_product_list.dart';
 import 'package:flutter_grate_app/widgets/widget_signature.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
@@ -49,7 +51,7 @@ class UpdateEstimateFragment extends StatefulWidget {
   _UpdateEstimateFragmentState createState() => _UpdateEstimateFragmentState();
 }
 
-class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
+class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with SingleTickerProviderStateMixin{
   String dollar = "\$";
   TextEditingController _productNameController = new TextEditingController();
   TextEditingController _descriptionController = new TextEditingController();
@@ -67,6 +69,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   List<Product> _productList = [];
   List<ProductImage> _productListForImage = [];
   Product selectedProduct;
+
+  List<FavouriteList> _list = [];
 
   Widget _PMSignature = Container();
   Widget _HOSignature = Container();
@@ -92,7 +96,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
   double estimateMainSubtotal = 0.0;
   double estimateTaxTotal = 0.0;
   double estimateTotalAmount = 0.0;
-  String note="";
+  String note = "";
 
   var _future;
 
@@ -634,7 +638,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                                           width: 128,
                                           child: CachedNetworkImage(
                                             imageUrl: _productListForImage[1]
-                                                        .ImageLoc,
+                                                .ImageLoc,
                                             imageBuilder:
                                                 (context, imageProvider) =>
                                                     Container(
@@ -1195,9 +1199,37 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
             builder: (context, setState) {
               return AlertDialog(
                 backgroundColor: Colors.white,
-                title: Text(
-                  "Add Product/Service",
-                  style: new TextStyle(fontSize: 24, color: Colors.black),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "Add Product/Service",
+                      style: new TextStyle(fontSize: 24, color: Colors.black),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showFavouriteList();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            Icons.add_circle,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "Choose from favourite",
+                            style:
+                                new TextStyle(color: Colors.black, fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
                 content: SizedBox(
                   width: 600,
@@ -1509,7 +1541,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                 ),
                 actions: <Widget>[
                   Container(
-                    width: 256,
+                    width: 128,
                     child: OutlineButton(
                       highlightElevation: 2,
                       shape: RoundedRectangleBorder(
@@ -1614,7 +1646,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                 title: Text("Proposal"),
               ),
               backgroundColor: Colors.white,
-              body: SendMailFragment(result, widget.customer.EstimateId, widget.login, widget.customer, ),
+              body: SendMailFragment(
+                result,
+                widget.customer.EstimateId,
+                widget.login,
+                widget.customer,
+              ),
             ),
           );
         },
@@ -1915,10 +1952,9 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
           return ProductImage.fromMap(mapForEditData['EstimateImage'][index]);
         }));
 
-        _Drawing = DrawingPlaceholder(
-            url:_productListForImage[2].ImageLoc);
-        _HOSignature = SignaturePlaceholder(
-            url:_productListForImage[0].ImageLoc);
+        _Drawing = DrawingPlaceholder(url: _productListForImage[2].ImageLoc);
+        _HOSignature =
+            SignaturePlaceholder(url: _productListForImage[0].ImageLoc);
         formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
         nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
         estimateTaxTotal = mapForEditData['Estimate']['Tax'];
@@ -1933,12 +1969,33 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                 : true;
         return json.decode(result.body);
       } else {
-        showMessage(context,"Network error!",json.decode(result.body),
+        showMessage(context, "Network error!", json.decode(result.body),
             Colors.redAccent, Icons.warning);
         return "";
       }
     } catch (error) {
       print(error.message);
     }
+  }
+  void showFavouriteList() {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return FavouriteProductListUI(widget.login,_fillProductInformations);
+        },
+        fullscreenDialog: true));
+  }
+
+  _fillProductInformations(Product product){
+    setState((){
+
+      _productNameController.text=product.name;
+      _rateController.text=product.rate.toString();
+      _quantityController.text="1";
+      _discountController.text="0";
+      _priceController.text=product.rate.toString();
+
+      selectedProduct = product;
+
+    });
   }
 }
