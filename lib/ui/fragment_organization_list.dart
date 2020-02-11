@@ -13,17 +13,17 @@ import 'package:http/http.dart' as http;
 
 import '../utils.dart';
 
-class OrganizationListUi extends StatefulWidget {
+class OrganizationListUI extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
 
-  OrganizationListUi(this.login, this.loggedInUser);
+  OrganizationListUI(this.login, this.loggedInUser);
 
   @override
-  _OrganizationListUiState createState() => _OrganizationListUiState();
+  _OrganizationListUIState createState() => _OrganizationListUIState();
 }
 
-class _OrganizationListUiState extends State<OrganizationListUi> {
+class _OrganizationListUIState extends State<OrganizationListUI> {
   List<Organization> _list = [];
 
   String message;
@@ -133,6 +133,14 @@ class _OrganizationListUiState extends State<OrganizationListUi> {
         _list = List.generate(map['orglist'].length, (index) {
           return Organization.fromMap(map['orglist'][index]);
         });
+        if(_list.length==1) {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  new DashboardUI(widget.login, widget.loggedInUser)));
+        }
         return result;
       } else {
         showMessage(context, "Network error!", json.decode(result.body),

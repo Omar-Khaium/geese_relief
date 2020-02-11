@@ -61,7 +61,7 @@ class _LogInUIState extends State<LogInUI> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  new OrganizationListUi(login, loggedInUser)));
+                  new OrganizationListUI(login, loggedInUser)));
     }
   }
 

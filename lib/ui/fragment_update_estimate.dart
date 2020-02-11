@@ -11,9 +11,11 @@ import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/product.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
+import 'package:flutter_grate_app/widgets/PDFScreen.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/drawing_placeholder.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
+import 'package:flutter_grate_app/widgets/pdf_view_page.dart';
 import 'package:flutter_grate_app/widgets/place_image.dart';
 import 'package:flutter_grate_app/widgets/shimmer_estimate.dart';
 import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
@@ -1138,7 +1140,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                               style: customButtonTextStyle(),
                             ),
                             onPressed: () {
-                              preparePdf();
+                              showSendMail();
                             },
                           ),
                         ),
@@ -1602,7 +1604,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
     );
   }
 
-  void showSendMail() {
+  void showSendMail() async {
+    Map<String, dynamic> result = await showSavingForSendMail();
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
           return SafeArea(
@@ -1611,7 +1614,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
                 title: Text("Proposal"),
               ),
               backgroundColor: Colors.white,
-              body: Container(),
+              body: SendMailFragment(result, widget.customer.EstimateId, widget.login, widget.customer, ),
             ),
           );
         },
@@ -1657,7 +1660,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
     }
 
     message = "Saving Estimate...";
-    bool resultStatus = await CreateEstimate();
+    var result = await CreateEstimate();
+    bool resultStatus = result['result'];
     Navigator.of(context).pop();
     showAPIResponse(
         context,
@@ -1665,6 +1669,56 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
         Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
     setState(() {});
     if (resultStatus) widget.backToCustomerDetailsFromEstimate(widget.customer);
+  }
+
+  Future showSavingForSendMail() async {
+    message = "Please wait...";
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return new BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Text(
+                  "Updating Estimate",
+                  style: estimateTextStyle(),
+                ),
+                content: Text(message),
+                contentTextStyle: estimateTextStyle(),
+              );
+            },
+          ),
+        );
+      },
+    );
+    message = "Uploading Camera Image...";
+    if (_imageFile != null) {
+      await uploadCameraImage();
+    }
+
+    message = "Uploading Drawing Image...";
+    if (base64Drawing.isNotEmpty) {
+      await uploadDrawingImage();
+    }
+
+    message = "Uploading Home Owner Signature...";
+    if (base64HOSignature.isNotEmpty) {
+      await uploadHOSignatureImage();
+    }
+
+    message = "Saving Estimate...";
+    var result = await CreateEstimate();
+    bool resultStatus = result['result'];
+    Navigator.of(context).pop();
+    showAPIResponse(
+        context,
+        resultStatus ? "Estimate saved Successfully!" : "Failed to Save!",
+        Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
+    setState(() {});
+    return result;
   }
 
   Future getSuggestions(String pattern) async {
@@ -1762,10 +1816,10 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
     body['ListEstimate'] = map;
     var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
         headers: headers, body: json.encode(body));
-    print(json.encode(body));
     if (result.statusCode == 200) {
-      return json.decode(result.body)['result'];
+      return json.decode(result.body);
     } else {
+      Navigator.of(context).pop();
       return false;
     }
   }
@@ -1886,9 +1940,5 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> {
     } catch (error) {
       print(error.message);
     }
-  }
-
-  void preparePdf() async {
-    showSendMail();
   }
 }

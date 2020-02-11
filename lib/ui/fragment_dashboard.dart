@@ -42,59 +42,6 @@ class _DashboardFragmentState extends State<DashboardFragment> {
 
   var _future;
 
-  Future getData() async {
-    Map<String, String> headers = {
-      'Authorization': widget.login.accessToken,
-      'PageNo': (++_pageNo).toString(),
-      'PageSize': '10',
-      'ResultType': 'Customer'
-    };
-
-    var result =
-        await http.get(BASE_URL + API_GET_ALL_CUSTOMER, headers: headers);
-    if (result.statusCode == 200) {
-      var map = json.decode(result.body);
-      var _customersMap = map['data']['CustomerList'];
-      _totalSize = map['data']['TotalCustomerCount']['Counter'];
-      arrayList = List.generate(_customersMap.length, (index) {
-        return Customer.fromMap(_customersMap[index]);
-      });
-      setState(() {});
-      return result;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return [];
-    }
-  }
-
-  Future fetchData() async {
-    Map<String, String> headers = {
-      'Authorization': widget.login.accessToken,
-      'PageNo': (++_pageNo).toString(),
-      'PageSize': '10',
-      'ResultType': 'Customer'
-    };
-
-    var result =
-        await http.get(BASE_URL + API_GET_ALL_CUSTOMER, headers: headers);
-    if (result.statusCode == 200) {
-      var map = json.decode(result.body);
-      var _customersMap = map['data']['CustomerList'];
-      List<Customer> _arrayList = List.generate(_customersMap.length, (index) {
-        return Customer.fromMap(_customersMap[index]);
-      });
-      setState(() {
-        arrayList.addAll(_arrayList);
-      });
-      return _arrayList;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return [];
-    }
-  }
-
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -113,6 +60,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       setState(() {
         _showPaginationShimmer = true;
       });
+
       await fetchData();
       setState(() {
         _showPaginationShimmer = false;
@@ -128,12 +76,44 @@ class _DashboardFragmentState extends State<DashboardFragment> {
       margin: EdgeInsets.only(top: 16, left: 32, right: 32),
       child: Column(
         children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Dashboard",
-              style: fragmentTitleStyle(),
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                "Dashboard",
+                style: fragmentTitleStyle(),
+              ),
+              Container(
+                width: 256,
+                height: 36,
+                padding: EdgeInsets.only(left: 12, right: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(36),
+                  color: Colors.grey.shade100
+                ),
+                child: InkWell(
+                  child: TextField(
+                    cursorColor: Colors.black,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.go,
+                    onChanged: (val){},
+                    onSubmitted: (val){
+                      
+                    },
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
+                      disabledBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
+                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
+                      errorBorder: UnderlineInputBorder(borderSide: BorderSide(style: BorderStyle.none)),
+                      hintText: "Search"
+                    ),
+                  ),
+                  onTap: (){},
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 8,
@@ -182,7 +162,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                               customer = arrayList[index];
                               return InkWell(
                                 onTap: () {
-                                  widget.goToCustomerDetails(arrayList[index].Id);
+                                  widget
+                                      .goToCustomerDetails(arrayList[index].Id);
                                 },
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
@@ -336,6 +317,59 @@ class _DashboardFragmentState extends State<DashboardFragment> {
         ],
       ),
     );
+  }
+
+  Future getData() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'PageNo': (++_pageNo).toString(),
+      'PageSize': '10',
+      'ResultType': 'Customer'
+    };
+
+    var result =
+        await http.get(BASE_URL + API_GET_ALL_CUSTOMER, headers: headers);
+    if (result.statusCode == 200) {
+      var map = json.decode(result.body);
+      var _customersMap = map['data']['CustomerList'];
+      _totalSize = map['data']['TotalCustomerCount']['Counter'];
+      arrayList = List.generate(_customersMap.length, (index) {
+        return Customer.fromMap(_customersMap[index]);
+      });
+      setState(() {});
+      return result;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return [];
+    }
+  }
+
+  Future fetchData() async {
+    Map<String, String> headers = {
+      'Authorization': widget.login.accessToken,
+      'PageNo': (++_pageNo).toString(),
+      'PageSize': '10',
+      'ResultType': 'Customer'
+    };
+
+    var result =
+        await http.get(BASE_URL + API_GET_ALL_CUSTOMER, headers: headers);
+    if (result.statusCode == 200) {
+      var map = json.decode(result.body);
+      var _customersMap = map['data']['CustomerList'];
+      List<Customer> _arrayList = List.generate(_customersMap.length, (index) {
+        return Customer.fromMap(_customersMap[index]);
+      });
+      setState(() {
+        arrayList.addAll(_arrayList);
+      });
+      return _arrayList;
+    } else {
+      showMessage(context, "Network error!", json.decode(result.body),
+          Colors.redAccent, Icons.warning);
+      return [];
+    }
   }
 
   Future deleteCustomer(int index) async {
@@ -582,17 +616,16 @@ class _DashboardFragmentState extends State<DashboardFragment> {
     _pageNo = 0;
     await getData();
   }
+
   //-----------------------Offline DB-----------------------
   void _checkBasementData() async {
-    List<BasementReport> basementsDatas=await dbHelper.getBasementData();
-    if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
+    List<BasementReport> basementsDatas = await dbHelper.getBasementData();
+    if (basementsDatas.isNotEmpty && basementsDatas.length != 0) {
       showPopup(basementsDatas);
-    }
-    else{
-
-    }
+    } else {}
   }
-  void showPopup(List<BasementReport> list){
+
+  void showPopup(List<BasementReport> list) {
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -600,7 +633,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
         return AlertDialog(
             backgroundColor: Colors.white,
             contentPadding: EdgeInsets.all(0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             content: Container(
               width: 400,
               height: 400,
@@ -609,7 +643,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                 children: <Widget>[
                   Align(
                       alignment: Alignment.center,
-                      child: Image.asset('images/no_internet.gif',fit: BoxFit.cover)),
+                      child: Image.asset('images/no_internet.gif',
+                          fit: BoxFit.cover)),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
@@ -619,7 +654,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                         Expanded(
                           flex: 2,
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 64,
                             child: RaisedButton(
                               highlightElevation: 2,
@@ -634,9 +669,10 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                DBHelper dbHelper=new DBHelper();
-                                for(BasementReport item in list) {
-                                  dbHelper.delete(item.id, DBInfo.TABLE_BASEMENT_INSPECTION);
+                                DBHelper dbHelper = new DBHelper();
+                                for (BasementReport item in list) {
+                                  dbHelper.delete(item.id,
+                                      DBInfo.TABLE_BASEMENT_INSPECTION);
                                 }
 //                                [0].header.replaceAll("\n", ""),basementsDatas[0].id
                                 Navigator.of(context).pop();
@@ -647,7 +683,7 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                         Expanded(
                           flex: 2,
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 64,
                             child: RaisedButton(
                               highlightElevation: 2,
@@ -674,25 +710,27 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                   ),
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }
-  _syncBaseData(List<BasementReport> list) async{
+
+  _syncBaseData(List<BasementReport> list) async {
     showDialog(context: context, builder: (context) => alertLoading());
 
-    for(BasementReport item in list) {
-      await saveInspectionReport(item.header.replaceAll("\n", ""),context, widget.login,item.id);
+    for (BasementReport item in list) {
+      await saveInspectionReport(
+          item.header.replaceAll("\n", ""), context, widget.login, item.id);
     }
     Navigator.of(context).pop();
   }
+
   alertLoading() {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
       child: SimpleDialog(
         contentPadding: EdgeInsets.all(0),
-        backgroundColor:Color(0xFF12C06A),
+        backgroundColor: Color(0xFF12C06A),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         children: <Widget>[
           Column(
@@ -704,7 +742,8 @@ class _DashboardFragmentState extends State<DashboardFragment> {
                 child: Image.asset(
                   "images/success.gif",
                   fit: BoxFit.cover,
-                  height: 400,width: 400,
+                  height: 400,
+                  width: 400,
                 ),
               ),
               Row(
