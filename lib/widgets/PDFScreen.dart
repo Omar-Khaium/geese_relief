@@ -38,7 +38,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   TextEditingController _BodyEmailController = new TextEditingController();
 
   String emailUrl = "";
-
+//
   @override
   void initState() {
     super.initState();
