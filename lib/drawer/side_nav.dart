@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/navigation_model.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
@@ -84,19 +86,46 @@ class SideNavUIState extends State<SideNavUI>
                               backgroundColor: Colors.black,
                               child: Text(
                                 widget.loggedInUser.UserName
-                                    .substring(0, 1).toUpperCase(),
+                                    .substring(0, 1)
+                                    .toUpperCase(),
                                 style: customButtonTextStyle(),
                               ),
                             )
-                          : new Container(
+                          : Container(
                               width: 28,
                               height: 28,
-                              decoration: new BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: new DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: new NetworkImage(
-                                      widget.loggedInUser.ProfilePicture),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(28),
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: widget.loggedInUser.ProfilePicture
+                                          .startsWith("/Files")
+                                      ? "https://www.gratecrm.com" +
+                                          widget.loggedInUser.ProfilePicture
+                                      : widget.loggedInUser.ProfilePicture,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) =>
+                                      CupertinoActivityIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      CircleAvatar(
+                                    maxRadius: 14,
+                                    minRadius: 14,
+                                    backgroundColor: Colors.black,
+                                    child: Text(
+                                      widget.loggedInUser.UserName
+                                          .substring(0, 1)
+                                          .toUpperCase(),
+                                      style: customButtonTextStyle(),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -104,10 +133,13 @@ class SideNavUIState extends State<SideNavUI>
                         width: sizedBoxAnimation.value,
                       ),
                       widthAnimation.value >= 290
-                          ? Text(
-                              widget.loggedInUser.UserName,
-                              style: defaultTextStyle,
-                              overflow: TextOverflow.ellipsis,
+                          ? SizedBox(
+                              width: 192,
+                              child: Text(
+                                widget.loggedInUser.UserName,
+                                style: defaultTextStyle,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             )
                           : new Container(),
                     ],

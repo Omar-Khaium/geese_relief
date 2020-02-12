@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
@@ -46,6 +47,8 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Zip zipDatas;
 
+  bool _isGettingZipCodes = false;
+
   @override
   void initState() {
     _checkBasementData();
@@ -70,73 +73,12 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   TextEditingController _zipController = new TextEditingController();
 
   List<DropDownSingleItem> TypeArray = [];
-  int TypeDropdown = 0;
+  int TypeDropdown;
 
   static String ACCESS_TOKEN = "";
   var _future;
   Product selectedProduct;
   final _UsNumberTextInputFormatter = UsNumberTextInputFormatter();
-
-  // ignore: missing_return
-  Future<String> makeRequest() async {
-    widget.isLoading(true);
-    try {
-      Map<String, String> data = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'authorization': widget.login.accessToken,
-        'FirstName': '${_firstNameController.text}',
-        'LastName': '${_lastNameController.text}',
-        'BusinessName': '${_businessTypeController.text}',
-        'Type': TypeArray[TypeDropdown].DataValue,
-        'PrimaryPhone': '${_primaryPhoneController.text}',
-        'SecondaryPhone': '${_secondaryPhoneController.text}',
-        'CellNo': '${_cellPhoneController.text}',
-        'email': '${_emailController.text}',
-        'Street': '${_streetController.text}',
-        'City': '${_cityController.text}',
-        'State': '${_stateController.text}',
-        'ZipCode': '${_zipController.text}',
-        'IsLead': 'false',
-        "LeadSource": "-1",
-        "Id": "0",
-      };
-      http.post(BASE_URL + API_SAVE_CUSTOMER, headers: data).then((response) {
-        widget.isLoading(false);
-        if (response.statusCode == 200) {
-          Map map = json.decode(response.body);
-          showMessage(context, "Success!", "Customer Added Successfully",
-              Colors.green.shade600, null);
-          widget.backToDashboard(0);
-        } else {
-          Flushbar(
-            flushbarPosition: FlushbarPosition.TOP,
-            flushbarStyle: FlushbarStyle.GROUNDED,
-            backgroundColor: Colors.redAccent,
-            icon: Icon(
-              Icons.error_outline,
-              size: 24.0,
-              color: Colors.white,
-            ),
-            duration: Duration(seconds: 4),
-            leftBarIndicatorColor: Colors.white70,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.red[800],
-                offset: Offset(0.0, 2.0),
-                blurRadius: 3.0,
-              )
-            ],
-            title: response.toString(),
-            message: "",
-            shouldIconPulse: false,
-          )..show(context);
-          widget.login.isAuthenticated = false;
-        }
-      });
-    } catch (error) {
-      error.toString();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,15 +137,16 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 onChanged: (val) {
                                   setState(() {});
                                 },
+                                validator: (val) {
+                                  return _firstNameController.text.isNotEmpty
+                                      ? null
+                                      : "* Required";
+                                },
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 maxLines: 1,
                                 decoration: new InputDecoration(
                                   labelText: "First Name",
-                                  errorText:
-                                      _firstNameController.text.isNotEmpty
-                                          ? null
-                                          : "* Required",
                                   focusedBorder: UnderlineInputBorder(
                                       borderSide:
                                           BorderSide(color: Colors.black87)),
@@ -231,6 +174,11 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 maxLines: 1,
                                 autofocus: false,
                                 textInputAction: TextInputAction.next,
+                                validator: (val) {
+                                  return _lastNameController.text.isNotEmpty
+                                      ? null
+                                      : "* Required";
+                                },
                                 onChanged: (val) {
                                   setState(() {});
                                 },
@@ -247,15 +195,42 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     Icons.person,
                                     color: Colors.grey,
                                   ),
-                                  errorText: _lastNameController.text.isNotEmpty
-                                      ? null
-                                      : "* Required",
                                   hintStyle: customHintStyle(),
                                   isDense: true,
                                 ),
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        DropdownButtonFormField(
+                          isDense: true,
+                          decoration: new InputDecoration(
+                              icon: Icon(Icons.business),
+                              labelText: "Business Type",
+                              labelStyle: customTextStyle(),
+                              hintText: "e.g. hint",
+                              hintStyle: customHintStyle(),
+                              alignLabelWithHint: false,
+                              isDense: true),
+                          validator: (val) {
+                            return TypeDropdown == 0
+                                ? "Select another value"
+                                : null;
+                          },
+                          items: List.generate(TypeArray.length, (index) {
+                            return DropdownMenuItem(
+                                value: index,
+                                child: Text(TypeArray[index].DisplayText));
+                          }),
+                          onChanged: (index) {
+                            setState(() {
+                              TypeDropdown = index;
+                            });
+                          },
+                          value: TypeDropdown,
                         ),
                         SizedBox(
                           height: 16,
@@ -271,6 +246,13 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           onChanged: (val) {
                             setState(() {});
                           },
+                          validator: (val) {
+                            return TypeDropdown == 1
+                                ? (_businessTypeController.text.isNotEmpty
+                                    ? null
+                                    : "* Required")
+                                : null;
+                          },
                           decoration: new InputDecoration(
                             labelText: "Business Name",
                             focusedBorder: UnderlineInputBorder(
@@ -282,38 +264,8 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               color: Colors.grey,
                             ),
                             isDense: true,
-                            errorText: _businessTypeController.text.isNotEmpty
-                                ? null
-                                : "* Required",
                             hintStyle: customHintStyle(),
                           ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        DropdownButtonFormField(
-                          isDense: true,
-                          decoration: new InputDecoration(
-                              errorText: TypeDropdown == 0
-                                  ? "Select another value"
-                                  : null,
-                              labelText: "Business Type",
-                              labelStyle: customTextStyle(),
-                              hintText: "e.g. hint",
-                              hintStyle: customHintStyle(),
-                              alignLabelWithHint: false,
-                              isDense: true),
-                          items: List.generate(TypeArray.length, (index) {
-                            return DropdownMenuItem(
-                                value: index,
-                                child: Text(TypeArray[index].DisplayText));
-                          }),
-                          onChanged: (index) {
-                            setState(() {
-                              TypeDropdown = index;
-                            });
-                          },
-                          value: TypeDropdown,
                         ),
                         SizedBox(
                           height: 16,
@@ -337,6 +289,11 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                   WhitelistingTextInputFormatter.digitsOnly,
                                   _UsNumberTextInputFormatter,
                                 ],
+                                validator: (val) {
+                                  return _primaryPhoneController.text.isNotEmpty
+                                      ? null
+                                      : "* Required";
+                                },
                                 decoration: new InputDecoration(
                                   labelText: "Primary Phone",
                                   focusedBorder: UnderlineInputBorder(
@@ -349,10 +306,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     Icons.call,
                                     color: Colors.grey,
                                   ),
-                                  errorText:
-                                      _primaryPhoneController.text.isNotEmpty
-                                          ? null
-                                          : "* Required",
                                   hintStyle: customHintStyle(),
                                   isDense: true,
                                 ),
@@ -390,10 +343,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     Icons.call,
                                     color: Colors.grey,
                                   ),
-                                  errorText:
-                                      _secondaryPhoneController.text.isNotEmpty
-                                          ? null
-                                          : "* Required",
                                   hintStyle: customHintStyle(),
                                   isDense: true,
                                 ),
@@ -430,9 +379,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               color: Colors.grey,
                             ),
                             isDense: true,
-                            errorText: _cellPhoneController.text.isNotEmpty
-                                ? null
-                                : "* Required",
                             hintStyle: customHintStyle(),
                           ),
                         ),
@@ -450,6 +396,11 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           maxLines: 1,
+                          validator: (val) {
+                            return _emailController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
                           decoration: new InputDecoration(
                             labelText: "Email",
                             focusedBorder: UnderlineInputBorder(
@@ -460,9 +411,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               Icons.email,
                               color: Colors.grey,
                             ),
-                            errorText: _emailController.text.isNotEmpty
-                                ? null
-                                : "* Required",
                             hintStyle: customHintStyle(),
                             isDense: true,
                           ),
@@ -481,6 +429,11 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             setState(() {});
                           },
                           maxLines: 1,
+                          validator: (val) {
+                            return _streetController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
                           decoration: new InputDecoration(
                             labelText: "Street",
                             focusedBorder: UnderlineInputBorder(
@@ -491,9 +444,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               MdiIcons.road,
                               color: Colors.grey,
                             ),
-                            errorText: _streetController.text.isNotEmpty
-                                ? null
-                                : "* Required",
                             hintStyle: customHintStyle(),
                             isDense: true,
                           ),
@@ -512,6 +462,11 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             setState(() {});
                           },
                           maxLines: 1,
+                          validator: (val) {
+                            return _cityController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
                           decoration: new InputDecoration(
                             labelText: "City",
                             focusedBorder: UnderlineInputBorder(
@@ -522,9 +477,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                               Icons.location_city,
                               color: Colors.grey,
                             ),
-                            errorText: _cityController.text.isNotEmpty
-                                ? null
-                                : "* Required",
                             hintStyle: customHintStyle(),
                             isDense: true,
                           ),
@@ -541,12 +493,19 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 cursorColor: Colors.black87,
                                 controller: _stateController,
                                 autofocus: false,
+                                textCapitalization: TextCapitalization.characters,
+                                maxLength: 2,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
                                 onChanged: (val) {
                                   setState(() {});
                                 },
                                 maxLines: 1,
+                                validator: (val) {
+                                  return _stateController.text.isNotEmpty
+                                      ? null
+                                      : "* Required";
+                                },
                                 decoration: new InputDecoration(
                                   labelText: "State",
                                   focusedBorder: UnderlineInputBorder(
@@ -559,9 +518,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     MdiIcons.homeCity,
                                     color: Colors.grey,
                                   ),
-                                  errorText: _stateController.text.isNotEmpty
-                                      ? null
-                                      : "* Required",
                                   hintStyle: customHintStyle(),
                                   isDense: true,
                                 ),
@@ -572,17 +528,20 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                             ),
                             Expanded(
                               flex: 2,
-                              child: TypeAheadField(
+                              child: TypeAheadFormField(
+                                validator: (val) {
+                                  return _zipController.text.isNotEmpty
+                                      ? null
+                                      : "* Required";
+                                },
                                 textFieldConfiguration: TextFieldConfiguration(
                                     controller: _zipController,
                                     autofocus: false,
                                     keyboardType: TextInputType.number,
-                                    maxLines: 1,
-                                    onChanged: (val) {
-                                      setState(() {});
-                                    },
+                                    maxLength: 5,
                                     decoration: new InputDecoration(
                                       labelText: "Zip",
+                                      hintText: "e.g. - 12345",
                                       focusedBorder: UnderlineInputBorder(
                                           borderSide: BorderSide(
                                               color: Colors.black87)),
@@ -593,15 +552,19 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                         MdiIcons.zipBox,
                                         color: Colors.grey,
                                       ),
+                                      suffixIcon: _isGettingZipCodes ? CupertinoActivityIndicator() : Container(width: 0, height: 0,),
                                       hintStyle: customHintStyle(),
-                                      errorText: _stateController.text.isNotEmpty
-                                          ? null
-                                          : "* Required",
                                       isDense: true,
                                     )),
                                 suggestionsCallback: (pattern) async {
-
-                                  return _zipController.text.length>=3 ? await getZipData(pattern):Container();
+                                  if(_zipController.text.length >= 3) {
+                                    setState(() {
+                                      _isGettingZipCodes = true;
+                                    });
+                                    return await getZipData(pattern);
+                                  } else {
+                                    return null;
+                                  }
                                 },
                                 itemBuilder: (context, suggestion) {
                                   Zip zip = suggestion;
@@ -619,13 +582,11 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                 onSuggestionSelected: (suggestion) {
                                   zipDatas = suggestion;
 
-                                    setState(() {
-                                      _zipController.text = zipDatas.zipCode;
-                                      _cityController.text = zipDatas.city;
-                                      _stateController.text = zipDatas.state;
-                                    });
-
-
+                                  setState(() {
+                                    _zipController.text = zipDatas.zipCode;
+                                    _cityController.text = zipDatas.city;
+                                    _stateController.text = zipDatas.state;
+                                  });
                                 },
                                 hideSuggestionsOnKeyboardHide: true,
                                 hideOnError: true,
@@ -660,17 +621,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                if (_firstNameController.text.isNotEmpty &&
-                                    _secondaryPhoneController.text.isNotEmpty &&
-                                    _businessTypeController.text.isNotEmpty &&
-                                    _primaryPhoneController.text.isNotEmpty &&
-                                    _secondaryPhoneController.text.isNotEmpty &&
-                                    _cellPhoneController.text.isNotEmpty &&
-                                    _emailController.text.isNotEmpty &&
-                                    _streetController.text.isNotEmpty &&
-                                    _cityController.text.isNotEmpty &&
-                                    _stateController.text.isNotEmpty &&
-                                    _zipController.text.isNotEmpty) {
+                                if (_formKey.currentState.validate()) {
                                   makeRequest();
                                 } else {
                                   showMessage(
@@ -775,29 +726,40 @@ class _AddCustomerState extends State<AddCustomerFragment> {
           List<Zip> _zipList = List.generate(map.length, (index) {
             return Zip.fromMap(map[index]);
           });
+          setState(() {
+            _isGettingZipCodes = false;
+          });
           return _zipList;
         } catch (error) {
+          setState(() {
+            _isGettingZipCodes = false;
+          });
           return [];
         }
       } else {
+        setState(() {
+          _isGettingZipCodes = false;
+        });
         showMessage(context, "Network error!", json.decode(result.body),
             Colors.redAccent, Icons.warning);
         return [];
       }
+    } else {
+      setState(() {
+        _isGettingZipCodes = false;
+      });
     }
   }
 
-  //-----------------------Offline DB-----------------------
   void _checkBasementData() async {
-    List<BasementReport> basementsDatas=await dbHelper.getBasementData();
-    if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
-      showPopup(basementsDatas[0].header.replaceAll("\n", ""),basementsDatas[0].id);
-    }
-    else{
-
-    }
+    List<BasementReport> basementsDatas = await dbHelper.getBasementData();
+    if (basementsDatas.isNotEmpty && basementsDatas.length != 0) {
+      showPopup(
+          basementsDatas[0].header.replaceAll("\n", ""), basementsDatas[0].id);
+    } else {}
   }
-  void showPopup( String header,int id){
+
+  void showPopup(String header, int id) {
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -805,14 +767,15 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         return AlertDialog(
             backgroundColor: Colors.white,
             contentPadding: EdgeInsets.all(0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             content: Container(
               width: 600,
               height: 600,
               color: Colors.white,
               child: Stack(
                 children: <Widget>[
-                  Image.asset('images/no_internet.gif',fit: BoxFit.cover),
+                  Image.asset('images/no_internet.gif', fit: BoxFit.cover),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
@@ -822,7 +785,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                         Expanded(
                           flex: 2,
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 64,
                             child: OutlineButton(
                               highlightElevation: 2,
@@ -837,8 +800,9 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                DBHelper dbHelper=new DBHelper();
-                                dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
+                                DBHelper dbHelper = new DBHelper();
+                                dbHelper.delete(
+                                    id, DBInfo.TABLE_BASEMENT_INSPECTION);
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -847,7 +811,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                         Expanded(
                           flex: 2,
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 64,
                             child: RaisedButton(
                               highlightElevation: 2,
@@ -864,7 +828,7 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                _syncBaseData(header,id);
+                                _syncBaseData(header, id);
                               },
                             ),
                           ),
@@ -874,16 +838,17 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                   ),
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }
-  _syncBaseData(String header,id) async{
+
+  _syncBaseData(String header, id) async {
     showDialog(context: context, builder: (context) => alertLoading());
-    await saveInspectionReport(header,context, widget.login,id);
+    await saveInspectionReport(header, context, widget.login, id);
     Navigator.of(context).pop();
   }
+
   alertLoading() {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
@@ -937,6 +902,66 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         ],
       ),
     );
+  }
+
+  makeRequest() async {
+    widget.isLoading(true);
+    try {
+      Map<String, String> data = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'authorization': widget.login.accessToken,
+        'FirstName': '${_firstNameController.text}',
+        'LastName': '${_lastNameController.text}',
+        'BusinessName': '${_businessTypeController.text}',
+        'Type': TypeArray[TypeDropdown].DataValue,
+        'PrimaryPhone': '${_primaryPhoneController.text}',
+        'SecondaryPhone': '${_secondaryPhoneController.text}',
+        'CellNo': '${_cellPhoneController.text}',
+        'email': '${_emailController.text}',
+        'Street': '${_streetController.text}',
+        'City': '${_cityController.text}',
+        'State': '${_stateController.text}',
+        'ZipCode': '${_zipController.text}',
+        'IsLead': 'false',
+        "LeadSource": "-1",
+        "Id": "0",
+      };
+      http.post(BASE_URL + API_SAVE_CUSTOMER, headers: data).then((response) {
+        widget.isLoading(false);
+        if (response.statusCode == 200) {
+          Map map = json.decode(response.body);
+          showMessage(context, "Success!", "Customer Added Successfully",
+              Colors.green.shade600, null);
+          widget.backToDashboard(0);
+        } else {
+          Flushbar(
+            flushbarPosition: FlushbarPosition.TOP,
+            flushbarStyle: FlushbarStyle.GROUNDED,
+            backgroundColor: Colors.redAccent,
+            icon: Icon(
+              Icons.error_outline,
+              size: 24.0,
+              color: Colors.white,
+            ),
+            duration: Duration(seconds: 4),
+            leftBarIndicatorColor: Colors.white70,
+            boxShadows: [
+              BoxShadow(
+                color: Colors.red[800],
+                offset: Offset(0.0, 2.0),
+                blurRadius: 3.0,
+              )
+            ],
+            title: response.toString(),
+            message: "",
+            shouldIconPulse: false,
+          )..show(context);
+          widget.login.isAuthenticated = false;
+        }
+      });
+    } catch (error) {
+      error.toString();
+    }
   }
 //-----------------------Offline DB-----------------------
 }

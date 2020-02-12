@@ -45,9 +45,8 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
         stream: _controller.stream,
         initialData: _list,
         builder: (context, snapshot){
-          if(snapshot.hasData) {
-            return
-              ListView.builder(
+            if(snapshot.hasData) {
+              return ListView.builder(
                 padding: EdgeInsets.all(16),
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
@@ -120,8 +119,8 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
                   );
                 },
               );
-          } else {
-            return Padding(
+            } else {
+              return Padding(
               padding: const EdgeInsets.all(16),
               child: ShimmerDashboardFragment(),
             );

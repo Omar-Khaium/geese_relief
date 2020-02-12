@@ -276,7 +276,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 child: InkWell(
                                                   child: Icon(
                                                     MdiIcons
-                                                        .briefcaseEdit,
+                                                        .pencil, size: 18,
                                                     color: Colors.white,
                                                   ),
                                                   onTap: () {
