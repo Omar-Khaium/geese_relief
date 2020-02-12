@@ -30,7 +30,6 @@ dependencies:
   image_picker:
   async:
   dotted_border:
-  webview_flutter:
   flutter_html:
   cached_network_image:
   url_launcher:

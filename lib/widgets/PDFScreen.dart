@@ -14,7 +14,6 @@ import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class SendMailFragment extends StatefulWidget {
   Map map;
@@ -37,9 +36,6 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   TextEditingController _CCEmailController = new TextEditingController();
   TextEditingController _SubjectEmailController = new TextEditingController();
   TextEditingController _BodyEmailController = new TextEditingController();
-
-  final Completer<WebViewController> _controller =
-      Completer<WebViewController>();
 
   String emailUrl = "";
 
