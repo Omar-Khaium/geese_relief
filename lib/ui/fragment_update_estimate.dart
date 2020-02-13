@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/ProductImage.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
-import 'package:flutter_grate_app/model/favourite_product_list_model.dart';
 import 'package:flutter_grate_app/model/product.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
@@ -16,9 +15,9 @@ import 'package:flutter_grate_app/widgets/PDFScreen.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/drawing_placeholder.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
-import 'package:flutter_grate_app/widgets/pdf_view_page.dart';
 import 'package:flutter_grate_app/widgets/place_image.dart';
 import 'package:flutter_grate_app/widgets/shimmer_estimate.dart';
+import 'package:flutter_grate_app/widgets/shimmer_upload.dart';
 import 'package:flutter_grate_app/widgets/signature_placeholder.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_drawing.dart';
@@ -34,10 +33,10 @@ import 'package:painter/painter.dart';
 import '../utils.dart';
 
 class UpdateEstimateFragment extends StatefulWidget {
-  Login login;
-  LoggedInUser loggedInUser;
-  CustomerDetails customer;
-  ValueChanged<CustomerDetails> backToCustomerDetailsFromEstimate;
+  final Login login;
+  final LoggedInUser loggedInUser;
+  final CustomerDetails customer;
+  final ValueChanged<CustomerDetails> backToCustomerDetailsFromEstimate;
 
   UpdateEstimateFragment(
       {Key key,
@@ -51,7 +50,8 @@ class UpdateEstimateFragment extends StatefulWidget {
   _UpdateEstimateFragmentState createState() => _UpdateEstimateFragmentState();
 }
 
-class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with SingleTickerProviderStateMixin{
+class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
+    with SingleTickerProviderStateMixin {
   String dollar = "\$";
   TextEditingController _productNameController = new TextEditingController();
   TextEditingController _descriptionController = new TextEditingController();
@@ -70,8 +70,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
   List<ProductImage> _productListForImage = [];
   Product selectedProduct;
 
-  List<FavouriteList> _list = [];
-
   Widget _PMSignature = Container();
   Widget _HOSignature = Container();
   String base64Drawing = "";
@@ -83,6 +81,11 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
   var base64 = const Base64Codec();
   String message;
   String formattedDate = DateFormat('MM/dd/yyyy').format(DateTime.now());
+
+  bool isDrawingSaving = false;
+  bool isCameraSaving = false;
+  bool isPMSignatureSaving = false;
+  bool isHOSignatureSaving = false;
 
   String estimateId = "";
   String nextDate = "";
@@ -107,13 +110,26 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
         (await ImagePicker.pickImage(source: ImageSource.camera));
     setState(() {
       _imageFile = cameraOutput;
+      uploadCameraImage();
     });
+    Navigator.of(context).pop();
+  }
+
+  _openGallery(BuildContext context) async {
+    File pickFromGallery =
+    (await ImagePicker.pickImage(source: ImageSource.gallery));
+    setState(() {
+      _imageFile = pickFromGallery;
+      uploadCameraImage();
+    });
+    Navigator.of(context).pop();
   }
 
   _generateDrawingPicture(PictureDetails picture) {
     _Drawing = PlaceImageFromPicture(picture);
     picture.toPNG().then((val) {
       base64Drawing = base64.encode(val);
+      uploadDrawingImage();
     });
   }
 
@@ -128,6 +144,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
     _HOSignature = PlaceImageFromPicture(picture);
     picture.toPNG().then((val) {
       base64HOSignature = base64.encode(val);
+      uploadHOSignatureImage();
     });
   }
 
@@ -624,43 +641,59 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(5.0))),
                             child: InkWell(
-                              child: _imageFile != null
-                                  ? Image.file(
-                                      _imageFile,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : (_productListForImage.length>1 && _productListForImage[1].ImageLoc != null &&
-                                          _productListForImage[1]
-                                              .ImageLoc
-                                              .isNotEmpty)
+                              child: Stack(
+                                children: <Widget>[
+                                  _imageFile != null
                                       ? Container(
-                                          height: 128,
-                                          width: 128,
-                                          child: CachedNetworkImage(
-                                            imageUrl: _productListForImage[1]
-                                                .ImageLoc,
-                                            imageBuilder:
-                                                (context, imageProvider) =>
-                                                    Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                            placeholder: (context, url) =>
-                                                CupertinoActivityIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                                          height: double.infinity,
+                                          width: double.infinity,
+                                          child: Image.file(
+                                            _imageFile,
+                                            fit: BoxFit.cover,
                                           ),
                                         )
-                                      : Icon(
-                                          Icons.person,
-                                          size: 142,
-                                        ),
-                              onTap: _openCamera,
+                                      : (_productListForImage.length > 1 &&
+                                              _productListForImage[1]
+                                                      .ImageLoc !=
+                                                  null &&
+                                              _productListForImage[1]
+                                                  .ImageLoc
+                                                  .isNotEmpty)
+                                          ? Container(
+                                              height: double.infinity,
+                                              width: double.infinity,
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    "${_productListForImage[1].ImageLoc.startsWith("/Files") ? "https://api.gratecrm.com" + _productListForImage[1].ImageLoc : _productListForImage[1].ImageLoc}",
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    CupertinoActivityIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            )
+                                          : Icon(
+                                              Icons.person,
+                                              size: 142,
+                                            ),
+                                  isCameraSaving
+                                      ? Center(
+                                          child: ShimmerUploadIcon(64),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                              onTap: ()=>_showDialog(context),
                             ),
                           ),
                         ],
@@ -915,20 +948,28 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height - 200,
+                            height: 500,
                             color: Colors.grey.shade100,
                             child: InkWell(
-                              child: _Drawing,
+                              child: Stack(
+                                children: <Widget>[
+                                  _Drawing,
+                                  isDrawingSaving
+                                      ? Center(
+                                          child: ShimmerUploadIcon(200),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) {
-                                      return DrawingDialog(
-                                          picture: _generateDrawingPicture);
-                                    },
-                                    fullscreenDialog: true
-                                  ),
+                                      builder: (context) {
+                                        return DrawingDialog(
+                                            picture: _generateDrawingPicture);
+                                      },
+                                      fullscreenDialog: true),
                                 );
                               },
                             ),
@@ -1028,7 +1069,18 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                                             height: 8,
                                           ),
                                           Expanded(
-                                            child: _PMSignature,
+                                            child: Stack(
+                                              children: <Widget>[
+                                                _PMSignature,
+                                                isPMSignatureSaving
+                                                    ? Center(
+                                                        child:
+                                                            ShimmerUploadIcon(
+                                                                64),
+                                                      )
+                                                    : Container(),
+                                              ],
+                                            ),
                                           ),
                                           SizedBox(
                                             height: 8,
@@ -1083,7 +1135,18 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                                             height: 8,
                                           ),
                                           Expanded(
-                                            child: _HOSignature,
+                                            child: Stack(
+                                              children: <Widget>[
+                                                _HOSignature,
+                                                isHOSignatureSaving
+                                                    ? Center(
+                                                        child:
+                                                            ShimmerUploadIcon(
+                                                                64),
+                                                      )
+                                                    : Container(),
+                                              ],
+                                            ),
                                           ),
                                           SizedBox(
                                             height: 8,
@@ -1145,7 +1208,19 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                               style: customButtonTextStyle(),
                             ),
                             onPressed: () {
-                              showSendMail();
+                              if (_productList.length == 0) {
+                                showError("Product list is empty!");
+                              } else if (isDrawingSaving ||
+                                  isCameraSaving ||
+                                  isHOSignatureSaving) {
+                                showError(
+                                    "Uploading Image. Grab some snacks and wait for a while");
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => loadingAlert());
+                                showSendMail();
+                              }
                             },
                           ),
                         ),
@@ -1169,7 +1244,15 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                             onPressed: () {
                               if (_productList.length == 0) {
                                 showError("Product list is empty!");
+                              } else if (isDrawingSaving ||
+                                  isCameraSaving ||
+                                  isHOSignatureSaving) {
+                                showError(
+                                    "Uploading Image. Grab some snacks and wait for a while");
                               } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => loadingAlert());
                                 showSaving();
                               }
                             },
@@ -1187,6 +1270,45 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
         }
       },
     );
+  }
+
+  Future<void> _showDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Make A choice"),
+            content: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: ListBody(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: GestureDetector(
+                        child: Text("Gallery"),
+                        onTap: () {
+                          widget.customer.ProfileImage = null;
+                          _openGallery(context);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: GestureDetector(
+                        child: Text("Camera"),
+                        onTap: () {
+                          widget.customer.ProfileImage = null;
+                          _openCamera();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   void showPopUp() {
@@ -1224,8 +1346,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
                           ),
                           Text(
                             "Choose from favourite",
-                            style:
-                                new TextStyle(color: Colors.black, fontSize: 20),
+                            style: new TextStyle(
+                                color: Colors.black, fontSize: 20),
                           ),
                         ],
                       ),
@@ -1620,15 +1742,23 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
             filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
             child: AlertDialog(
               title: Text(
-                "Error !",
-                style: errorTitleTextStyle(),
+                "Error",
+                style: Theme.of(context).textTheme.title.copyWith(
+                    color: Colors.redAccent.shade700,
+                    fontWeight: FontWeight.bold),
               ),
               content: Text(message),
-              contentTextStyle: estimateTextStyle(),
+              contentTextStyle: Theme.of(context).textTheme.headline.copyWith(
+                  color: Colors.grey.shade900, fontWeight: FontWeight.bold),
               actions: <Widget>[
                 OutlineButton(
                   textColor: Colors.red,
-                  child: Text("Close"),
+                  child: Text(
+                    "Close",
+                    style: Theme.of(context).textTheme.subhead.copyWith(
+                        color: Colors.redAccent.shade700,
+                        fontWeight: FontWeight.bold),
+                  ),
                   onPressed: () => Navigator.of(context).pop(),
                 )
               ],
@@ -1641,52 +1771,15 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
     Map<String, dynamic> result = await showSavingForSendMail();
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (context) => SendMailFragment(
-                result,
-                widget.customer.EstimateId,
-                widget.login,
-                widget.customer),
+            result,
+            widget.customer.EstimateId,
+            widget.login,
+            widget.customer,
+            backToCustomerDetails),
         fullscreenDialog: true));
   }
 
   void showSaving() async {
-    message = "Please wait...";
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: Text(
-                  "Updating Estimate",
-                  style: estimateTextStyle(),
-                ),
-                content: Text(message),
-                contentTextStyle: estimateTextStyle(),
-              );
-            },
-          ),
-        );
-      },
-    );
-    message = "Uploading Camera Image...";
-    if (_imageFile != null) {
-      await uploadCameraImage();
-    }
-
-    message = "Uploading Drawing Image...";
-    if (base64Drawing.isNotEmpty) {
-      await uploadDrawingImage();
-    }
-
-    message = "Uploading Home Owner Signature...";
-    if (base64HOSignature.isNotEmpty) {
-      await uploadHOSignatureImage();
-    }
-
-    message = "Saving Estimate...";
     var result = await CreateEstimate(false);
     bool resultStatus = result['result'];
     Navigator.of(context).pop();
@@ -1699,53 +1792,15 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
   }
 
   Future showSavingForSendMail() async {
-    message = "Please wait...";
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: Text(
-                  "Updating Estimate",
-                  style: estimateTextStyle(),
-                ),
-                content: Text(message),
-                contentTextStyle: estimateTextStyle(),
-              );
-            },
-          ),
-        );
-      },
-    );
-    message = "Uploading Camera Image...";
-    if (_imageFile != null) {
-      await uploadCameraImage();
-    }
-
-    message = "Uploading Drawing Image...";
-    if (base64Drawing.isNotEmpty) {
-      await uploadDrawingImage();
-    }
-
-    message = "Uploading Home Owner Signature...";
-    if (base64HOSignature.isNotEmpty) {
-      await uploadHOSignatureImage();
-    }
-
-    message = "Saving Estimate...";
     var result = await CreateEstimate(true);
-    bool resultStatus = result ['result'];
+    bool resultStatus = result['result'];
     Navigator.of(context).pop();
     showAPIResponse(
         context,
         resultStatus ? "Estimate saved Successfully!" : "Failed to Save!",
         Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
     setState(() {});
-     return result;
+    return result;
   }
 
   Future getSuggestions(String pattern) async {
@@ -1843,8 +1898,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       map.add(product.toJson());
     }
     body['ListEstimate'] = map;
-    var result =
-    await http.post(BASE_URL+API_CREATE_ESTIMATE, headers: headers, body: json.encode(body));
+    var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
+        headers: headers, body: json.encode(body));
     if (result.statusCode == 200) {
       return json.decode(result.body);
     } else {
@@ -1864,7 +1919,10 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
         : Colors.red;
   }
 
-  Future uploadCameraImage() async {
+  uploadCameraImage() async {
+    setState(() {
+      isCameraSaving = true;
+    });
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1872,18 +1930,21 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       "filename": "file-from-omar.png",
       "filepath": base64.encode(_imageFile.readAsBytesSync())
     };
-    var result = await http.post(API_CREATE_ESTIMATE + API_UPLOAD_FILE,
+    var result = await http.post(BASE_URL + API_UPLOAD_FILE,
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _CameraImagePath = map['filePath'];
-      return true;
-    } else {
-      return false;
     }
+    setState(() {
+      isCameraSaving = false;
+    });
   }
 
-  Future uploadDrawingImage() async {
+  uploadDrawingImage() async {
+    setState(() {
+      isDrawingSaving = true;
+    });
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1891,18 +1952,21 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       "filename": "file-from-omar.png",
       "filepath": base64Drawing
     };
-    var result = await http.post(API_CREATE_ESTIMATE + API_UPLOAD_FILE,
+    var result = await http.post(BASE_URL + API_UPLOAD_FILE,
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _drawingImagePath = map['filePath'];
-      return true;
-    } else {
-      return false;
     }
+    setState(() {
+      isDrawingSaving = false;
+    });
   }
 
-  Future uploadHOSignatureImage() async {
+  uploadHOSignatureImage() async {
+    setState(() {
+      isHOSignatureSaving = true;
+    });
     Map<String, String> headers = <String, String>{
       "Authorization": widget.login.accessToken
     };
@@ -1910,15 +1974,15 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       "filename": "file-from-omar.png",
       "filepath": base64HOSignature
     };
-    var result = await http.post(API_CREATE_ESTIMATE + API_UPLOAD_FILE,
+    var result = await http.post(BASE_URL + API_UPLOAD_FILE,
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
       _HOSignatureImagePath = map['filePath'];
-      return true;
-    } else {
-      return false;
     }
+    setState(() {
+      isHOSignatureSaving = false;
+    });
   }
 
   getEstimateData() async {
@@ -1936,22 +2000,27 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
           _productListForImage.clear();
           _productList.addAll(
               List.generate(mapForEditData['EstimateDetails'].length, (index) {
-                return Product.fromMap(
-                    mapForEditData['EstimateDetails'][index], false);
-              }));
+            return Product.fromMap(
+                mapForEditData['EstimateDetails'][index], false);
+          }));
           _productListForImage.addAll(
               List.generate(mapForEditData['EstimateImage'].length, (index) {
-                return ProductImage.fromMap(
-                    mapForEditData['EstimateImage'][index]);
-              }));
+            return ProductImage.fromMap(mapForEditData['EstimateImage'][index]);
+          }));
 
-          if(_productListForImage.length>2) {
+          if (_productListForImage.length > 2) {
             _Drawing = DrawingPlaceholder(
-                url: _productListForImage[2].ImageLoc);
+                url: _productListForImage[2].ImageLoc.startsWith("/Files")
+                    ? "https://api.gratecrm.com" +
+                        _productListForImage[2].ImageLoc
+                    : _productListForImage[2].ImageLoc);
           }
-          if(_productListForImage.length>0) {
+          if (_productListForImage.length > 0) {
             _HOSignature = SignaturePlaceholder(
-                url: _productListForImage[0].ImageLoc);
+                url: _productListForImage[0].ImageLoc.startsWith("/Files")
+                    ? "https://api.gratecrm.com" +
+                        _productListForImage[0].ImageLoc
+                    : _productListForImage[0].ImageLoc);
           }
           formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
           nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
@@ -1962,10 +2031,10 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
           estimateTotalAmount = estimateBaseSubTotal - estimateDiscountTotal;
           estimateMainSubtotal = estimateTotalAmount - estimateTaxTotal;
           _EstimateDiscountModeIsPercentage =
-          mapForEditData['Estimate']['DiscountType'] == 'amount'
-              ? false
-              : true;
-        } catch(error) {
+              mapForEditData['Estimate']['DiscountType'] == 'amount'
+                  ? false
+                  : true;
+        } catch (error) {
           print(error);
         }
         return json.decode(result.body);
@@ -1978,25 +2047,28 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment> with Si
       print(error.message);
     }
   }
+
   void showFavouriteList() {
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
-          return FavouriteProductListUI(widget.login,_fillProductInformations);
+          return FavouriteProductListUI(widget.login, _fillProductInformations);
         },
         fullscreenDialog: true));
   }
 
-  _fillProductInformations(Product product){
-    setState((){
-
-      _productNameController.text=product.name;
-      _rateController.text=product.rate.toString();
-      _quantityController.text="1";
-      _discountController.text="0";
-      _priceController.text=product.rate.toString();
+  _fillProductInformations(Product product) {
+    setState(() {
+      _productNameController.text = product.name;
+      _rateController.text = product.rate.toString();
+      _quantityController.text = "1";
+      _discountController.text = "0";
+      _priceController.text = product.rate.toString();
 
       selectedProduct = product;
-
     });
+  }
+
+  backToCustomerDetails(int id) {
+    widget.backToCustomerDetailsFromEstimate(widget.customer);
   }
 }

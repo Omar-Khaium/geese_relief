@@ -11,7 +11,7 @@ class ShimmerDashboardFragment extends StatelessWidget {
       children: <Widget>[
         Column(
           mainAxisSize: MainAxisSize.min,
-          children: [0, 1, 2, 3, 4, 5]
+          children: [0, 1, 2, 3, 4, 5, 6, 7]
               .map(
                 (_) => Column(
                   mainAxisSize: MainAxisSize.min,
