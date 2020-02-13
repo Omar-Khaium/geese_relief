@@ -8,14 +8,17 @@ import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/ui/ui_dashboard.dart';
+import 'package:flutter_grate_app/widgets/list_shimmer_item_customer.dart';
+import 'package:flutter_grate_app/widgets/list_shimmer_item_with_only_icon.dart';
+import 'package:flutter_grate_app/widgets/list_shimmer_item_without_icon.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:http/http.dart' as http;
 
 import '../utils.dart';
 
 class OrganizationListUI extends StatefulWidget {
-  Login login;
-  LoggedInUser loggedInUser;
+  final Login login;
+  final LoggedInUser loggedInUser;
 
   OrganizationListUI(this.login, this.loggedInUser);
 
@@ -34,7 +37,7 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _future=getOrganizationData();
+    _future = getOrganizationData();
   }
 
   @override
@@ -42,17 +45,20 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
+        elevation: 4,
         leading: Container(),
-        title: Text("Please Slelect Organization",style: new TextStyle(fontSize:26,color: Colors.black),),
+        title: Text(
+          "Please Select An Organization",
+          style: new TextStyle(fontSize: 26, color: Colors.black),
+        ),
       ),
       body: Container(
+        margin: EdgeInsets.only(top: 16),
         child: FutureBuilder(
           future: _future,
           builder: (context, snapshot) {
             try {
               if (snapshot.hasData) {
-
                 try {
                   return Container(
                     width: MediaQuery.of(context).size.width,
@@ -76,7 +82,9 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
                           child: ListTile(
                             onTap: () {
                               resetSelection(index);
-                              showDialog(context: context, builder: (_)=> loadingAlert());
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => loadingAlert());
                               saveOrganization(index, widget.login);
                             },
                             leading: Icon(Icons.business),
@@ -102,8 +110,22 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
                   );
                 }
               } else {
-                return Center(
-                  child: Text("Loading..",style: new TextStyle(fontSize: 24,color: Colors.black),),
+                return ListView(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [0, 1, 2, 3, 4, 5]
+                          .map((_) => ListTile(
+                                contentPadding:
+                                    EdgeInsets.only(left: 16, top: 4, right: 4),
+                                title: ShimmerItemCustomer(250),
+                        subtitle: Divider(),
+                              ))
+                          .toList(),
+                    )
+                  ],
                 );
               }
             } catch (error) {
@@ -133,13 +155,13 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
         _list = List.generate(map['orglist'].length, (index) {
           return Organization.fromMap(map['orglist'][index]);
         });
-        if(_list.length==1) {
+        if (_list.length == 1) {
           Navigator.of(context).pop();
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                  new DashboardUI(widget.login, widget.loggedInUser)));
+                      new DashboardUI(widget.login, widget.loggedInUser)));
         }
         return result;
       } else {
@@ -152,25 +174,6 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
     }
   }
 
-  getData(Login login) async {
-    Map<String, String> headers = {
-      'Authorization': login.accessToken,
-      'username': login.username
-    };
-
-    var url = "https://api.gratecrm.com/GetUserByUserName";
-    var result = await http.get(url, headers: headers);
-    if (result.statusCode == 200) {
-      widget.loggedInUser = LoggedInUser.fromMap(json.decode(result.body));
-      await saveLoggedInUserToDatabase(widget.loggedInUser);
-      return widget.loggedInUser;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return null;
-    }
-  }
-
   saveOrganization(index, Login login) async {
     Map<String, String> headers = {
       'Authorization': login.accessToken,
@@ -179,27 +182,25 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
 
     var url = "https://api.gratecrm.com/ChangeDefaultCompany";
     var result = await http.post(url, headers: headers);
-    try{
+    try {
       if (result.statusCode == 200) {
-        widget.loggedInUser.CompanyGUID= _list[index].value;
-        widget.loggedInUser.CompanyName= _list[index].text;
+        widget.loggedInUser.CompanyGUID = _list[index].value;
+        widget.loggedInUser.CompanyName = _list[index].text;
         Navigator.of(context).pop();
 
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                new DashboardUI(widget.login, widget.loggedInUser)));
+                    new DashboardUI(widget.login, widget.loggedInUser)));
       } else {
         showMessage(context, "Network error!", json.decode(result.body),
             Colors.redAccent, Icons.warning);
         return null;
       }
-    }
-    catch(error){
+    } catch (error) {
       print(error);
     }
-
   }
 
   saveLoggedInUserToDatabase(LoggedInUser loggedInUser) async {
@@ -207,17 +208,18 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
     await dbHelper.save(loggedInUser, DBInfo.TABLE_CURRENT_USER);
   }
 
-  resetSelection(index) async{
-    for(Organization item in _list){
+  resetSelection(index) async {
+    for (Organization item in _list) {
       setState(() {
-        item.selected=false;
+        item.selected = false;
       });
-    }setState(() {
-      _list[index].selected=true;
+    }
+    setState(() {
+      _list[index].selected = true;
     });
   }
 
-   showSaving(){
+  showSaving() {
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -239,17 +241,18 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
                             alignment: Alignment.center,
                             child: Padding(
                               padding: EdgeInsets.all(16),
-                              child: Text("adwadwadw",style: new TextStyle(color: Colors.white,fontSize: 18),
+                              child: Text(
+                                "adwadwadw",
+                                style: new TextStyle(
+                                    color: Colors.white, fontSize: 18),
                               ),
-                            )
-                        ),
+                            )),
                       ),
                     ],
                   )
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }

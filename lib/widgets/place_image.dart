@@ -10,6 +10,8 @@ class PlaceImageFromPicture extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      height: double.infinity,
       child: FutureBuilder(
         future: _picture.toPNG(),
         builder: (context, snapshot) {

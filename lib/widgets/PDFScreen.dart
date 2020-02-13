@@ -20,12 +20,12 @@ class SendMailFragment extends StatefulWidget {
   String estimateId;
   String urlPDFPath = "";
   Login accessToken;
-  ValueChanged<bool> isLoading;
   LoggedInUser loggedInUser;
   CustomerDetails customerId;
+  ValueChanged<int> backToCustomerDetails;
 
   SendMailFragment(
-      this.map, this.estimateId, this.accessToken, this.customerId);
+      this.map, this.estimateId, this.accessToken, this.customerId, this.backToCustomerDetails);
 
   @override
   _SendMailFragmentState createState() => _SendMailFragmentState();
@@ -85,6 +85,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
             padding: EdgeInsets.only(right: 26),
             child: GestureDetector(
               onTap: () {
+                showDialog(context: context, builder: (context)=>loadingAlert());
                 postData();
               },
               child: CircleAvatar(
@@ -202,29 +203,6 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                     }
                   },
                 ),
-                /*new TextField(
-                  controller: _BodyEmailController,
-                  obscureText: false,
-                  cursorColor: Colors.black,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  minLines: 10,
-                  style: customTextStyle(),
-                  decoration: new InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87)),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
-                      errorText: _SubjectEmailController.text.isNotEmpty
-                          ? null
-                          : "* Required",
-                      labelText: "Body",
-                      labelStyle: customTextStyle(),
-                      hintStyle: customHintStyle(),
-                      alignLabelWithHint: false,
-                      isDense: true),
-                ),*/
-                /* Html(data: map['EstimateEmailModel']['body'],),*/
               ],
             ),
           ),
@@ -271,41 +249,23 @@ class _SendMailFragmentState extends State<SendMailFragment> {
           Map map = json.decode(response.body);
           http.get(map['EmailUrl']).then((responseResults) {
             if (responseResults.statusCode == 200) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              widget.backToCustomerDetails(0);
               showAPIResponse(
                   context, "Email Successfully Sent", Colors.green.shade600);
             } else {
+              Navigator.of(context).pop();
               showAPIResponse(context, "Email Not Sent", Colors.red.shade600);
             }
           });
-          print(map);
         } else {
-          Flushbar(
-            flushbarPosition: FlushbarPosition.TOP,
-            flushbarStyle: FlushbarStyle.GROUNDED,
-            backgroundColor: Colors.redAccent,
-            icon: Icon(
-              Icons.error_outline,
-              size: 24.0,
-              color: Colors.white,
-            ),
-            duration: Duration(seconds: 4),
-            leftBarIndicatorColor: Colors.white70,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.red[800],
-                offset: Offset(0.0, 2.0),
-                blurRadius: 3.0,
-              )
-            ],
-            title: response.toString(),
-            message: "",
-            shouldIconPulse: false,
-          )..show(context);
-          widget.accessToken.isAuthenticated = false;
+          Navigator.of(context).pop();
+          showAPIResponse(context, json.decode(response.body), Colors.red.shade600);
         }
       });
     } catch (error) {
-      error.toString();
+      Navigator.of(context).pop();
     }
   }
 }

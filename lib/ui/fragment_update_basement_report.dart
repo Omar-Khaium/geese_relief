@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/BasementInspection.dart';
@@ -185,6 +186,7 @@ class _UpdateBasementReportFragmentState
       LosePowerArray = [],
       LosePowerHowOftenArray = [],
       YesNoArray = [],
+      GoDownBasementArray = [],
       RatingArray = [];
 
   int CurrentOutsideConditionsSelection = 0,
@@ -295,29 +297,67 @@ class _UpdateBasementReportFragmentState
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Stack(
-                              children: <Widget>[
-                                ClipRRect(
-                                    borderRadius: new BorderRadius.all(
-                                        Radius.circular(12)),
-                                    child: _decideImageView()),
-                                Padding(
-                                  padding: EdgeInsets.all(4),
-                                  child: Align(
-                                    alignment: Alignment.topCenter,
-                                    child: GestureDetector(
-                                      child: Icon(
-                                        MdiIcons.circleEditOutline,
-                                        color: Colors.white,
-                                      ),
-                                      onTap: () {
-                                        _showDialog(context);
-                                      },
+                            ClipRRect(
+                                borderRadius:
+                                new BorderRadius.all(
+                                    Radius.circular(
+                                        12)),
+                                child: Container(
+                                  child: _imageFile != null
+                                      ? Image.file(
+                                    _imageFile,
+                                    width: 128,
+                                    height: 128,
+                                    fit: BoxFit.cover,
+                                  )
+                                      : (widget.customer
+                                      .ProfileImage !=
+                                      null &&
+                                      widget
+                                          .customer
+                                          .ProfileImage
+                                          .isNotEmpty
+                                      ? Container(
+                                    height: 128,
+                                    width: 128,
+                                    child:
+                                    CachedNetworkImage(
+                                      imageUrl: widget
+                                          .customer
+                                          .ProfileImage,
+                                      imageBuilder:
+                                          (context,
+                                          imageProvider) =>
+                                          Container(
+                                            decoration:
+                                            BoxDecoration(
+                                              image:
+                                              DecorationImage(
+                                                image:
+                                                imageProvider,
+                                                fit: BoxFit
+                                                    .cover,
+                                              ),
+                                            ),
+                                          ),
+                                      placeholder:
+                                          (context,
+                                          url) =>
+                                          CupertinoActivityIndicator(),
+                                      errorWidget: (context,
+                                          url,
+                                          error) =>
+                                          Icon(Icons
+                                              .error),
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
+                                  )
+                                      : Icon(
+                                    Icons.person,
+                                    size: 142,
+                                  )),
+                                  color:
+                                  Colors.grey.shade100,
+                                )),
                             SizedBox(
                               width: 8,
                             ),
@@ -352,10 +392,13 @@ class _UpdateBasementReportFragmentState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            ListRowItem(
-                              icon: Icons.event,
-                              text:
-                                  "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: ListRowItem(
+                                icon: Icons.event,
+                                text:
+                                    "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
+                              ),
                             ),
                             SizedBox(
                               height: 16,
@@ -1632,11 +1675,11 @@ class _UpdateBasementReportFragmentState
                                                   alignLabelWithHint: false,
                                                   isDense: true),
                                               items: List.generate(
-                                                  YesNoArray.length, (index) {
+                                                  GoDownBasementArray.length, (index) {
                                                 return DropdownMenuItem(
                                                     value: index,
                                                     child: Text(
-                                                        YesNoArray[index]
+                                                        GoDownBasementArray[index]
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
@@ -2491,7 +2534,7 @@ class _UpdateBasementReportFragmentState
                                       alignment: Alignment.centerRight,
                                       child: InkWell(
                                         onTap: () {
-                                          //showSaving();
+                                          showDialog(context: context, builder: (context)=>loadingAlert());
                                           saveInspectionReport();
                                         },
                                         child: Container(
@@ -2536,8 +2579,8 @@ class _UpdateBasementReportFragmentState
                                 );
                               }
                             } else {
-                              return Center(
-                                child: CupertinoActivityIndicator(),
+                              return LinearProgressIndicator(
+                                backgroundColor: Colors.grey.shade100,
                               );
                             }
                           } catch (error) {
@@ -2551,8 +2594,8 @@ class _UpdateBasementReportFragmentState
                         },
                       );
                     } else {
-                      return Center(
-                        child: Text("Loading"),
+                      return LinearProgressIndicator(
+                        backgroundColor: Colors.grey.shade100,
                       );
                     }
                   },
@@ -2569,7 +2612,7 @@ class _UpdateBasementReportFragmentState
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Key':
-          'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
+          'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating,GoDownBasement'
     };
 
     var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
@@ -2613,6 +2656,9 @@ class _UpdateBasementReportFragmentState
             break;
           case "Rating":
             RatingArray.add(item);
+            break;
+          case "GoDownBasement":
+            GoDownBasementArray.add(item);
             break;
         }
       }
@@ -2855,7 +2901,7 @@ class _UpdateBasementReportFragmentState
           YesNoArray[NoticedMoldOrMildewSelection].DataValue;
       headers['NoticedMoldOrMildewComment'] =
           _NoticedMoldsCommentController.text;
-      headers['BasementGoDown'] = YesNoArray[BasementGoDownSelection].DataValue;
+      headers['BasementGoDown'] = GoDownBasementArray[BasementGoDownSelection].DataValue;
       headers['HomeSufferForRespiratory'] =
           YesNoArray[HomeSufferForRespiratoryProblemsSelection].DataValue;
       headers['HomeSufferForrespiratoryComment'] =
@@ -2906,57 +2952,22 @@ class _UpdateBasementReportFragmentState
       http.post(BASE_URL+API_SAVE_BASEMENT_INSPECTION, headers: headers).then((response) {
         try {
           if (response.statusCode == 200) {
-            showAPIResponse(context, "Inspection Created", Colors.green);
+            Navigator.of(context).pop();
+            showAPIResponse(context, "Basement Inspection Report Updated", Colors.green);
             widget.backToCustomerDetails(widget.customer);
           } else {
+            Navigator.of(context).pop();
             showAPIResponse(context, "Something Went Wrong", Colors.red);
           }
         } catch (error) {
+          Navigator.of(context).pop();
           showAPIResponse(context, "Error :" + error.toString(), null);
         }
       });
     } catch (error) {
+      Navigator.of(context).pop();
       showAPIResponse(context, "Error :" + error.toString(), null);
     }
-  }
-
-  void showSaving() async {
-    message = "Please wait...";
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                title: Text(
-                  "Saving Basement Ispection",
-                  style: estimateTextStyle(),
-                ),
-                content: Text(message),
-                contentTextStyle: estimateTextStyle(),
-              );
-            },
-          ),
-        );
-      },
-    );
-    setState(() {
-      message = "Uploading Basement Information...";
-    });
-
-    bool resultStatus = await saveInspectionReport();
-    Navigator.of(context).pop();
-    showAPIResponse(
-        context,
-        resultStatus
-            ? "Basement Inspection Saved Successfully!"
-            : "Failed to Save!",
-        Color(resultStatus ? COLOR_SUCCESS : COLOR_DANGER));
-    setState(() {});
-    //if(resultStatus) widget.backToCustomerDetailsFromEstimate(widget.customer);
   }
 
   int checkIndex(String _text, List<DropDownSingleItem> _list) {

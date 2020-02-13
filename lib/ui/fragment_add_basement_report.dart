@@ -96,7 +96,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       LosePowerArray = [],
       LosePowerHowOftenArray = [],
       YesNoArray = [],
-      RatingArray = [];
+      RatingArray = [],
+      GoDownBasementArray = [];
 
   DBHelper dbHelper = new DBHelper();
   int CurrentOutsideConditionsSelection = 0,
@@ -1450,11 +1451,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             hintStyle: customHintStyle(),
                                             alignLabelWithHint: false,
                                             isDense: true),
-                                        items: List.generate(YesNoArray.length,
+                                        items: List.generate(GoDownBasementArray.length,
                                             (index) {
                                           return DropdownMenuItem(
                                               value: index,
-                                              child: Text(YesNoArray[index]
+                                              child: Text(GoDownBasementArray[index]
                                                   .DisplayText));
                                         }),
                                         onChanged: (index) {
@@ -2303,8 +2304,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                           );
                         }
                       } else {
-                        return Center(
-                          child: CupertinoActivityIndicator(),
+                        return LinearProgressIndicator(
+                          backgroundColor: Colors.grey.shade100,
                         );
                       }
                     } catch (error) {
@@ -2422,7 +2423,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Key':
-          'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating'
+          'CurrentOutsideConditions,Heat,Air,BasementDehumidifier,FoundationType,RemoveWater,LosePower,LosePowerHowOften,YesNo,Rating,GoDownBasement'
     };
 
     var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
@@ -2460,6 +2461,9 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
             break;
           case "YesNo":
             YesNoArray.add(item);
+            break;
+          case "GoDownBasement":
+            GoDownBasementArray.add(item);
             break;
           case "Rating":
             RatingArray.add(item);
@@ -2533,7 +2537,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
           YesNoArray[NoticedMoldOrMildewSelection].DataValue;
       headers['NoticedMoldOrMildewComment'] =
           _NoticedMoldsCommentController.text;
-      headers['BasementGoDown'] = YesNoArray[BasementGoDownSelection].DataValue;
+      headers['BasementGoDown'] = GoDownBasementArray[BasementGoDownSelection].DataValue;
       headers['HomeSufferForRespiratory'] =
           YesNoArray[HomeSufferForRespiratoryProblemsSelection].DataValue;
       headers['HomeSufferForrespiratoryComment'] =
@@ -2691,7 +2695,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
           YesNoArray[NoticedMoldOrMildewSelection].DataValue;
       headers['NoticedMoldOrMildewComment'] =
           _NoticedMoldsCommentController.text;
-      headers['BasementGoDown'] = YesNoArray[BasementGoDownSelection].DataValue;
+      headers['BasementGoDown'] = GoDownBasementArray[BasementGoDownSelection].DataValue;
       headers['HomeSufferForRespiratory'] =
           YesNoArray[HomeSufferForRespiratoryProblemsSelection].DataValue;
       headers['HomeSufferForrespiratoryComment'] =
