@@ -125,7 +125,6 @@ class _OrganizationListUIState extends State<OrganizationListUI> {
       Map<String, String> headers = {
         'Authorization': widget.login.accessToken,
       };
-
       var url = "https://api.gratecrm.com/GetOrganizationList";
       var result = await http.get(url, headers: headers);
       if (result.statusCode == 200) {

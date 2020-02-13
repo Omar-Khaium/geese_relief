@@ -528,7 +528,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                       SizedBox(
                                         height: 8,
                                       ),
-                                      Row(
+                                      /*Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
@@ -662,6 +662,203 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ],
                                           ),
                                         ],
+                                      ),*/
+                                      Table(
+                                        columnWidths: {
+                                          0: FlexColumnWidth(3),
+                                          1: FlexColumnWidth(1.5),
+                                          2: FlexColumnWidth(.5),
+                                        },
+                                        defaultVerticalAlignment:
+                                        TableCellVerticalAlignment.middle,
+                                        children: [
+                                          TableRow(children: [
+                                            TableCell(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons.cubeOutline),
+                                                      Icon(MdiIcons.identifier),
+                                                      SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Text(
+                                                        _list[index].InvoiceId,
+                                                        style: listTextStyle(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons.text),
+                                                      SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Flexible(
+                                                        child: Text(
+                                                          _productList[index]
+                                                              .Description,
+                                                          style: listTextStyle(),
+                                                          overflow:
+                                                          TextOverflow.ellipsis,
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons.calendarClock),
+                                                      SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Text(
+                                                        _productList[index].Date,
+                                                        style: listTextStyle(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons.layers),
+                                                      SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Text(
+                                                        "${_productList[index].Quantity
+                                                            .replaceAllMapped(
+                                                            reg, mathFunc)}",
+                                                        style: listTextStyle(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons.cashUsdOutline),
+                                                      SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      Text(
+                                                        "${_discountController.text == "0"
+                                                            ? _productList[index].Rate
+                                                            .replaceAllMapped(reg, mathFunc)
+                                                            : _productList[index].Rate
+                                                            .replaceAllMapped(
+                                                            reg, mathFunc)}",
+                                                        style: listTextStyle(),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons.cashUsd),
+                                                      SizedBox(
+                                                        width: 16,
+                                                      ),
+                                                      RichText(
+                                                        text: TextSpan(
+                                                          style: Theme
+                                                              .of(context)
+                                                              .textTheme
+                                                              .body1,
+                                                          children: <TextSpan>[
+                                                            TextSpan(
+                                                                text:
+                                                                "${_discountController
+                                                                    .text == "0"
+                                                                    ? _productList[index]
+                                                                    .Price.replaceAllMapped(
+                                                                    reg, mathFunc)
+                                                                    : "${_productList[index]
+                                                                    .Price.replaceAllMapped(
+                                                                    reg, mathFunc)}"}",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                    FontWeight.bold,
+                                                                    color:
+                                                                    Colors.black)),
+                                                            TextSpan(
+                                                                text:
+                                                                "${_discountController
+                                                                    .text == "0"
+                                                                    ? _productList[index]
+                                                                    .Price.replaceAllMapped(
+                                                                    reg, mathFunc)
+                                                                    : " ( ${_productList[index]
+                                                                    .discountAsPercentage
+                                                                    ? "${_productList[index]
+                                                                    .discount}%"
+                                                                    : "\$${_productList[index]
+                                                                    .discount}"} off )"}",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                    FontWeight.bold,
+                                                                    color: Colors.red)),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  CircleAvatar(
+                                                    backgroundColor:
+                                                    Colors.grey.shade300,
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.delete,
+                                                        color: Colors.black,
+                                                        size: 18,
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _productList.removeAt(index);
+                                                          estimateTotalCalculation();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ])
+                                        ],
                                       ),
                                       SizedBox(
                                         height: 8,
@@ -722,6 +919,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
+
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

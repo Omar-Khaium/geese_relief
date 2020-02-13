@@ -14,12 +14,10 @@ import '../utils.dart';
 
 class RecommendedLevelDetails extends StatefulWidget {
   final Login login;
+  final ValueChanged<int> backToCustomerDetails;
   final LoggedInUser loggedInUser;
   final CustomerDetails customer;
   final int index;
-  final ValueChanged<String> backToRecommendedLevel;
-  final ValueChanged<int> updateRecommendedLevel;
-  bool _isSelected=true;
 
   RecommendedLevelDetails(
       {Key key,
@@ -27,15 +25,14 @@ class RecommendedLevelDetails extends StatefulWidget {
       this.loggedInUser,
       this.index,
       this.customer,
-      this.backToRecommendedLevel,
-      this.updateRecommendedLevel})
+      this.backToCustomerDetails,})
       : super(key: key);
 
   @override
   _RecommendedLevelDetails createState() => _RecommendedLevelDetails();
 }
 
-class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
+class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
   List<VideoPreview> _list = [
     new VideoPreview(
         "images/video.mp4", "images/peach_of_mind.jpg", "Peace Of Mind"),
@@ -334,12 +331,11 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
                     child: new Card(
                         elevation: 4,
                         child: InkWell(
-                          onTap: (){
+                          onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                  new VideoPlayerScreen(
+                                  builder: (context) => new VideoPlayerScreen(
                                     url: _list[index].url,
                                   ),
                                 ));
@@ -359,22 +355,25 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
                                   decoration:
                                       BoxDecoration(color: Colors.black87),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          _list[index].title,
-                                          style: TextStyle(
-                                              color: Colors.white, fontSize: 18),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Icon(
-                                          Icons.play_arrow, color: Colors.red, size: 36,
-                                        )
-                                      ],
-                                    )
-                                  ),
+                                      padding: const EdgeInsets.all(12),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            _list[index].title,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Icon(
+                                            Icons.play_arrow,
+                                            color: Colors.red,
+                                            size: 36,
+                                          )
+                                        ],
+                                      )),
                                 ),
                               ),
                             ],
@@ -411,7 +410,8 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
     Navigator.of(context).pop();
     showAPIResponse(context, status ? "Successful!" : "Failed!",
         Color(status ? COLOR_SUCCESS : COLOR_DANGER));
-    widget.updateRecommendedLevel(widget.index);
+    if(status)
+      widget.backToCustomerDetails(0);
   }
 
   Future _save() async {
@@ -422,7 +422,19 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
 
-    var result = await http.post(BASE_URL+API_SAVE_RECOMMENDED_LEVEL, headers: headers);
-    return json.decode(result.body)['result'];
+    var result = await http.post(BASE_URL + API_SAVE_RECOMMENDED_LEVEL,
+        headers: headers);
+    if(result.statusCode==200){
+      Navigator.of(context).pop();
+      return json.decode(result.body)['result'];
+    }
+    else{
+      showMessage(context, "Network error!", "Something went wrong!!!",
+          Colors.redAccent, Icons.warning);
+    }
+
+
+
   }
+
 }

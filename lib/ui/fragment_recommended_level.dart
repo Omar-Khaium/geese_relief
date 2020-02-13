@@ -33,7 +33,8 @@ class RecommendedLevel extends StatefulWidget {
 var cardAspectRatio = 1.00;
 var widgetAspectRatio = cardAspectRatio * 1.15;
 
-class _RecommendedLevelState extends State<RecommendedLevel> {
+class _RecommendedLevelState extends State<RecommendedLevel>
+    with SingleTickerProviderStateMixin {
   var currentPage = recommendations.length - 1.0;
 
   updateRecommendedLevel(int level) {
@@ -104,6 +105,8 @@ class _RecommendedLevelState extends State<RecommendedLevel> {
                                         login: widget.login,
                                         index: index,
                                         customer: widget.customer,
+                                        backToCustomerDetails:
+                                            backToCustomerDetails,
                                       ),
                                     )),
                               );
@@ -120,6 +123,10 @@ class _RecommendedLevelState extends State<RecommendedLevel> {
         )
       ]),
     );
+  }
+
+  void backToCustomerDetails(int id) {
+    widget.backToCustomerDetails(widget.customer);
   }
 }
 
