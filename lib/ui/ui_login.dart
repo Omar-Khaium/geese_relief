@@ -124,11 +124,13 @@ class _LogInUIState extends State<LogInUI> {
                               ],
                             ),
                             SizedBox(
-                              height: 36,
+                              height: 128,
                             ),
                             new TextFormField(
                               controller: _usernameController,
                               obscureText: false,
+                              autocorrect: false,
+                              autofocus: false,
                               cursorColor: Colors.black,
                               keyboardType: TextInputType.emailAddress,
                               maxLines: 1,
@@ -155,6 +157,8 @@ class _LogInUIState extends State<LogInUI> {
                               controller: _passwordController,
                               obscureText: _isObscureText,
                               cursorColor: Colors.black,
+                              autocorrect: false,
+                              autofocus: false,
                               keyboardType: TextInputType.emailAddress,
                               maxLines: 1,
                               validator: (val) {
