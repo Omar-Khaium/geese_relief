@@ -78,254 +78,260 @@ class _LogInUIState extends State<LogInUI> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
-      body: new Stack(
-        children: <Widget>[
-          DarkBackgroundWidget(),
-          Padding(
-            padding: const EdgeInsets.all(100.0),
-            child: new Row(
-              children: <Widget>[
-                new Expanded(
-                  child: LeftPanelForLoginWidget(),
-                  flex: 1,
-                ),
-                new Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.white),
-                    child: Padding(
-                      padding: const EdgeInsets.all(36.0),
-                      child: Form(
-                        key: _key,
-                        child: new Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 32,
-                                  height: 32,
-                                  child: Image.asset("images/logo.png"),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 16),
-                                  child: Text(
-                                    "Login",
-                                    style: customWelcomeStyle(
-                                        Colors.blueGrey.shade800),
+    return SafeArea(
+      top: true,
+      bottom: true,
+      right: true,
+      left: true,
+      child: new Scaffold(
+        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomPadding: false,
+        body: new Stack(
+          children: <Widget>[
+            DarkBackgroundWidget(),
+            Padding(
+              padding: const EdgeInsets.all(100.0),
+              child: new Row(
+                children: <Widget>[
+                  new Expanded(
+                    child: LeftPanelForLoginWidget(),
+                    flex: 1,
+                  ),
+                  new Expanded(
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(36.0),
+                        child: Form(
+                          key: _key,
+                          child: new Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 32,
+                                    height: 32,
+                                    child: Image.asset("images/logo.png"),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 128,
-                            ),
-                            new TextFormField(
-                              controller: _usernameController,
-                              obscureText: false,
-                              autocorrect: false,
-                              autofocus: false,
-                              cursorColor: Colors.black,
-                              keyboardType: TextInputType.emailAddress,
-                              maxLines: 1,
-                              validator: (val) {
-                                return val.isNotEmpty ? null : "* Required";
-                              },
-                              style: customTextStyle(),
-                              decoration: new InputDecoration(
-                                isDense: true,
-                                icon: new Icon(
-                                  Icons.mail_outline,
-                                ),
-                                labelText: "Username",
-                                labelStyle: customTextStyle(),
-                                hintText: "e.g. example@mail.com",
-                                hintStyle: customHintStyle(),
-                                alignLabelWithHint: false,
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 16),
+                                    child: Text(
+                                      "Login",
+                                      style: customWelcomeStyle(
+                                          Colors.blueGrey.shade800),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            new TextFormField(
-                              controller: _passwordController,
-                              obscureText: _isObscureText,
-                              cursorColor: Colors.black,
-                              autocorrect: false,
-                              autofocus: false,
-                              keyboardType: TextInputType.emailAddress,
-                              maxLines: 1,
-                              validator: (val) {
-                                return val.isNotEmpty ? null : "* Required";
-                              },
-                              style: customTextStyle(),
-                              decoration: new InputDecoration(
-                                isDense: true,
-                                icon: new Icon(
-                                  Icons.lock_outline,
-                                ),
-                                labelText: "Password",
-                                labelStyle: customTextStyle(),
-                                hintText: "e.g. ******",
-                                hintStyle: customHintStyle(),
-                                alignLabelWithHint: false,
-                                suffixIcon: new IconButton(
-                                  icon: _isObscureText
-                                      ? new Icon(
-                                          Icons.visibility,
-                                        )
-                                      : new Icon(
-                                          Icons.visibility_off,
-                                        ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isObscureText =
-                                          _isObscureText ? false : true;
-                                    });
-                                  },
-                                  iconSize: 24,
+                              SizedBox(
+                                height: 128,
+                              ),
+                              new TextFormField(
+                                controller: _usernameController,
+                                obscureText: false,
+                                autocorrect: false,
+                                autofocus: false,
+                                cursorColor: Colors.black,
+                                keyboardType: TextInputType.emailAddress,
+                                maxLines: 1,
+                                validator: (val) {
+                                  return val.isNotEmpty ? null : "* Required";
+                                },
+                                style: customTextStyle(),
+                                decoration: new InputDecoration(
+                                  isDense: true,
+                                  icon: new Icon(
+                                    Icons.mail_outline,
+                                  ),
+                                  labelText: "Username",
+                                  labelStyle: customTextStyle(),
+                                  hintText: "e.g. example@mail.com",
+                                  hintStyle: customHintStyle(),
+                                  alignLabelWithHint: false,
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            new Stack(
-                              children: <Widget>[
-                                Align(
-                                  child: new Row(
-                                    children: <Widget>[
-                                      Checkbox(
-                                        activeColor: Colors.black,
-                                        checkColor: Colors.white,
-                                        value: _isRemembered,
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.padded,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            _isRemembered = value;
-                                          });
-                                        },
-                                      ),
-                                      InkWell(
-                                        child: TextWidget(
-                                          "Remember Me",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _isRemembered = !_isRemembered;
-                                          });
-                                        },
-                                      ),
-                                    ],
+                              SizedBox(
+                                height: 16,
+                              ),
+                              new TextFormField(
+                                controller: _passwordController,
+                                obscureText: _isObscureText,
+                                cursorColor: Colors.black,
+                                autocorrect: false,
+                                autofocus: false,
+                                keyboardType: TextInputType.emailAddress,
+                                maxLines: 1,
+                                validator: (val) {
+                                  return val.isNotEmpty ? null : "* Required";
+                                },
+                                style: customTextStyle(),
+                                decoration: new InputDecoration(
+                                  isDense: true,
+                                  icon: new Icon(
+                                    Icons.lock_outline,
                                   ),
-                                  alignment: Alignment.centerLeft,
-                                ),
-                                Align(
-                                  child: MaterialButton(
-                                    elevation: 4,
-                                    color: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          new BorderRadius.circular(36.0),
-                                      side: BorderSide(color: Colors.white12),
-                                    ),
-                                    textColor: Colors.white,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 32,
-                                          right: 32,
-                                          top: 16,
-                                          bottom: 16),
-                                      child: TextWidget(
-                                        "Login",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .title
-                                            .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
+                                  labelText: "Password",
+                                  labelStyle: customTextStyle(),
+                                  hintText: "e.g. ******",
+                                  hintStyle: customHintStyle(),
+                                  alignLabelWithHint: false,
+                                  suffixIcon: new IconButton(
+                                    icon: _isObscureText
+                                        ? new Icon(
+                                            Icons.visibility,
+                                          )
+                                        : new Icon(
+                                            Icons.visibility_off,
+                                          ),
                                     onPressed: () {
                                       setState(() {
-                                        if (_key.currentState.validate()) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => loadingAlert());
-                                          login = new Login(
-                                              null,
-                                              _usernameController.text,
-                                              _passwordController.text,
-                                              _isRemembered,
-                                              false,
-                                              "",
-                                              0);
-                                          makeRequest();
-                                        }
+                                        _isObscureText =
+                                            _isObscureText ? false : true;
+                                      });
+                                    },
+                                    iconSize: 24,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 16,
+                              ),
+                              new Stack(
+                                children: <Widget>[
+                                  Align(
+                                    child: new Row(
+                                      children: <Widget>[
+                                        Checkbox(
+                                          activeColor: Colors.black,
+                                          checkColor: Colors.white,
+                                          value: _isRemembered,
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.padded,
+                                          onChanged: (bool value) {
+                                            setState(() {
+                                              _isRemembered = value;
+                                            });
+                                          },
+                                        ),
+                                        InkWell(
+                                          child: TextWidget(
+                                            "Remember Me",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subhead
+                                                .copyWith(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _isRemembered = !_isRemembered;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                  ),
+                                  Align(
+                                    child: MaterialButton(
+                                      elevation: 4,
+                                      color: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(36.0),
+                                        side: BorderSide(color: Colors.white12),
+                                      ),
+                                      textColor: Colors.white,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 32,
+                                            right: 32,
+                                            top: 16,
+                                            bottom: 16),
+                                        child: TextWidget(
+                                          "Login",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .title
+                                              .copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (_key.currentState.validate()) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) => loadingAlert());
+                                            login = new Login(
+                                                null,
+                                                _usernameController.text,
+                                                _passwordController.text,
+                                                _isRemembered,
+                                                false,
+                                                "",
+                                                0);
+                                            makeRequest();
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    alignment: Alignment.centerRight,
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: new Container(
+                                  height: double.infinity,
+                                  alignment: Alignment.bottomCenter,
+                                  child: InkWell(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 16,
+                                          top: 16,
+                                          right: 16,
+                                          bottom: 16),
+                                      child: TextWidget(
+                                        "Forget Password",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subhead
+                                            .copyWith(color: Colors.black),
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    new ForgetPasswordUI()));
                                       });
                                     },
                                   ),
-                                  alignment: Alignment.centerRight,
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: new Container(
-                                height: double.infinity,
-                                alignment: Alignment.bottomCenter,
-                                child: InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16,
-                                        top: 16,
-                                        right: 16,
-                                        bottom: 16),
-                                    child: TextWidget(
-                                      "Forget Password",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .subhead
-                                          .copyWith(color: Colors.black),
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  new ForgetPasswordUI()));
-                                    });
-                                  },
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                    flex: 1,
                   ),
-                  flex: 1,
-                ),
 
 /*------------------------------Loading Indicator-----------------------------*/
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

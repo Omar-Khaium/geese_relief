@@ -65,9 +65,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     setState(() {
       _imageFile = pickFromGallery;
       _base64Image = base64Encode(_imageFile.readAsBytesSync());
-      uploadCustomerImage();
     });
     Navigator.of(context).pop();
+    showDialog(context: context, builder: (_)=>loadingAlert());
+    uploadCustomerImage();
   }
 
   _openCamera(BuildContext context) async {
@@ -76,9 +77,10 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     setState(() {
       _imageFile = pickFromCamera;
       _base64Image = base64Encode(_imageFile.readAsBytesSync());
-      uploadCustomerImage();
     });
     Navigator.of(context).pop();
+    showDialog(context: context, builder: (_)=>loadingAlert());
+    uploadCustomerImage();
   }
 
   @override
@@ -103,7 +105,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Icon(Icons.photo_camera),
+                            Icon(Icons.photo_album),
                             SizedBox(
                               width: 12,
                             ),
@@ -209,8 +211,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ClipRRect(
                                                 borderRadius:
                                                     new BorderRadius.all(
-                                                        Radius.circular(
-                                                            12)),
+                                                        Radius.circular(12)),
                                                 child: Container(
                                                   child: _imageFile != null
                                                       ? Image.file(
@@ -249,10 +250,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                placeholder:
-                                                                    (context,
-                                                                            url) =>
-                                                                        CupertinoActivityIndicator(),
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    CupertinoActivityIndicator(),
                                                                 errorWidget: (context,
                                                                         url,
                                                                         error) =>
@@ -264,19 +264,17 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                               Icons.person,
                                                               size: 142,
                                                             )),
-                                                  color:
-                                                      Colors.grey.shade100,
+                                                  color: Colors.grey.shade100,
                                                 )),
                                             Positioned(
                                               top: 4,
                                               right: 4,
                                               child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.black54,
+                                                backgroundColor: Colors.black54,
                                                 child: InkWell(
                                                   child: Icon(
-                                                    MdiIcons
-                                                        .pencil, size: 18,
+                                                    MdiIcons.pencil,
+                                                    size: 18,
                                                     color: Colors.white,
                                                   ),
                                                   onTap: () {
@@ -299,8 +297,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                               widget.customer.Name,
                                               style: new TextStyle(
                                                   fontSize: 26,
-                                                  fontWeight:
-                                                      FontWeight.bold),
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                             SizedBox(
                                               height: 16,
@@ -331,9 +328,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 SizedBox(
                                                   width: 6,
                                                 ),
-                                                Text(
-                                                    widget.customer
-                                                        .ContactNum,
+                                                Text(widget.customer.ContactNum,
                                                     style: new TextStyle(
                                                         fontSize: 16)),
                                               ],
@@ -399,7 +394,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                                 .fileDocumentBoxMultiple
                                                             : MdiIcons
                                                                 .plusBoxMultiple,
-                                                        color: Colors.white,
+                                                        color: Colors.white, size: 42
                                                       ),
                                                       SizedBox(
                                                         height: 16,
@@ -416,7 +411,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 12,
+                                            width: 16,
                                           ),
                                           Expanded(
                                             child: RaisedButton(
@@ -434,37 +429,36 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 padding:
                                                     const EdgeInsets.all(24),
                                                 child: Center(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      SmoothStarRating(
-                                                          allowHalfRating:
-                                                              false,
-                                                          starCount: 6,
-                                                          rating: widget
-                                                              .customer
-                                                              .RecommendedLevel,
-                                                          size: 24,
-                                                          color: Colors.white,
-                                                          borderColor:
-                                                              Colors.white),
-                                                      SizedBox(
-                                                        height: 16,
-                                                      ),
-                                                      Text(
-                                                        "Recommended Level",
-                                                        style:
-                                                            customButtonTextStyle(),
-                                                      )
-                                                    ],
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      widget
+                                                          .goToRecommendedLevel(
+                                                              widget.customer);
+                                                    },
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Icon(getRecommendedLevelIcon(widget
+                                                            .customer
+                                                            .RecommendedLevel.toInt()), color: Colors.white, size: 42,),
+                                                        SizedBox(
+                                                          height: 16,
+                                                        ),
+                                                        Text(
+                                                          "Recommended Level",
+                                                          style:
+                                                              customButtonTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 12,
+                                            width: 16,
                                           ),
                                           Expanded(
                                             child: RaisedButton(
@@ -488,7 +482,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                     children: <Widget>[
                                                       Icon(
                                                         Icons.pie_chart,
-                                                        color: Colors.white,
+                                                        color: Colors.white, size: 42
                                                       ),
                                                       SizedBox(
                                                         height: 16,
@@ -516,367 +510,192 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                             height: 16,
                           ),
                           Expanded(
-                            child: _list.length==0 ?Image.asset("images/no_data.png",fit: BoxFit.cover,scale: 1,) : ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  Icon(MdiIcons.identifier),
-                                                  SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Text(
-                                                    _list[index].InvoiceId,
-                                                    style: listTextStyle(),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 8,
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Icon(MdiIcons.text),
-                                                  SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Text(
-                                                    _list[index].Description,
-                                                    style: listTextStyle(),
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 8,
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Icon(MdiIcons.calendarClock),
-                                                  SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Text(
-                                                    _list[index].CreatedDate,
-                                                    style: listTextStyle(),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Row(
-                                                children: <Widget>[
-                                                  Icon(MdiIcons.layers),
-                                                  SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Text(
-                                                    _list[index].Quantity,
-                                                    style: listTextStyle(),
-                                                  )
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: 8,
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Icon(MdiIcons.cashUsdOutline),
-                                                  SizedBox(
-                                                    width: 16,
-                                                  ),
-                                                  Text(
-                                                    "${_list[index].Price == null || _list[index].Price == "0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}",
-                                                    style: listTextStyle(),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.grey.shade300,
-                                                child: InkWell(
-                                                  child: Icon(
-                                                    Icons.content_copy,
-                                                    color: Colors.black,
-                                                    size: 18,
-                                                  ),
-                                                  onTap: () {
-                                                    setState(() {
-                                                      duplicateDialog(index);
-                                                    });
-                                                  },
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 8,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          deleteMessage(index));
-                                                },
-                                                child: CircleAvatar(
-                                                  backgroundColor:
-                                                      Colors.grey.shade300,
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.black,
-                                                    size: 18,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      /*Table(
-                                        columnWidths: {
-                                          0: FlexColumnWidth(3),
-                                          1: FlexColumnWidth(1.5),
-                                          2: FlexColumnWidth(.5),
-                                        },
-                                        defaultVerticalAlignment:
-                                        TableCellVerticalAlignment.middle,
-                                        children: [
-                                          TableRow(children: [
-                                            TableCell(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Icon(MdiIcons.cubeOutline),
-                                                      Icon(MdiIcons.identifier),
-                                                      SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      Text(
-                                                        _list[index].InvoiceId,
-                                                        style: listTextStyle(),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Icon(MdiIcons.text),
-                                                      SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      Flexible(
-                                                        child: Text(
-                                                          _productList[index]
-                                                              .Description,
-                                                          style: listTextStyle(),
-                                                          overflow:
-                                                          TextOverflow.ellipsis,
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Icon(MdiIcons.calendarClock),
-                                                      SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      Text(
-                                                        _productList[index].Date,
-                                                        style: listTextStyle(),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                            child: _list.length == 0
+                                ? Image.asset(
+                                    "images/no_data.png",
+                                    fit: BoxFit.cover,
+                                    scale: 1,
+                                  )
+                                : ListView.builder(
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: 8,
                                             ),
-                                            TableCell(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(MdiIcons.layers),
-                                                      SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      Text(
-                                                        "${_productList[index].Quantity
-                                                            .replaceAllMapped(
-                                                            reg, mathFunc)}",
-                                                        style: listTextStyle(),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(MdiIcons.cashUsdOutline),
-                                                      SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      Text(
-                                                        "${_discountController.text == "0"
-                                                            ? _productList[index].Rate
-                                                            .replaceAllMapped(reg, mathFunc)
-                                                            : _productList[index].Rate
-                                                            .replaceAllMapped(
-                                                            reg, mathFunc)}",
-                                                        style: listTextStyle(),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Row(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(MdiIcons.cashUsd),
-                                                      SizedBox(
-                                                        width: 16,
-                                                      ),
-                                                      RichText(
-                                                        text: TextSpan(
-                                                          style: Theme
-                                                              .of(context)
-                                                              .textTheme
-                                                              .body1,
-                                                          children: <TextSpan>[
-                                                            TextSpan(
-                                                                text:
-                                                                "${_discountController
-                                                                    .text == "0"
-                                                                    ? _productList[index]
-                                                                    .Price.replaceAllMapped(
-                                                                    reg, mathFunc)
-                                                                    : "${_productList[index]
-                                                                    .Price.replaceAllMapped(
-                                                                    reg, mathFunc)}"}",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                    FontWeight.bold,
-                                                                    color:
-                                                                    Colors.black)),
-                                                            TextSpan(
-                                                                text:
-                                                                "${_discountController
-                                                                    .text == "0"
-                                                                    ? _productList[index]
-                                                                    .Price.replaceAllMapped(
-                                                                    reg, mathFunc)
-                                                                    : " ( ${_productList[index]
-                                                                    .discountAsPercentage
-                                                                    ? "${_productList[index]
-                                                                    .discount}%"
-                                                                    : "\$${_productList[index]
-                                                                    .discount}"} off )"}",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                    FontWeight.bold,
-                                                                    color: Colors.red)),
-                                                          ],
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .identifier),
+                                                        SizedBox(
+                                                          width: 16,
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            TableCell(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  CircleAvatar(
-                                                    backgroundColor:
-                                                    Colors.grey.shade300,
-                                                    child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.delete,
-                                                        color: Colors.black,
-                                                        size: 18,
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _productList.removeAt(index);
-                                                          estimateTotalCalculation();
-                                                        });
-                                                      },
+                                                        Text(
+                                                          _list[index]
+                                                              .InvoiceId,
+                                                          style:
+                                                              listTextStyle(),
+                                                        )
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons.text),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          _list[index]
+                                                              .Description,
+                                                          style:
+                                                              listTextStyle(),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .calendarClock),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          _list[index]
+                                                              .CreatedDate,
+                                                          style:
+                                                              listTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons.layers),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          _list[index].Quantity,
+                                                          style:
+                                                              listTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .cashUsdOutline),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          "${_list[index].Price == null || _list[index].Price == "0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}",
+                                                          style:
+                                                              listTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: <Widget>[
+                                                    CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey.shade300,
+                                                      child: InkWell(
+                                                        child: Icon(
+                                                          Icons.content_copy,
+                                                          color: Colors.black,
+                                                          size: 18,
+                                                        ),
+                                                        onTap: () {
+                                                          setState(() {
+                                                            duplicateDialog(
+                                                                index);
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 8,
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                deleteMessage(
+                                                                    index));
+                                                      },
+                                                      child: CircleAvatar(
+                                                        backgroundColor: Colors
+                                                            .grey.shade300,
+                                                        child: Icon(
+                                                          Icons.delete,
+                                                          color: Colors.black,
+                                                          size: 18,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                          ])
-                                        ],
-                                      ),*/
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Divider(),
-                                    ],
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Divider(),
+                                          ],
+                                        ),
+                                        onTap: () {
+                                          widget.customer.EstimateId =
+                                              _list[index].InvoiceId;
+                                          widget.customer.EstimateIntId =
+                                              int.parse(_list[index].Id);
+                                          widget.goToUpdateEstimate(
+                                              widget.customer);
+                                        },
+                                      );
+                                    },
+                                    itemCount: _list.length,
                                   ),
-                                  onTap: () {
-                                    widget.customer.EstimateId =
-                                        _list[index].InvoiceId;
-                                    widget.customer.EstimateIntId =
-                                        int.parse(_list[index].Id);
-                                    widget.goToUpdateEstimate(widget.customer);
-                                  },
-                                );
-                              },
-                              itemCount: _list.length,
-                            ),
                           ),
                         ],
                       );
@@ -919,7 +738,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
-
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
@@ -928,7 +746,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     }
   }
 
-  Future uploadCustomerImage() async {
+  uploadCustomerImage() async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'CustomerId': '${widget.customerID}',
@@ -943,14 +761,14 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         .then((response) {
       try {
         if (response.statusCode == 200) {
-          return response;
+          Navigator.of(context).pop();
         } else {
           showMessage(context, "Network error!", json.decode(response.body),
               Colors.redAccent, Icons.warning);
-          return [];
+          Navigator.of(context).pop();
         }
       } catch (error) {
-        return Container();
+        Navigator.of(context).pop();
       }
     });
   }
@@ -980,42 +798,42 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     switch (level) {
       case 0:
         {
-          return Icons.exposure_zero;
+          return MdiIcons.numeric0Box;
         }
         break;
       case 1:
         {
-          return Icons.looks_one;
+          return MdiIcons.numeric1Box;
         }
         break;
       case 2:
         {
-          return Icons.looks_two;
+          return MdiIcons.numeric2Box;
         }
         break;
       case 3:
         {
-          return Icons.looks_3;
+          return MdiIcons.numeric3Box;
         }
         break;
       case 4:
         {
-          return Icons.looks_4;
+          return MdiIcons.numeric4Box;
         }
         break;
       case 5:
         {
-          return Icons.looks_5;
+          return MdiIcons.numeric5Box;
         }
         break;
       case 6:
         {
-          return Icons.looks_6;
+          return MdiIcons.numeric6Box;
         }
         break;
       default:
         {
-          return Icons.exposure_zero;
+          return MdiIcons.numeric0Box;
         }
     }
   }

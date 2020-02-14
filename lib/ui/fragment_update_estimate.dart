@@ -117,7 +117,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
-    (await ImagePicker.pickImage(source: ImageSource.gallery));
+        (await ImagePicker.pickImage(source: ImageSource.gallery));
     setState(() {
       _imageFile = pickFromGallery;
       uploadCameraImage();
@@ -693,7 +693,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                       : Container(),
                                 ],
                               ),
-                              onTap: ()=>_showDialog(context),
+                              onTap: () => _showDialog(context),
                             ),
                           ),
                         ],
@@ -1934,7 +1934,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
-      _CameraImagePath = map['filePath'];
+      _CameraImagePath = "https://api.gratecrm.com" + map['filePath'];
     }
     setState(() {
       isCameraSaving = false;
@@ -1956,7 +1956,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
-      _drawingImagePath = map['filePath'];
+      _drawingImagePath = "https://api.gratecrm.com" + map['filePath'];
     }
     setState(() {
       isDrawingSaving = false;
@@ -1978,7 +1978,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
-      _HOSignatureImagePath = map['filePath'];
+      _HOSignatureImagePath = "https://api.gratecrm.com" + map['filePath'];
     }
     setState(() {
       isHOSignatureSaving = false;

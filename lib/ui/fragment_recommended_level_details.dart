@@ -338,7 +338,9 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   builder: (context) => new VideoPlayerScreen(
                                     url: _list[index].url,
                                   ),
+                                  fullscreenDialog: true
                                 ));
+
                           },
                           child: Stack(
                             children: <Widget>[

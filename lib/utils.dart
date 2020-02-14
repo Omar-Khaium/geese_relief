@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/widgets/widget_loading.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -249,21 +250,7 @@ loadingAlert() {
     onWillPop: () async => false,
     child: BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-      child: AlertDialog(
-        titlePadding: EdgeInsets.all(0),
-        contentPadding: EdgeInsets.all(0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        content: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.asset(
-            "images/loading.gif",
-            fit: BoxFit.cover,
-            scale: 1,
-            width: 128,
-            height: 128,
-          ),
-        ),
-      ),
+      child: LoadingWidget(),
     ),
   );
 }

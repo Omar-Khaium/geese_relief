@@ -1959,7 +1959,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
-      _CameraImagePath = map['filePath'];
+      _CameraImagePath = "https://api.gratecrm.com"+map['filePath'];
     }
     setState(() {
       isCameraSaving = false;
@@ -1981,7 +1981,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
-      _drawingImagePath = map['filePath'];
+      _drawingImagePath = "https://api.gratecrm.com"+map['filePath'];
     }
     setState(() {
       isDrawingSaving = false;
@@ -2003,7 +2003,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
         headers: headers, body: body);
     if (result.statusCode == 200) {
       Map map = json.decode(result.body);
-      _HOSignatureImagePath = map['filePath'];
+      _HOSignatureImagePath = "https://api.gratecrm.com" +map['filePath'];
     }
     setState(() {
       isHOSignatureSaving = false;

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
-
   String url;
 
   VideoPlayerScreen({Key key, this.url}) : super(key: key);
@@ -44,9 +43,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return Scaffold(
-      // Use a FutureBuilder to display a loading spinner while waiting for the
-      // VideoPlayerController to finish initializing.
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
       body: Container(
+        width: double.infinity,
         height: double.infinity,
         child: FutureBuilder(
           future: _initializeVideoPlayerFuture,
@@ -69,23 +70,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Wrap the play or pause in a call to `setState`. This ensures the
-          // correct icon is shown.
           setState(() {
-            // If the video is playing, pause it.
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              // If the video is paused, play it.
-              _controller.play();
-            }
+            _controller.value.isPlaying
+                ? _controller.pause()
+                : _controller.play();
           });
         },
-        // Display the correct icon depending on the state of the player.
         child: Icon(
           _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

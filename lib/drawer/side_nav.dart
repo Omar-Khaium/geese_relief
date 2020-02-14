@@ -177,7 +177,7 @@ class SideNavUIState extends State<SideNavUI>
                     });
                   },
                   child: AnimatedIcon(
-                    icon: AnimatedIcons.arrow_menu,
+                    icon: AnimatedIcons.close_menu,
                     color: Colors.blueGrey.shade800,
                     size: 48,
                     progress: _animationController,
