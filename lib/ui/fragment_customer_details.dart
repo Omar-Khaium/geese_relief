@@ -528,7 +528,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                       SizedBox(
                                         height: 8,
                                       ),
-                                      /*Row(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment:
@@ -662,8 +662,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ],
                                           ),
                                         ],
-                                      ),*/
-                                      Table(
+                                      ),
+                                      /*Table(
                                         columnWidths: {
                                           0: FlexColumnWidth(3),
                                           1: FlexColumnWidth(1.5),
@@ -859,7 +859,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                             ),
                                           ])
                                         ],
-                                      ),
+                                      ),*/
                                       SizedBox(
                                         height: 8,
                                       ),
