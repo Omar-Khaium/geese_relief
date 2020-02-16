@@ -20,7 +20,7 @@ class PlaceImageFromPicture extends StatelessWidget {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return Container(child: Image.memory(snapshot.data, fit: BoxFit.fill,),);
+                return Container(child: Image.memory(snapshot.data, fit: BoxFit.cover,),);
               }
               break;
             default:

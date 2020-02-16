@@ -215,8 +215,8 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                 ? PDFView(
                     filePath: widget.urlPDFPath,
                     enableSwipe: true,
-                    swipeHorizontal: true,
-                    autoSpacing: false,
+                    swipeHorizontal: false,
+                    autoSpacing: true,
                     pageFling: false,
                     onError: (error) {
                       print(error.toString());
