@@ -1406,7 +1406,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                       Product product =
                                       Product.fromMap(suggestion, true);
                                       for(Product item in _productList) {
-                                        if(item.id==product.id) {
+                                        if(item.guid==product.guid) {
                                           return Container();
                                         }
                                       }

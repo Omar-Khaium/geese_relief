@@ -1405,7 +1405,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                       Product product =
                                           Product.fromMap(suggestion, true);
                                       for(Product item in _productList) {
-                                        if(item.id==product.id) {
+                                        if(item.guid==product.guid) {
                                           return Container();
                                         }
                                       }
