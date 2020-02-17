@@ -1,15 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
-import 'package:flutter_grate_app/ui/fragment_recommended_level_details.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/data.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'fragment_recommended_level_details.dart';
 
 class RecommendedLevel extends StatefulWidget {
   final Login login;
@@ -30,12 +28,11 @@ class RecommendedLevel extends StatefulWidget {
   _RecommendedLevelState createState() => new _RecommendedLevelState();
 }
 
-var cardAspectRatio = 1.00;
-var widgetAspectRatio = cardAspectRatio * 1.15;
 
 class _RecommendedLevelState extends State<RecommendedLevel>
     with SingleTickerProviderStateMixin {
-  var currentPage = recommendations.length - 1.0;
+
+  int selectedLevel;
 
   updateRecommendedLevel(int level) {
     setState(() {
@@ -45,185 +42,451 @@ class _RecommendedLevelState extends State<RecommendedLevel>
 
   @override
   Widget build(BuildContext context) {
-    PageController controller =
-        PageController(initialPage: recommendations.length - 1);
-    controller.addListener(() {
-      setState(() {
-        currentPage = controller.page;
-      });
-    });
-
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       margin: EdgeInsets.only(top: 16, left: 32, right: 32),
-      child: Column(children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Row(
-            children: <Widget>[
-              CustomBackButton(
-                onTap: () => widget.backToCustomerDetails(widget.customer),
-              ),
-              SizedBox(
-                width: 16,
-              ),
-              Text("Customer Details", style: fragmentTitleStyle()),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 24,
-        ),
-        Expanded(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width * .5,
-                    height: MediaQuery.of(context).size.height * .75,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        CardScrollWidget(currentPage,
-                            widget.customer.RecommendedLevel.toInt()),
-                        Positioned.fill(
-                          child: PageView.builder(
-                            itemCount: recommendations.length,
-                            controller: controller,
-                            reverse: true,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                child: Container(),
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          new RecommendedLevelDetails(
-                                        loggedInUser: widget.loggedInUser,
-                                        login: widget.login,
-                                        index: index,
-                                        customer: widget.customer,
-                                        backToCustomerDetails:
-                                            backToCustomerDetails,
-                                      ),
-                                    )),
-                              );
-                            },
-                          ),
-                        )
-                      ],
+      child: Column(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: <Widget>[
+                CustomBackButton(
+                  onTap: () => widget.backToCustomerDetails(widget.customer),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text("Recommended Level", style: fragmentTitleStyle()),
+                    Text(
+                      "Choose your plan for "+widget.customer.FirstName+" "+widget.customer.LastName ,
+                      style: listTextStyleForRecommendedLevel(),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                )
+              ],
             ),
           ),
-        )
-      ]),
+          SizedBox(
+            height: 24,
+          ),
+          Expanded(
+              child: Column(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 24, left: 0, right: 0),
+                alignment: Alignment.topCenter,
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      "Step towards a " +
+                          widget.loggedInUser.CompanyName +
+                          " and a nationally backend warranty",
+                      style: listTextStyle(),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "All of our  " +
+                          widget.loggedInUser.CompanyName +
+                          " /Crawl space Contractors are traoned and certified",
+                      style: Theme.of(context).textTheme.subhead.copyWith(
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Table(
+                      border: TableBorder.all(width: .5, color: Colors.black),
+                      children: [
+                        TableRow(children: [
+                          TableCell(
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Level One",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subhead
+                                          .copyWith(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.bold),
+                                    ))),
+                          ),
+                          TableCell(
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Level Two",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subhead
+                                          .copyWith(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.bold),
+                                    ))),
+                          ),
+                          TableCell(
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Level Three",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subhead
+                                          .copyWith(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.bold),
+                                    ))),
+                          ),
+                          TableCell(
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Level Four",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subhead
+                                          .copyWith(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.bold),
+                                    ))),
+                          ),
+                          TableCell(
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Level Five",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subhead
+                                          .copyWith(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.bold),
+                                    ))),
+                          ),
+                          TableCell(
+                            child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      "Level Six",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subhead
+                                          .copyWith(
+                                              color: Colors.grey.shade700,
+                                              fontWeight: FontWeight.bold),
+                                    ))),
+                          ),
+                        ]),
+                        TableRow(children: [
+                          TableCell(
+                              child: InkWell(
+                                onTap: (){
+                                  goToRecommendedLevelDetails(1);
+                                },
+                                child: Container(
+                                    height: 460,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: widget.customer.RecommendedLevel.toInt()==1 ? Colors.blue.shade200 :Colors.white
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Container(
+                                          alignment: Alignment.center,
+                                          padding: EdgeInsets.only(
+                                              top: 16, left: 10, right: 10),
+                                          child: Text(
+                                            "Ground Water Control",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2
+                                                .copyWith(
+                                                    //color: Colors.grey.shade500,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.all(24),
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.grey,
+                                              ),
+                                            )),
+                                      ],
+                                    )),
+                              )),
+                          TableCell(
+                              child: InkWell(
+                                onTap: (){
+                                  goToRecommendedLevelDetails(2);
+                                },
+                                child: Container(
+                                    height: 460,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(
+                                        color: widget.customer.RecommendedLevel.toInt()==2 ? Colors.blue.shade200  :Colors.white
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 16, left: 10, right: 10),
+                                          child: Text(
+                                            "Pump And Power Failur Backup Protection",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2
+                                                .copyWith(
+                                                    //color: Colors.grey.shade500,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.all(24),
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.grey,
+                                              ),
+                                            )),
+                                      ],
+                                    )),
+                              )),
+                          TableCell(
+                              child: InkWell(
+                                onTap: (){
+                                  goToRecommendedLevelDetails(3);
+                                },
+                                child: Container(
+                                    height: 460,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(
+                                        color: widget.customer.RecommendedLevel.toInt()==3 ? Colors.blue.shade200 :Colors.white
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 16, left: 10, right: 10),
+                                          child: Text(
+                                            "Full Parimeter Grate Drain System",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2
+                                                .copyWith(
+                                                    //color: Colors.grey.shade500,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.all(24),
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.grey,
+                                              ),
+                                            )),
+                                      ],
+                                    )),
+                              )),
+                          TableCell(
+                              child: InkWell(
+                                onTap: (){
+                                  goToRecommendedLevelDetails(4);
+                                },
+                                child: Container(
+                                    height: 460,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(
+                                        color: widget.customer.RecommendedLevel.toInt()==4 ? Colors.blue.shade200  :Colors.white
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 16, left: 10, right: 10),
+                                          child: Text(
+                                            "Full Wall Protecttion",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2
+                                                .copyWith(
+                                                    //color: Colors.grey.shade500,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.all(24),
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.grey,
+                                              ),
+                                            )),
+                                      ],
+                                    )),
+                              )),
+                          TableCell(
+                              child: InkWell(
+                                onTap: (){
+                                  goToRecommendedLevelDetails(5);
+                                },
+                                child: Container(
+                                    height: 460,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(
+                                        color: widget.customer.RecommendedLevel.toInt()==5 ? Colors.blue.shade200  :Colors.white
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 16, left: 10, right: 10),
+                                          child: Text(
+                                            "Moisture Control",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2
+                                                .copyWith(
+                                                    //color: Colors.grey.shade500,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.all(24),
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.grey,
+                                              ),
+                                            )),
+                                      ],
+                                    )),
+                              )),
+                          TableCell(
+                              child: InkWell(
+                                onTap: (){
+                                  goToRecommendedLevelDetails(6);
+                                },
+                                child: Container(
+                                    height: 460,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(
+                                        color: widget.customer.RecommendedLevel.toInt()==6 ? Colors.blue.shade200  :Colors.white
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 16, left: 10, right: 10),
+                                          child: Text(
+                                            "Maintainance And Unkeep",
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body2
+                                                .copyWith(
+                                                    //color: Colors.grey.shade500,
+                                                    fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.all(24),
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.grey.shade300,
+                                              child: Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.grey,
+                                              ),
+                                            )),
+                                      ],
+                                    )),
+                              )),
+                        ]),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ))
+        ],
+      ),
     );
   }
 
+  void goToRecommendedLevelDetails(index){
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+          new RecommendedLevelDetails(
+            loggedInUser: widget.loggedInUser,
+            login: widget.login,
+            index: index,
+            customer: widget.customer,
+            backToCustomerDetails:
+            backToCustomerDetails,
+          ),
+        ));
+  }
   void backToCustomerDetails(int id) {
     widget.backToCustomerDetails(widget.customer);
   }
-}
-
-class CardScrollWidget extends StatefulWidget {
-  var currentPage;
-  int selectedLevel;
-
-  CardScrollWidget(this.currentPage, this.selectedLevel);
 
   @override
-  _CardScrollWidgetState createState() => _CardScrollWidgetState();
-}
+  void initState() {
+    selectedLevel=widget.selectedLevel;
 
-class _CardScrollWidgetState extends State<CardScrollWidget> {
-  var padding = 20.0;
-
-  var verticalInset = 20.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return new AspectRatio(
-      aspectRatio: widgetAspectRatio,
-      child: LayoutBuilder(builder: (context, contraints) {
-        var width = contraints.maxWidth;
-        var height = contraints.maxHeight;
-
-        var safeWidth = width - 2 * padding;
-        var safeHeight = height - 2 * padding;
-
-        var heightOfPrimaryCard = safeHeight;
-        var widthOfPrimaryCard = heightOfPrimaryCard * cardAspectRatio;
-
-        var primaryCardLeft = safeWidth - widthOfPrimaryCard;
-        var horizontalInset = primaryCardLeft / 2;
-
-        List<Widget> cardList = new List();
-
-        for (var i = 0; i < recommendations.length; i++) {
-          var delta = i - widget.currentPage;
-          bool isOnRight = delta > 0;
-
-          var start = padding +
-              max(
-                  primaryCardLeft -
-                      horizontalInset * -delta * (isOnRight ? 15 : 1),
-                  0.0);
-
-          var cardItem = Positioned.directional(
-            top: padding + verticalInset * max(-delta, 0.0),
-            bottom: padding + verticalInset * max(-delta, 0.0),
-            start: start,
-            textDirection: TextDirection.rtl,
-            child: InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => new RecommendedLevelDetails(),
-                  )),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16.0),
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                    BoxShadow(
-                        color: Colors.black12,
-                        offset: Offset(0, 0),
-                        blurRadius: 16.0)
-                  ]),
-                  child: AspectRatio(
-                    aspectRatio: cardAspectRatio,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        recommendations[i],
-                        Positioned(
-                          right: 36,
-                          top: 40,
-                          child: i + 1 == widget.selectedLevel
-                              ? Icon(
-                                  MdiIcons.checkDecagram,
-                                  size: 48,
-                                  color: Colors.green.shade200,
-                                )
-                              : Container(),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-          cardList.add(cardItem);
-        }
-        return Stack(
-          children: cardList,
-        );
-      }),
-    );
   }
 }

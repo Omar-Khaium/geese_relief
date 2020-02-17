@@ -51,7 +51,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Recommended Level ${widget.index + 1}"),
+        title: Text("Recommended Level ${widget.index}"),
         backgroundColor: Colors.black,
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -92,7 +92,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 5
+                                  decoration: (widget.index) >= 6
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -116,7 +116,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 5
+                                  decoration: (widget.index) >= 6
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -140,7 +140,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 5
+                                  decoration: (widget.index) >= 6
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -164,7 +164,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 4
+                                  decoration: (widget.index) >= 5
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -188,7 +188,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 3
+                                  decoration: (widget.index) >= 4
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -212,7 +212,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 2
+                                  decoration: (widget.index) >= 3
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -236,7 +236,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index + 1) >= 2
+                                  decoration: (widget.index) >= 3
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -420,7 +420,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Id': widget.customer.Id,
-      'RecommendedLevel': (widget.index + 1).toString(),
+      'RecommendedLevel': (widget.index).toString(),
       'CompanyId': widget.loggedInUser.CompanyGUID,
     };
 

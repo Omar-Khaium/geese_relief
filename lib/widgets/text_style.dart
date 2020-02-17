@@ -94,6 +94,21 @@ TextStyle listTextStyle(){
       fontStyle: FontStyle.normal,
   );
 }
+TextStyle subtitleText(){
+  return new TextStyle(
+      color: Colors.black,
+      fontSize: 16,
+      fontStyle: FontStyle.normal,
+  );
+}
+TextStyle listTextStyleForRecommendedLevel(){
+  return new TextStyle(
+    color: Colors.black,
+    fontSize: 18,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w500
+  );
+}
 
 TextStyle estimateTextStyle(){
   return new TextStyle(
