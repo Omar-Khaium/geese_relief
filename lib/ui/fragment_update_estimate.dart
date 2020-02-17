@@ -1404,6 +1404,11 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                     itemBuilder: (context, suggestion) {
                                       Product product =
                                           Product.fromMap(suggestion, true);
+                                      for(Product item in _productList) {
+                                        if(item.id==product.id) {
+                                          return Container();
+                                        }
+                                      }
                                       return ListTile(
                                         leading: Icon(MdiIcons.cubeOutline),
                                         title: Text(product.name),
