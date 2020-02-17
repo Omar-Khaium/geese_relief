@@ -49,17 +49,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
 
   bool _isGettingZipCodes = false;
 
-  @override
-  void initState() {
-    _checkBasementData();
-    super.initState();
-    _future = getData();
-    if (!widget.login.isAuthenticated) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => LogInUI(widget.login)));
-    }
-  }
-
   TextEditingController _firstNameController = new TextEditingController();
   TextEditingController _lastNameController = new TextEditingController();
   TextEditingController _businessTypeController = new TextEditingController();
@@ -76,637 +65,615 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   int TypeDropdown;
 
   static String ACCESS_TOKEN = "";
-  var _future;
   Product selectedProduct;
   final _UsNumberTextInputFormatter = UsNumberTextInputFormatter();
 
   @override
+  void initState() {
+    _checkBasementData();
+    super.initState();
+    Future.delayed(Duration.zero, () => getData());
+    if (!widget.login.isAuthenticated) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => LogInUI(widget.login)));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Column(
-            children: <Widget>[
-              SizedBox(
-                height: 16,
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(left: 32),
-                  child: Row(
-                    children: <Widget>[
-                      CustomBackButton(
-                        onTap: () => widget.backToDashboard(0),
-                      ),
-                      SizedBox(
-                        width: 16,
-                      ),
-                      Text("Add Customer", style: fragmentTitleStyle()),
-                    ],
-                  ),
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 16,
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            margin: EdgeInsets.only(left: 32),
+            child: Row(
+              children: <Widget>[
+                CustomBackButton(
+                  onTap: () => widget.backToDashboard(0),
                 ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Container(
-                child: Divider(),
-                margin: EdgeInsets.only(left: 32, right: 32),
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(right: 32, left: 32),
-                  child: Form(
-                    key: _formKey,
-                    child: ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                controller: _firstNameController,
-                                style: customTextStyle(),
-                                cursorColor: Colors.black87,
-                                autofocus: false,
-                                onChanged: (val) {
-                                  setState(() {});
-                                },
-                                validator: (val) {
-                                  return _firstNameController.text.isNotEmpty
-                                      ? null
-                                      : "* Required";
-                                },
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
-                                maxLines: 1,
-                                decoration: new InputDecoration(
-                                  labelText: "First Name",
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black87)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                                  icon: new Icon(
-                                    Icons.person,
-                                    color: Colors.grey,
-                                  ),
-                                  hintStyle: customHintStyle(),
-                                  isDense: true,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 36,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                cursorColor: Colors.black87,
-                                keyboardType: TextInputType.text,
-                                controller: _lastNameController,
-                                maxLines: 1,
-                                autofocus: false,
-                                textInputAction: TextInputAction.next,
-                                validator: (val) {
-                                  return _lastNameController.text.isNotEmpty
-                                      ? null
-                                      : "* Required";
-                                },
-                                onChanged: (val) {
-                                  setState(() {});
-                                },
-                                style: customTextStyle(),
-                                decoration: new InputDecoration(
-                                  labelText: "Last Name",
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black87)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                                  icon: new Icon(
-                                    Icons.person,
-                                    color: Colors.grey,
-                                  ),
-                                  hintStyle: customHintStyle(),
-                                  isDense: true,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        DropdownButtonFormField(
-                          isDense: true,
-                          decoration: new InputDecoration(
-                              icon: Icon(Icons.business),
-                              labelText: "Business Type",
-                              labelStyle: customTextStyle(),
-                              hintText: "e.g. hint",
-                              hintStyle: customHintStyle(),
-                              alignLabelWithHint: false,
-                              isDense: true),
-                          validator: (val) {
-                            return TypeDropdown == 0
-                                ? "Select another value"
-                                : null;
-                          },
-                          items: List.generate(TypeArray.length, (index) {
-                            return DropdownMenuItem(
-                                value: index,
-                                child: Text(TypeArray[index].DisplayText));
-                          }),
-                          onChanged: (index) {
-                            setState(() {
-                              TypeDropdown = index;
-                            });
-                          },
-                          value: TypeDropdown,
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        TextFormField(
-                          cursorColor: Colors.black87,
+                SizedBox(
+                  width: 16,
+                ),
+                Text("Add Customer", style: fragmentTitleStyle()),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Container(
+          child: Divider(),
+          margin: EdgeInsets.only(left: 32, right: 32),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(right: 32, left: 32),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          controller: _firstNameController,
                           style: customTextStyle(),
-                          controller: _businessTypeController,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          maxLines: 1,
+                          cursorColor: Colors.black87,
                           autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
                           validator: (val) {
-                            return TypeDropdown == 1
-                                ? (_businessTypeController.text.isNotEmpty
-                                    ? null
-                                    : "* Required")
-                                : null;
+                            return _firstNameController.text.isNotEmpty
+                                ? null
+                                : "* Required";
                           },
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          maxLines: 1,
                           decoration: new InputDecoration(
-                            labelText: "Business Name",
+                            labelText: "First Name",
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
+                                borderSide:
+                                BorderSide(color: Colors.black87)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey)),
                             icon: new Icon(
-                              Icons.business,
+                              Icons.person,
                               color: Colors.grey,
                             ),
-                            isDense: true,
                             hintStyle: customHintStyle(),
+                            isDense: true,
                           ),
                         ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                controller: _primaryPhoneController,
-                                style: customTextStyle(),
-                                onChanged: (val) {
-                                  setState(() {});
-                                },
-                                cursorColor: Colors.black87,
-                                keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
-                                maxLines: 1,
-                                autofocus: false,
-                                inputFormatters: <TextInputFormatter>[
-                                  WhitelistingTextInputFormatter.digitsOnly,
-                                  _UsNumberTextInputFormatter,
-                                ],
-                                validator: (val) {
-                                  return _primaryPhoneController.text.isNotEmpty
-                                      ? null
-                                      : "* Required";
-                                },
-                                decoration: new InputDecoration(
-                                  labelText: "Primary Phone",
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black87)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                                  icon: new Icon(
-                                    Icons.call,
-                                    color: Colors.grey,
-                                  ),
-                                  hintStyle: customHintStyle(),
-                                  isDense: true,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 36,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                cursorColor: Colors.black87,
-                                controller: _secondaryPhoneController,
-                                onChanged: (val) {
-                                  setState(() {});
-                                },
-                                keyboardType: TextInputType.number,
-                                maxLines: 1,
-                                autofocus: false,
-                                textInputAction: TextInputAction.next,
-                                style: customTextStyle(),
-                                inputFormatters: <TextInputFormatter>[
-                                  WhitelistingTextInputFormatter.digitsOnly,
-                                  _UsNumberTextInputFormatter,
-                                ],
-                                decoration: new InputDecoration(
-                                  labelText: "Secondary Phone",
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black87)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                                  icon: new Icon(
-                                    Icons.call,
-                                    color: Colors.grey,
-                                  ),
-                                  hintStyle: customHintStyle(),
-                                  isDense: true,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        TextFormField(
+                      ),
+                      SizedBox(
+                        width: 36,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
                           cursorColor: Colors.black87,
+                          keyboardType: TextInputType.text,
+                          controller: _lastNameController,
+                          maxLines: 1,
+                          autofocus: false,
+                          textInputAction: TextInputAction.next,
+                          validator: (val) {
+                            return _lastNameController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
+                          onChanged: (val) {
+                            setState(() {});
+                          },
                           style: customTextStyle(),
-                          controller: _cellPhoneController,
+                          decoration: new InputDecoration(
+                            labelText: "Last Name",
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.black87)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey)),
+                            icon: new Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                            ),
+                            hintStyle: customHintStyle(),
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  DropdownButtonFormField(
+                    isDense: true,
+                    decoration: new InputDecoration(
+                        icon: Icon(Icons.business),
+                        labelText: "Business Type",
+                        labelStyle: customTextStyle(),
+                        hintText: "e.g. hint",
+                        hintStyle: customHintStyle(),
+                        alignLabelWithHint: false,
+                        isDense: true),
+                    validator: (val) {
+                      return TypeDropdown == 0
+                          ? "Select another value"
+                          : null;
+                    },
+                    items: List.generate(TypeArray.length, (index) {
+                      return DropdownMenuItem(
+                          value: index,
+                          child: Text(TypeArray[index].DisplayText));
+                    }),
+                    onChanged: (index) {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      setState(() {
+                        TypeDropdown = index;
+                      });
+                    },
+                    value: TypeDropdown,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    cursorColor: Colors.black87,
+                    style: customTextStyle(),
+                    controller: _businessTypeController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    autofocus: false,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    validator: (val) {
+                      return TypeDropdown == 1
+                          ? (_businessTypeController.text.isNotEmpty
+                          ? null
+                          : "* Required")
+                          : null;
+                    },
+                    decoration: new InputDecoration(
+                      labelText: "Business Name",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.business,
+                        color: Colors.grey,
+                      ),
+                      isDense: true,
+                      hintStyle: customHintStyle(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          controller: _primaryPhoneController,
+                          style: customTextStyle(),
+                          onChanged: (val) {
+                            setState(() {});
+                          },
+                          cursorColor: Colors.black87,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
                           maxLines: 1,
                           autofocus: false,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
                           inputFormatters: <TextInputFormatter>[
                             WhitelistingTextInputFormatter.digitsOnly,
                             _UsNumberTextInputFormatter,
                           ],
+                          validator: (val) {
+                            return _primaryPhoneController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
                           decoration: new InputDecoration(
-                            labelText: "Cell Phone",
+                            labelText: "Primary Phone",
                             focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
+                                borderSide:
+                                BorderSide(color: Colors.black87)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey)),
                             icon: new Icon(
                               Icons.call,
                               color: Colors.grey,
                             ),
-                            isDense: true,
-                            hintStyle: customHintStyle(),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        TextFormField(
-                          cursorColor: Colors.black87,
-                          style: customTextStyle(),
-                          controller: _emailController,
-                          autofocus: false,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          maxLines: 1,
-                          validator: (val) {
-                            return _emailController.text.isNotEmpty
-                                ? null
-                                : "* Required";
-                          },
-                          decoration: new InputDecoration(
-                            labelText: "Email",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            icon: new Icon(
-                              Icons.email,
-                              color: Colors.grey,
-                            ),
                             hintStyle: customHintStyle(),
                             isDense: true,
                           ),
                         ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        TextFormField(
-                          cursorColor: Colors.black87,
-                          style: customTextStyle(),
-                          controller: _streetController,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          autofocus: false,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          maxLines: 1,
-                          validator: (val) {
-                            return _streetController.text.isNotEmpty
-                                ? null
-                                : "* Required";
-                          },
-                          decoration: new InputDecoration(
-                            labelText: "Street",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            icon: new Icon(
-                              MdiIcons.road,
-                              color: Colors.grey,
-                            ),
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        TextFormField(
-                          cursorColor: Colors.black87,
-                          style: customTextStyle(),
-                          controller: _cityController,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          autofocus: false,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          maxLines: 1,
-                          validator: (val) {
-                            return _cityController.text.isNotEmpty
-                                ? null
-                                : "* Required";
-                          },
-                          decoration: new InputDecoration(
-                            labelText: "City",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            icon: new Icon(
-                              Icons.location_city,
-                              color: Colors.grey,
-                            ),
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: TextFormField(
-                                style: customTextStyle(),
-                                cursorColor: Colors.black87,
-                                controller: _stateController,
-                                autofocus: false,
-                                textCapitalization: TextCapitalization.characters,
-                                maxLength: 2,
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
-                                onChanged: (val) {
-                                  setState(() {});
-                                },
-                                maxLines: 1,
-                                validator: (val) {
-                                  return _stateController.text.isNotEmpty
-                                      ? null
-                                      : "* Required";
-                                },
-                                decoration: new InputDecoration(
-                                  labelText: "State",
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black87)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey)),
-                                  icon: new Icon(
-                                    MdiIcons.homeCity,
-                                    color: Colors.grey,
-                                  ),
-                                  hintStyle: customHintStyle(),
-                                  isDense: true,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 36,
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: TypeAheadFormField(
-                                validator: (val) {
-                                  return _zipController.text.isNotEmpty
-                                      ? null
-                                      : "* Required";
-                                },
-                                textFieldConfiguration: TextFieldConfiguration(
-                                    controller: _zipController,
-                                    autofocus: false,
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 5,
-                                    decoration: new InputDecoration(
-                                      labelText: "Zip",
-                                      hintText: "e.g. - 12345",
-                                      focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black87)),
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.grey)),
-                                      icon: new Icon(
-                                        MdiIcons.zipBox,
-                                        color: Colors.grey,
-                                      ),
-                                      suffixIcon: _isGettingZipCodes ? CupertinoActivityIndicator() : Container(width: 0, height: 0,),
-                                      hintStyle: customHintStyle(),
-                                      isDense: true,
-                                    )),
-                                suggestionsCallback: (pattern) async {
-                                  if(_zipController.text.length >= 3) {
-                                    setState(() {
-                                      _isGettingZipCodes = true;
-                                    });
-                                    return await getZipData(pattern);
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  Zip zip = suggestion;
-                                  return ListTile(
-                                    leading: Icon(MdiIcons.zipBoxOutline),
-                                    title: Text(zip.zipCode),
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        Text(zip.city + ","),
-                                        Text(zip.state),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  zipDatas = suggestion;
-
-                                  setState(() {
-                                    _zipController.text = zipDatas.zipCode;
-                                    _cityController.text = zipDatas.city;
-                                    _stateController.text = zipDatas.state;
-                                  });
-                                },
-                                hideSuggestionsOnKeyboardHide: true,
-                                hideOnError: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 36,
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            margin: EdgeInsets.only(right: 36),
-                            height: 64,
-                            width: 156,
-                            child: RaisedButton(
-                              highlightElevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(36.0),
-                                  side: BorderSide(color: Colors.white12)),
-                              disabledColor: Colors.black,
-                              color: Colors.black,
-                              elevation: 2,
-                              textColor: Colors.white,
-                              padding: EdgeInsets.all(12.0),
-                              child: Text(
-                                "Submit",
-                                style: new TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontFamily: "Roboto"),
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState.validate()) {
-                                  makeRequest();
-                                } else {
-                                  showMessage(
-                                      context,
-                                      "Validation Error",
-                                      "Please fill all the fields",
-                                      Colors.red,
-                                      Icons.error);
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 32,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        } else {
-          return Column(
-            children: <Widget>[
-              SizedBox(
-                height: 16,
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.only(left: 32),
-                  child: Row(
-                    children: <Widget>[
-                      CustomBackButton(
-                        onTap: () => widget.backToDashboard(0),
                       ),
                       SizedBox(
-                        width: 16,
+                        width: 36,
                       ),
-                      Text("Add Customer", style: fragmentTitleStyle()),
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          cursorColor: Colors.black87,
+                          controller: _secondaryPhoneController,
+                          onChanged: (val) {
+                            setState(() {});
+                          },
+                          keyboardType: TextInputType.number,
+                          maxLines: 1,
+                          autofocus: false,
+                          textInputAction: TextInputAction.next,
+                          style: customTextStyle(),
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            _UsNumberTextInputFormatter,
+                          ],
+                          decoration: new InputDecoration(
+                            labelText: "Secondary Phone",
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.black87)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey)),
+                            icon: new Icon(
+                              Icons.call,
+                              color: Colors.grey,
+                            ),
+                            hintStyle: customHintStyle(),
+                            isDense: true,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    cursorColor: Colors.black87,
+                    style: customTextStyle(),
+                    controller: _cellPhoneController,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    autofocus: false,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      _UsNumberTextInputFormatter,
+                    ],
+                    decoration: new InputDecoration(
+                      labelText: "Cell Phone",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.call,
+                        color: Colors.grey,
+                      ),
+                      isDense: true,
+                      hintStyle: customHintStyle(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    cursorColor: Colors.black87,
+                    style: customTextStyle(),
+                    controller: _emailController,
+                    autofocus: false,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    maxLines: 1,
+                    validator: (val) {
+                      return _emailController.text.isNotEmpty
+                          ? null
+                          : "* Required";
+                    },
+                    decoration: new InputDecoration(
+                      labelText: "Email",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.email,
+                        color: Colors.grey,
+                      ),
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    cursorColor: Colors.black87,
+                    style: customTextStyle(),
+                    controller: _streetController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    maxLines: 1,
+                    validator: (val) {
+                      return _streetController.text.isNotEmpty
+                          ? null
+                          : "* Required";
+                    },
+                    decoration: new InputDecoration(
+                      labelText: "Street",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        MdiIcons.road,
+                        color: Colors.grey,
+                      ),
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    cursorColor: Colors.black87,
+                    style: customTextStyle(),
+                    controller: _cityController,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    maxLines: 1,
+                    validator: (val) {
+                      return _cityController.text.isNotEmpty
+                          ? null
+                          : "* Required";
+                    },
+                    decoration: new InputDecoration(
+                      labelText: "City",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.location_city,
+                        color: Colors.grey,
+                      ),
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 2,
+                        child: TextFormField(
+                          style: customTextStyle(),
+                          cursorColor: Colors.black87,
+                          controller: _stateController,
+                          autofocus: false,
+                          textCapitalization: TextCapitalization.characters,
+                          maxLength: 2,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          onChanged: (val) {
+                            setState(() {});
+                          },
+                          maxLines: 1,
+                          validator: (val) {
+                            return _stateController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
+                          decoration: new InputDecoration(
+                            labelText: "State",
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.black87)),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey)),
+                            icon: new Icon(
+                              MdiIcons.homeCity,
+                              color: Colors.grey,
+                            ),
+                            hintStyle: customHintStyle(),
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 36,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: TypeAheadFormField(
+                          validator: (val) {
+                            return _zipController.text.isNotEmpty
+                                ? null
+                                : "* Required";
+                          },
+                          textFieldConfiguration: TextFieldConfiguration(
+                              controller: _zipController,
+                              autofocus: false,
+                              keyboardType: TextInputType.number,
+                              maxLength: 5,
+                              decoration: new InputDecoration(
+                                labelText: "Zip",
+                                hintText: "e.g. - 12345",
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: Colors.black87)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: Colors.grey)),
+                                icon: new Icon(
+                                  MdiIcons.zipBox,
+                                  color: Colors.grey,
+                                ),
+                                suffixIcon: _isGettingZipCodes
+                                    ? CupertinoActivityIndicator()
+                                    : Container(
+                                  width: 0,
+                                  height: 0,
+                                ),
+                                hintStyle: customHintStyle(),
+                                isDense: true,
+                              )),
+                          suggestionsCallback: (pattern) async {
+                            if (_zipController.text.length >= 3) {
+                              setState(() {
+                                _isGettingZipCodes = true;
+                              });
+                              return await getZipData(pattern);
+                            } else {
+                              return null;
+                            }
+                          },
+                          itemBuilder: (context, suggestion) {
+                            Zip zip = suggestion;
+                            return ListTile(
+                              leading: Icon(MdiIcons.zipBoxOutline),
+                              title: Text(zip.zipCode),
+                              subtitle: Row(
+                                children: <Widget>[
+                                  Text(zip.city + ","),
+                                  Text(zip.state),
+                                ],
+                              ),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            zipDatas = suggestion;
+
+                            setState(() {
+                              _zipController.text = zipDatas.zipCode;
+                              _cityController.text = zipDatas.city;
+                              _stateController.text = zipDatas.state;
+                            });
+                          },
+                          hideSuggestionsOnKeyboardHide: true,
+                          hideOnError: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 36,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      margin: EdgeInsets.only(right: 36),
+                      height: 64,
+                      width: 156,
+                      child: RaisedButton(
+                        highlightElevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(36.0),
+                            side: BorderSide(color: Colors.white12)),
+                        disabledColor: Colors.black,
+                        color: Colors.black,
+                        elevation: 2,
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Submit",
+                          style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontFamily: "Roboto"),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState.validate()) {
+                            showDialog(context: context, builder: (_)=>loadingAlert());
+                            makeRequest();
+                          } else {
+                            showMessage(
+                                context,
+                                "Validation Error",
+                                "Please fill all the fields",
+                                Colors.red,
+                                Icons.error);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 32,
+                  )
+                ],
               ),
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                child: LinearProgressIndicator(
-                  backgroundColor: Colors.grey.shade200,
-                ),
-                margin: EdgeInsets.only(left: 32, right: 32),
-              ),
-            ],
-          );
-        }
-      },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  Future getData() async {
+  getData() async {
+    showDialog(context: context, builder: (_) => loadingAlert());
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
       'Key': 'CustomerType'
     };
-    var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
-    if (result.statusCode == 200) {
-      var map = json.decode(result.body)['data'];
-      List<DropDownSingleItem> lists = List.generate(map.length, (index) {
-        return DropDownSingleItem.fromMap(map[index]);
-      });
-      for (DropDownSingleItem item in lists) {
-        switch (item.DataKey) {
-          case 'CustomerType':
-            TypeArray.add(item);
-            break;
+    try {
+      var result = await http.get(BASE_URL + API_GET_LOOK_UP, headers: headers);
+      if (result.statusCode == 200) {
+        var map = json.decode(result.body)['data'];
+        List<DropDownSingleItem> lists = List.generate(map.length, (index) {
+          return DropDownSingleItem.fromMap(map[index]);
+        });
+        for (DropDownSingleItem item in lists) {
+          switch (item.DataKey) {
+            case 'CustomerType':
+              TypeArray.add(item);
+              break;
+          }
         }
+        setState(() {
+
+        });
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pop();
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
       }
-      return result;
-    } else {
-      showMessage(context, "Network error!", json.decode(result.body),
-          Colors.redAccent, Icons.warning);
-      return [];
+    } catch (error) {
+      Navigator.of(context).pop();
     }
   }
 
@@ -905,7 +872,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   }
 
   makeRequest() async {
-    widget.isLoading(true);
     try {
       Map<String, String> data = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -927,40 +893,21 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         "Id": "0",
       };
       http.post(BASE_URL + API_SAVE_CUSTOMER, headers: data).then((response) {
-        widget.isLoading(false);
         if (response.statusCode == 200) {
-          Map map = json.decode(response.body);
-          showMessage(context, "Success!", "Customer Added Successfully",
-              Colors.green.shade600, null);
+          Navigator.of(context).pop();
           widget.backToDashboard(0);
+          showMessage(context, "Congratulations!", "New customer added successfully",
+              Colors.green, Icons.check);
         } else {
-          Flushbar(
-            flushbarPosition: FlushbarPosition.TOP,
-            flushbarStyle: FlushbarStyle.GROUNDED,
-            backgroundColor: Colors.redAccent,
-            icon: Icon(
-              Icons.error_outline,
-              size: 24.0,
-              color: Colors.white,
-            ),
-            duration: Duration(seconds: 4),
-            leftBarIndicatorColor: Colors.white70,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.red[800],
-                offset: Offset(0.0, 2.0),
-                blurRadius: 3.0,
-              )
-            ],
-            title: response.toString(),
-            message: "",
-            shouldIconPulse: false,
-          )..show(context);
-          widget.login.isAuthenticated = false;
+          Navigator.of(context).pop();
+          showMessage(context, "Error!", "Something went wrong",
+              Colors.redAccent, Icons.warning);
         }
       });
     } catch (error) {
-      error.toString();
+      Navigator.of(context).pop();
+      showMessage(context, "Error!", "Something went wrong",
+          Colors.redAccent, Icons.warning);
     }
   }
 //-----------------------Offline DB-----------------------

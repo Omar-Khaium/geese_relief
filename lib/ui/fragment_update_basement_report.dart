@@ -506,7 +506,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   CurrentOutsideConditionsSelection =
                                                       index;
                                                 });
@@ -689,7 +690,8 @@ class _UpdateBasementReportFragmentState
                                                                 .DisplayText));
                                                       }),
                                                       onChanged: (index) {
-                                                        setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                           HeatSelection = index;
                                                         });
                                                       },
@@ -726,7 +728,8 @@ class _UpdateBasementReportFragmentState
                                                                 .DisplayText));
                                                       }),
                                                       onChanged: (index) {
-                                                        setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                           AirSelection = index;
                                                         });
                                                       },
@@ -826,7 +829,8 @@ class _UpdateBasementReportFragmentState
                                                                     .DisplayText));
                                                       }),
                                                       onChanged: (index) {
-                                                        setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                           BasementDehumidifierSelection =
                                                               index;
                                                         });
@@ -954,7 +958,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   GroundWaterSelection = index;
                                                 });
                                               },
@@ -982,7 +987,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   GroundWaterRatingSelection =
                                                       index;
                                                 });
@@ -1016,7 +1022,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   IronBacteriaSelection = index;
                                                 });
                                               },
@@ -1044,7 +1051,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   IronBacteriaRatingSelection =
                                                       index;
                                                 });
@@ -1079,7 +1087,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   CondensationSelection = index;
                                                 });
                                               },
@@ -1107,7 +1116,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   CondensationRatingSelection =
                                                       index;
                                                 });
@@ -1142,7 +1152,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   WallCracksSelection = index;
                                                 });
                                               },
@@ -1170,7 +1181,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   WallCracksRatingSelection =
                                                       index;
                                                 });
@@ -1204,7 +1216,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   FloorCracksSelection = index;
                                                 });
                                               },
@@ -1232,7 +1245,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   FloorCracksRatingSelection =
                                                       index;
                                                 });
@@ -1268,7 +1282,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   ExistingSumpPumpSelection =
                                                       index;
                                                 });
@@ -1304,7 +1319,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   ExistingDrainageSystemSelection =
                                                       index;
                                                 });
@@ -1341,7 +1357,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   ExistingRadonSystemSelection =
                                                       index;
                                                 });
@@ -1378,7 +1395,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   DryerVentToCodeSelection =
                                                       index;
                                                 });
@@ -1415,7 +1433,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   FoundationTypeSelection =
                                                       index;
                                                 });
@@ -1449,7 +1468,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   BulkheadSelection = index;
                                                 });
                                               },
@@ -1549,7 +1569,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   NoticedSmellsOrOdorsSelection =
                                                       index;
                                                 });
@@ -1616,7 +1637,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   NoticedMoldOrMildewSelection =
                                                       index;
                                                 });
@@ -1683,7 +1705,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   BasementGoDownSelection =
                                                       index;
                                                 });
@@ -1719,7 +1742,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   HomeSufferForRespiratoryProblemsSelection =
                                                       index;
                                                 });
@@ -1786,7 +1810,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   ChildrenPlayInBasementSelection =
                                                       index;
                                                 });
@@ -1853,7 +1878,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   ChildrenPlayInBasementSelection =
                                                       index;
                                                 });
@@ -1920,7 +1946,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   NoticedBugsOrRodentsSelection =
                                                       index;
                                                 });
@@ -1986,7 +2013,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   GetWaterSelection = index;
                                                 });
                                               },
@@ -2045,7 +2073,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   RemoveWaterSelection = index;
                                                 });
                                               },
@@ -2080,7 +2109,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   SeeCondensationPipesDrippingSelection =
                                                       index;
                                                 });
@@ -2147,7 +2177,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   RepairsTryAndFixSelection =
                                                       index;
                                                 });
@@ -2212,7 +2243,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   LivingPlanSelection = index;
                                                 });
                                               },
@@ -2246,7 +2278,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   SellPlaningSelection = index;
                                                 });
                                               },
@@ -2274,7 +2307,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   PlansForBasementOnceSelection =
                                                       index;
                                                 });
@@ -2311,7 +2345,8 @@ class _UpdateBasementReportFragmentState
                                                             .DisplayText));
                                               }),
                                               onChanged: (index) {
-                                                setState(() {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
+                                                      setState(() {
                                                   HomeTestedForRadonSelection =
                                                       index;
                                                 });
@@ -2387,6 +2422,7 @@ class _UpdateBasementReportFragmentState
                                                                   .DisplayText));
                                                     }),
                                                     onChanged: (index) {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
                                                       setState(() {
                                                         LosePowerSelection =
                                                             index;
@@ -2430,6 +2466,7 @@ class _UpdateBasementReportFragmentState
                                                                   .DisplayText));
                                                     }),
                                                     onChanged: (index) {
+                                                      FocusScope.of(context).requestFocus(FocusNode());
                                                       setState(() {
                                                         LosePowerHowOftenSelection =
                                                             index;

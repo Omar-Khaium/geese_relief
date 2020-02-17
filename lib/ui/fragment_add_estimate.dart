@@ -102,49 +102,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
 
   File _imageFile;
 
-  _openCamera() async {
-    File cameraOutput =
-    (await ImagePicker.pickImage(source: ImageSource.camera));
-    setState(() {
-      _imageFile = cameraOutput;
-      uploadCameraImage();
-    });
-    Navigator.of(context).pop();
-  }
-
-  _openGallery(BuildContext context) async {
-    File pickFromGallery =
-    (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile = pickFromGallery;
-      uploadCameraImage();
-    });
-    Navigator.of(context).pop();
-  }
-
-  _generateDrawingPicture(PictureDetails picture) {
-    _Drawing = PlaceImageFromPicture(picture);
-    picture.toPNG().then((val) {
-      base64Drawing = base64.encode(val);
-      uploadDrawingImage();
-    });
-  }
-
-  _generatePMSignaturePicture(PictureDetails picture) {
-    _PMSignature = PlaceImageFromPicture(picture);
-    picture.toPNG().then((val) {
-      base64PMSignature = base64.encode(val);
-    });
-  }
-
-  _generateHOSignaturePicture(PictureDetails picture) {
-    _HOSignature = PlaceImageFromPicture(picture);
-    picture.toPNG().then((val) {
-      base64HOSignature = base64.encode(val);
-      uploadHOSignatureImage();
-    });
-  }
-
   @override
   void initState() {
     _future = getGeneratedEstimate();
@@ -1312,6 +1269,49 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     );
   }
 
+  _openCamera() async {
+    File cameraOutput =
+    (await ImagePicker.pickImage(source: ImageSource.camera));
+    setState(() {
+      _imageFile = cameraOutput;
+      uploadCameraImage();
+    });
+    Navigator.of(context).pop();
+  }
+
+  _openGallery(BuildContext context) async {
+    File pickFromGallery =
+    (await ImagePicker.pickImage(source: ImageSource.gallery));
+    setState(() {
+      _imageFile = pickFromGallery;
+      uploadCameraImage();
+    });
+    Navigator.of(context).pop();
+  }
+
+  _generateDrawingPicture(PictureDetails picture) {
+    _Drawing = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64Drawing = base64.encode(val);
+      uploadDrawingImage();
+    });
+  }
+
+  _generatePMSignaturePicture(PictureDetails picture) {
+    _PMSignature = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64PMSignature = base64.encode(val);
+    });
+  }
+
+  _generateHOSignaturePicture(PictureDetails picture) {
+    _HOSignature = PlaceImageFromPicture(picture);
+    picture.toPNG().then((val) {
+      base64HOSignature = base64.encode(val);
+      uploadHOSignatureImage();
+    });
+  }
+
   void showPopUp() {
     showDialog<void>(
       context: context,
@@ -1405,6 +1405,11 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                     itemBuilder: (context, suggestion) {
                                       Product product =
                                       Product.fromMap(suggestion, true);
+                                      for(Product item in _productList) {
+                                        if(item.id==product.id) {
+                                          return Container();
+                                        }
+                                      }
                                       return ListTile(
                                         leading: Icon(MdiIcons.cubeOutline),
                                         title: Text(product.name),
