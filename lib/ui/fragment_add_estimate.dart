@@ -819,7 +819,10 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                           Radius.circular(5.0))),
                                   padding: EdgeInsets.only(left: 8, right: 8),
                                   child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
+                                    child: DropdownButtonFormField(
+                                      decoration: InputDecoration(
+                                        enabled: false
+                                      ),
                                       items: _TaxType.map(
                                               (String dropDownStringItem) {
                                             return DropdownMenuItem<String>(
@@ -835,7 +838,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                           estimateTotalCalculation();
                                         });
                                       },
-                                      value: _TaxTypeSelectedValue,
+                                      value: /*_TaxTypeSelectedValue*/ _TaxType[1],
                                     ),
                                   ),
                                 ),

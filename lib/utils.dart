@@ -254,3 +254,7 @@ loadingAlert() {
     ),
   );
 }
+
+String buildCustomerImageUrl(String customerId, String companyId) {
+  return "https://www.gratecrm.com/CustomerImgShow/W=172/H=172/CustomerId=$customerId/UserName=administrator/CompanyId=$companyId/Image_Preview.jpg";
+}

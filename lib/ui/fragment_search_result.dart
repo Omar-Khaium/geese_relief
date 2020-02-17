@@ -138,7 +138,7 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
 
       var result = await http.post(BASE_URL + API_SEARCH, headers: headers);
       if (result.statusCode == 200) {
-        var map = json.decode(result.body)['model'];
+        var map = json.decode(result.body)['CustomerCustomModel'];
         _list = [];
         map.forEach((_item) {
           _list.add(Customer.fromMap(Map<String, dynamic>.from(_item)));

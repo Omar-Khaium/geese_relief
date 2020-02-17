@@ -231,10 +231,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                               height: 128,
                                                               width: 128,
                                                               child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl: widget
-                                                                    .customer
-                                                                    .ProfileImage,
+                                                                  /*CachedNetworkImage(
+                                                                imageUrl: buildCustomerImageUrl(widget.customer.CustomerId, widget.loggedInUser.CompanyGUID),
                                                                 imageBuilder:
                                                                     (context,
                                                                             imageProvider) =>
@@ -258,7 +256,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                                         error) =>
                                                                     Icon(Icons
                                                                         .error),
-                                                              ),
+                                                              )*/
+                                                                  Image.network(buildCustomerImageUrl(widget.customer.CustomerId, widget.loggedInUser.CompanyGUID), fit: BoxFit.cover,),
                                                             )
                                                           : Icon(
                                                               Icons.person,
