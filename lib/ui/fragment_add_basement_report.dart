@@ -142,8 +142,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
   var base64 = const Base64Codec();
 
   Map<String, String> headers = <String, String>{};
+
   File _imageFile;
   BasementReport basementReport;
+
   var _key = GlobalKey<FormState>();
 
   void initState() {
@@ -318,7 +320,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || CurrentOutsideConditionsSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Current Outside Conditions*",
                                     labelStyle: customTextStyle(),
@@ -352,8 +354,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false, signed: false),
+                                keyboardType: TextInputType.phone,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
@@ -447,7 +448,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index)=> index==0 ? "Required" : null,
+                                        validator: (index)=> index==0 || HeatSelection==null ? "Required" : null,
                                         decoration: new InputDecoration(
                                             labelText: "Heat*",
                                             labelStyle: customTextStyle(),
@@ -476,7 +477,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index)=> index==0 ? "Required" : null,
+                                        validator: (index)=> index==0 || AirSelection==null ? "Required" : null,
                                         decoration: new InputDecoration(
                                             labelText: "Air *",
                                             labelStyle: customTextStyle(),
@@ -548,7 +549,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index)=> index==0 ? "Required" : null,
+                                        validator: (index)=> index==0 || BasementDehumidifierSelection==null ? "Required" : null,
                                         decoration: new InputDecoration(
                                             labelText: "Basement Dehumidifier *",
                                             labelStyle: customTextStyle(),
@@ -661,7 +662,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || GroundWaterSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Ground Water *",
                                     labelStyle: customTextStyle(),
@@ -715,7 +716,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || IronBacteriaSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Iron Bacteria *",
                                     labelStyle: customTextStyle(),
@@ -769,7 +770,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || CondensationSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Condensation *",
                                     labelStyle: customTextStyle(),
@@ -823,7 +824,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || WallCracksSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Wall Cracks *",
                                     labelStyle: customTextStyle(),
@@ -877,7 +878,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || FloorCracksSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Floor Cracks *",
                                     labelStyle: customTextStyle(),
@@ -931,7 +932,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || ExistingSumpPumpSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Existing Sump Pump *",
                                     labelStyle: customTextStyle(),
@@ -958,7 +959,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || ExistingDrainageSystemSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Existing Drainage System *",
                                     labelStyle: customTextStyle(),
@@ -985,7 +986,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || ExistingRadonSystemSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Radon System (existing) *",
                                     labelStyle: customTextStyle(),
@@ -1012,7 +1013,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || DryerVentToCodeSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Dryer Vent To Code? *",
                                     labelStyle: customTextStyle(),
@@ -1039,7 +1040,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || FoundationTypeSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText: "Foundation Type? *",
                                     labelStyle: customTextStyle(),
@@ -1068,9 +1069,9 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || BulkheadSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
-                                    labelText: "Bulkhead ? *",
+                                    labelText: "Bulkhead? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1153,7 +1154,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || NoticedSmellsOrOdorsSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "1. Have you ever noticed smells/odors coming from the basement? *",
@@ -1181,14 +1182,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               new TextFormField(
                                 controller: _NoticedSmellsCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "1. Comment *",
+                                    labelText: "1. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1200,7 +1201,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || NoticedMoldOrMildewSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "2. Have you ever noticed mold/mildew on any item in the basement? *",
@@ -1228,14 +1229,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               new TextFormField(
                                 controller: _NoticedMoldsCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "2. Comment *",
+                                    labelText: "2. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1247,7 +1248,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || BasementGoDownSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "3. How often do you go down in the basement? *",
@@ -1275,7 +1276,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || HomeSufferForRespiratoryProblemsSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "4. Does anyone in the home suffer from respiratory problems? *",
@@ -1305,14 +1306,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               new TextFormField(
                                 controller:
                                     _SufferFromRespiratoryCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "4. Comment *",
+                                    labelText: "4. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1324,7 +1325,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || ChildrenPlayInBasementSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "5. Do your children play in the basement? *",
@@ -1353,14 +1354,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               new TextFormField(
                                 controller:
                                     _ChildrenPlayInTheBasementCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "5. Comment *",
+                                    labelText: "5. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1372,7 +1373,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || PetsGoInBasementSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "6. Do you have pets that go in the basement? *",
@@ -1390,24 +1391,24 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   FocusScope.of(context)
                                       .requestFocus(FocusNode());
                                   setState(() {
-                                    ChildrenPlayInBasementSelection = index;
+                                    PetsGoInBasementSelection = index;
                                   });
                                 },
-                                value: ChildrenPlayInBasementSelection,
+                                value: PetsGoInBasementSelection,
                               ),
                               SizedBox(
                                 height: 4,
                               ),
                               new TextFormField(
                                 controller: _HavePetsCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "6. Comment *",
+                                    labelText: "6. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1419,7 +1420,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || NoticedBugsOrRodentsSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "7. Have you ever noticed bugs/rodents in the basement? *",
@@ -1447,14 +1448,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               new TextFormField(
                                 controller: _NoticedBugsCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "7. Comment *",
+                                    labelText: "7. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1466,10 +1467,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || GetWaterSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
-                                        "8. Do you get water?* How high does the water level get?",
+                                        "8. Do you get water? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1494,14 +1495,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               new TextFormField(
                                 controller: _GetWaterCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "8. Comment *",
+                                    labelText: "8. How high does the water level get? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1542,7 +1543,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || SeeCondensationPipesDrippingSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "10. Do you ever see pipes dripping (condensation)? *",
@@ -1571,14 +1572,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               new TextFormField(
                                 controller:
                                     _EverSeePipesDrippingCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "10. Comment *",
+                                    labelText: "10. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1590,7 +1591,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || RepairsTryAndFixSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "11. Have you done any repairs to try and fix these problems? *",
@@ -1619,14 +1620,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               new TextFormField(
                                 controller:
                                     _AnyRepairsToTryAndFixCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "11. Comment *",
+                                    labelText: "11. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1638,10 +1639,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || LivingPlanSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
-                                        "12. How long do you plan on living here?* Are you planning to sell*",
+                                        "12. How long do you plan on living here? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1666,10 +1667,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || SellPlaningSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
-                                        "12. How long do you plan on living here?* Are you planning to sell*",
+                                        "12. Are you planning to sell*",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1721,7 +1722,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 ? "Required" : null,
+                                validator: (index)=> index==0 || HomeTestedForRadonSelection==null ? "Required" : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "14. Has your home been tested for radon in the past 2 years? *",
@@ -1750,14 +1751,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               new TextFormField(
                                 controller:
                                     _TestedForRadonInThePast2YearsCommentController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+//                                validator: (val)=> val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "14. Comment *",
+                                    labelText: "14. Comment",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1773,7 +1774,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   Expanded(
                                     child: DropdownButtonFormField(
                                       isDense: true,
-                                      validator: (index)=> index==0 ? "Required" : null,
+                                      validator: (index)=> index==0 || LosePowerSelection==null ? "Required" : null,
                                       decoration: new InputDecoration(
                                           labelText: "15. Do you lose power? *",
                                           labelStyle: customTextStyle(),
@@ -1804,7 +1805,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   Expanded(
                                     child: DropdownButtonFormField(
                                       isDense: true,
-                                      validator: (index)=> index==0 ? "Required" : null,
+                                      validator: (index)=> index==0 || LosePowerHowOftenSelection==null ? "Required" : null,
                                       decoration: new InputDecoration(
                                           labelText: "If so how often? *",
                                           labelStyle: customTextStyle(),
