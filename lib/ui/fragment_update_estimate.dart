@@ -482,8 +482,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                               padding: EdgeInsets.all(16),
                               child: Table(
                                 columnWidths: {
-                                  0: FlexColumnWidth(3.5),
-                                  1: FlexColumnWidth(1),
+                                  0: FlexColumnWidth(3),
+                                  1: FlexColumnWidth(1.5),
                                   2: FlexColumnWidth(.5),
                                 },
                                 defaultVerticalAlignment:
@@ -580,9 +580,45 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                                 width: 16,
                                               ),
                                               Text(
-                                                "${_productList[index].Rate.replaceAllMapped(reg, mathFunc)}",
+                                                "${_discountController.text == "0" ? _productList[index].Rate.replaceAllMapped(reg, mathFunc) : _productList[index].Rate.replaceAllMapped(reg, mathFunc)}",
                                                 style: listTextStyle(),
-                                              )
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Icon(MdiIcons.cashUsd),
+                                              SizedBox(
+                                                width: 16,
+                                              ),
+                                              RichText(
+                                                text: TextSpan(
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .body1,
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text:
+                                                            "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}"}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.black)),
+                                                    TextSpan(
+                                                        text:
+                                                            "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.red)),
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ],
@@ -1404,6 +1440,11 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                     itemBuilder: (context, suggestion) {
                                       Product product =
                                           Product.fromMap(suggestion, true);
+                                      for (Product item in _productList) {
+                                        if (item.guid == product.guid) {
+                                          return Container();
+                                        }
+                                      }
                                       return ListTile(
                                         leading: Icon(MdiIcons.cubeOutline),
                                         title: Text(product.name),

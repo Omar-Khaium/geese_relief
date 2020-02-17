@@ -356,55 +356,15 @@ class _LogInUIState extends State<LogInUI> {
           login.isAuthenticated = true;
           saveToDatabase();
         } else {
-          Flushbar(
-            flushbarPosition: FlushbarPosition.TOP,
-            flushbarStyle: FlushbarStyle.GROUNDED,
-            backgroundColor: Colors.redAccent,
-            icon: Icon(
-              Icons.error_outline,
-              size: 24.0,
-              color: Colors.white,
-            ),
-            duration: Duration(seconds: 4),
-            leftBarIndicatorColor: Colors.white70,
-            boxShadows: [
-              BoxShadow(
-                color: Colors.red[800],
-                offset: Offset(0.0, 2.0),
-                blurRadius: 3.0,
-              )
-            ],
-            title: "Authentication Error!",
-            message: "Check your \'Username\' and \'Password\' again.",
-            shouldIconPulse: false,
-          )..show(context);
           login.isAuthenticated = false;
           Navigator.of(context).pop();
+          showMessage(context, "Authentication Error!", "Check your \'Username\' and \'Password\' again.", Colors.redAccent, Icons.warning);
         }
       });
     } catch (error) {
-      Flushbar(
-        flushbarPosition: FlushbarPosition.TOP,
-        flushbarStyle: FlushbarStyle.GROUNDED,
-        backgroundColor: Colors.redAccent,
-        icon: Icon(
-          Icons.error_outline,
-          size: 24.0,
-          color: Colors.white,
-        ),
-        duration: Duration(seconds: 4),
-        leftBarIndicatorColor: Colors.white70,
-        boxShadows: [
-          BoxShadow(
-            color: Colors.red[800],
-            offset: Offset(0.0, 2.0),
-            blurRadius: 3.0,
-          )
-        ],
-        title: "Authentication Error!",
-        message: "Timeout!",
-        shouldIconPulse: false,
-      )..show(context);
+      login.isAuthenticated = false;
+      Navigator.of(context).pop();
+      showMessage(context, "Authentication Error!", "Timeout", Colors.redAccent, Icons.warning);
     }
   }
 

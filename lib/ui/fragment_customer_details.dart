@@ -809,6 +809,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           .then((response) {
         if (response.statusCode == 200) {
           Navigator.of(context).pop();
+          showMessage(context, "Profile Picture", "Successfully updated ${widget.customer.Name}'s profile picture",
+              Colors.green, Icons.check);
         } else {
           Navigator.of(context).pop();
           showMessage(context, "Error!", "Something went wrong",

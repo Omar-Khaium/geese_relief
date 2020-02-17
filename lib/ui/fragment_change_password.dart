@@ -6,7 +6,6 @@ import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
-import 'package:flutter_grate_app/ui/fragment_logout.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -23,6 +22,7 @@ class ChangePasswordFragment extends StatefulWidget {
 
 class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
 
+  var _formKey = GlobalKey<FormState>();
 
   TextEditingController _oldPaswordController = new TextEditingController();
   TextEditingController _newPaswordController = new TextEditingController();
@@ -42,18 +42,11 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
 
     var result = await http.post(BASE_URL+API_CHANGE_PASSWORD, headers: headers);
     if (result.statusCode == 200){
-      if(widget.login.password==_oldPaswordController.text){
-        if(_newPaswordController.text==_confirmPaswordController.text){
-          showPopup();
-        }
-        else {
-          showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
-        }
-      }
-
+      Navigator.of(context).pop();
+      showPopup();
     } else {
-      showMessage(context, "Network error!", json.decode(result.body), Colors.redAccent, Icons.warning);
-      return [];
+      Navigator.of(context).pop();
+      showMessage(context, "Network error!", result.body, Colors.redAccent, Icons.warning);
     }
   }
 
@@ -87,158 +80,175 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
             child: Divider(),
           ),
           Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: <Widget>[
-                new TextField(
-                  cursorColor: Colors.black87,
-                  controller: _oldPaswordController,
-                  keyboardType: TextInputType.emailAddress,
-                  obscureText: _isOldpAsswordObscureText,
-                  maxLines: 1,
-                  decoration: new InputDecoration(
-                    labelText: "Old Password",
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black87)),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    icon: new Icon(
-                      Icons.lock,
-                      color: Colors.grey,
-                    ),
-                    isDense: true,
-                    suffixIcon: new IconButton(
-                      icon: _isOldpAsswordObscureText
-                          ? new Icon(
-                        Icons.visibility,
-                      )
-                          : new Icon(
-                        Icons.visibility_off,
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  new TextFormField(
+                    validator: (val)=> val.isEmpty ? "Required" : null,
+                    cursorColor: Colors.black87,
+                    controller: _oldPaswordController,
+                    keyboardType: TextInputType.emailAddress,
+                    obscureText: _isOldpAsswordObscureText,
+                    maxLines: 1,
+                    decoration: new InputDecoration(
+                      labelText: "Old Password",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.lock,
+                        color: Colors.grey,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isOldpAsswordObscureText =
-                          _isOldpAsswordObscureText ? false : true;
-                        });
-                      },
-                      iconSize: 24,
+                      isDense: true,
+                      suffixIcon: new IconButton(
+                        icon: _isOldpAsswordObscureText
+                            ? new Icon(
+                          Icons.visibility,
+                        )
+                            : new Icon(
+                          Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isOldpAsswordObscureText =
+                            _isOldpAsswordObscureText ? false : true;
+                          });
+                        },
+                        iconSize: 24,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                new TextField(
-                  cursorColor: Colors.black87,
-                  controller: _newPaswordController,
-                  obscureText: _isNewpAsswordObscureText,
-                  keyboardType: TextInputType.emailAddress,
-                  maxLines: 1,
-                  decoration: new InputDecoration(
-                    labelText: "New Password",
-                    hintText: "e.g. ******",
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black87)),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    icon: new Icon(
-                      Icons.lock,
-                      color: Colors.grey,
-                    ),
-                    isDense: true,
-                    suffixIcon: new IconButton(
-                      icon: _isNewpAsswordObscureText
-                          ? new Icon(
-                        Icons.visibility,
-                      )
-                          : new Icon(
-                        Icons.visibility_off,
+                  SizedBox(
+                    height: 30,
+                  ),
+                  new TextFormField(
+                    validator: (val)=> val.isEmpty ? "Required" : null,
+                    cursorColor: Colors.black87,
+                    controller: _newPaswordController,
+                    obscureText: _isNewpAsswordObscureText,
+                    keyboardType: TextInputType.emailAddress,
+                    maxLines: 1,
+                    decoration: new InputDecoration(
+                      labelText: "New Password",
+                      hintText: "e.g. ******",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.lock,
+                        color: Colors.grey,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isNewpAsswordObscureText =
-                          _isNewpAsswordObscureText ? false : true;
-                        });
-                      },
-                      iconSize: 24,
+                      isDense: true,
+                      suffixIcon: new IconButton(
+                        icon: _isNewpAsswordObscureText
+                            ? new Icon(
+                          Icons.visibility,
+                        )
+                            : new Icon(
+                          Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isNewpAsswordObscureText =
+                            _isNewpAsswordObscureText ? false : true;
+                          });
+                        },
+                        iconSize: 24,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                new TextField(
-                  cursorColor: Colors.black87,
-                  controller: _confirmPaswordController,
-                  obscureText: _isConfirmpAsswordObscureText,
-                  keyboardType: TextInputType.emailAddress,
-                  maxLines: 1,
-                  decoration: new InputDecoration(
-                    labelText: "Confirm Password",
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black87)),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    icon: new Icon(
-                      Icons.lock,
-                      color: Colors.grey,
-                    ),
-                    isDense: true,
-                    suffixIcon: new IconButton(
-                      icon: _isConfirmpAsswordObscureText
-                          ? new Icon(
-                        Icons.visibility,
-                      )
-                          : new Icon(
-                        Icons.visibility_off,
+                  SizedBox(
+                    height: 30,
+                  ),
+                  new TextFormField(
+                    validator: (val)=> val.isEmpty ? "Required" : null,
+                    cursorColor: Colors.black87,
+                    controller: _confirmPaswordController,
+                    obscureText: _isConfirmpAsswordObscureText,
+                    keyboardType: TextInputType.emailAddress,
+                    maxLines: 1,
+                    decoration: new InputDecoration(
+                      labelText: "Confirm Password",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        Icons.lock,
+                        color: Colors.grey,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _isConfirmpAsswordObscureText =
-                          _isConfirmpAsswordObscureText ? false : true;
-                        });
-                      },
-                      iconSize: 24,
+                      isDense: true,
+                      suffixIcon: new IconButton(
+                        icon: _isConfirmpAsswordObscureText
+                            ? new Icon(
+                          Icons.visibility,
+                        )
+                            : new Icon(
+                          Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isConfirmpAsswordObscureText =
+                            _isConfirmpAsswordObscureText ? false : true;
+                          });
+                        },
+                        iconSize: 24,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    margin: EdgeInsets.only(right: 36),
-                    height: 64,
-                    width: 156,
-                    child: RaisedButton(
-                      highlightElevation: 5,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(36.0),
-                          side: BorderSide(color: Colors.white12)),
-                      disabledColor: Colors.black,
-                      color: Colors.black,
-                      elevation: 5,
-                      textColor: Colors.white,
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        "Submit",
-                        style: new TextStyle(
-                            color: Colors.white, fontSize: 22, fontFamily: "Roboto"),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      margin: EdgeInsets.only(right: 36),
+                      height: 64,
+                      width: 156,
+                      child: RaisedButton(
+                        highlightElevation: 5,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(36.0),
+                            side: BorderSide(color: Colors.white12)),
+                        disabledColor: Colors.black,
+                        color: Colors.black,
+                        elevation: 5,
+                        textColor: Colors.white,
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Submit",
+                          style: new TextStyle(
+                              color: Colors.white, fontSize: 22, fontFamily: "Roboto"),
+                        ),
+                        onPressed: (){
+                          if(_formKey.currentState.validate()){
+                            if(widget.login.password==_oldPaswordController.text && _oldPaswordController.text!=_newPaswordController.text && _oldPaswordController.text!=_confirmPaswordController.text && _newPaswordController.text==_confirmPaswordController.text) {
+                              showDialog(context: context, builder: (_)=>loadingAlert());
+                              getPasswordChanged();
+                            } else if (widget.login.password!=_oldPaswordController.text) {
+                              showMessage(context, "Validation Error", "Old Password didn't matched", Colors.red, Icons.error);
+                            } else if (_oldPaswordController.text==_newPaswordController.text) {
+                              showMessage(context, "Validation Error", "Old Password and new password can't be the same", Colors.red, Icons.error);
+                            } else if (_oldPaswordController.text==_confirmPaswordController.text) {
+                              showMessage(context, "Validation Error", "Old Password and confirm password can't be the same", Colors.red, Icons.error);
+                            } else if (_newPaswordController.text!=_confirmPaswordController.text) {
+                              showMessage(context, "Validation Error", "New password and Confirm password didn't matched", Colors.red, Icons.error);
+                            }
+                          }
+                          else{
+                            showMessage(context, "Validation Error", "Please fill all the fields", Colors.red, Icons.error);
+                          }
+                        },
                       ),
-                      onPressed: (){
-                        if(_oldPaswordController.text.isNotEmpty && _newPaswordController.text.isNotEmpty){
-                          getPasswordChanged();
-                        }
-                        else{
-                          showMessage(context, "Validation Error", "Please fill all the fields", Colors.red, Icons.error);
-                        }
-                      },
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )
         ],
@@ -342,7 +352,6 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                                        child: Text("Save your password first",style: new TextStyle(color: Colors.white,fontSize: 36),),
                                      );
                                   }
-
                                 },
                               ),
                             ),
