@@ -4,6 +4,7 @@ class CustomerDetails {
   String Id;
   String CustomerId;
   String Title;
+  String Type;
   String FirstName;
   String LastName;
   String BusinessName;
@@ -25,6 +26,7 @@ class CustomerDetails {
       this.Id,
       this.CustomerId,
       this.Title,
+      this.Type,
       this.FirstName,
       this.LastName,
       this.BusinessName,
@@ -114,11 +116,12 @@ class CustomerDetails {
     Id = map["CustomerDetails"]['Id'].toString();
     CustomerId = map["CustomerDetails"]['CustomerId'].toString();
     Title = map["CustomerDetails"]['Title'].toString();
+    Type = map["CustomerDetails"]['Type'].toString();
     FirstName = map["CustomerDetails"]['FirstName'];
     LastName = map["CustomerDetails"]['LastName'];
     BusinessName = map["CustomerDetails"]['BusinessName'];
     PrimaryPhone = map["CustomerDetails"]['PrimaryPhone'];
-    SecondaryPhone = map["CustomerDetails"]['SecondaryPhone'];
+    SecondaryPhone = map["CustomerDetails"]['CellNo'];
     EmailAddress = map["CustomerDetails"]['EmailAddress'];
     Street = map["CustomerDetails"]['Street'];
     City = map["CustomerDetails"]['City'];

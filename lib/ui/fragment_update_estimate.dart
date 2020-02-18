@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:painter/painter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../utils.dart';
 
@@ -69,6 +69,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
   List<Product> _productList = [];
   List<ProductImage> _productListForImage = [];
   Product selectedProduct;
+
+  String cameraImageURL = null;
 
   Widget _PMSignature = Container();
   Widget _HOSignature = Container();
@@ -698,24 +700,23 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                           ? Container(
                                               height: double.infinity,
                                               width: double.infinity,
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    "${_productListForImage[1].ImageLoc.startsWith("/Files") ? "https://api.gratecrm.com" + _productListForImage[1].ImageLoc : _productListForImage[1].ImageLoc}",
-                                                imageBuilder:
-                                                    (context, imageProvider) =>
-                                                        Container(
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: imageProvider,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                                placeholder: (context, url) =>
-                                                    CupertinoActivityIndicator(),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
+                                              child: FadeInImage
+                                                  .assetNetwork(
+                                                placeholder:
+                                                "images/loading.gif",
+                                                image: buildEstimateImageUrl(
+                                                    widget
+                                                        .customer
+                                                        .EstimateId,
+                                                    widget
+                                                        .loggedInUser
+                                                        .CompanyGUID,
+                                                    widget.login
+                                                        .username,
+                                                    Uuid()
+                                                        .v1()),
+                                                fit: BoxFit
+                                                    .cover,
                                               ),
                                             )
                                           : Icon(
@@ -2049,20 +2050,26 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
             return ProductImage.fromMap(mapForEditData['EstimateImage'][index]);
           }));
 
-          if (_productListForImage.length > 2) {
-            _Drawing = DrawingPlaceholder(
-                url: _productListForImage[2].ImageLoc.startsWith("/Files")
-                    ? "https://api.gratecrm.com" +
-                        _productListForImage[2].ImageLoc
-                    : _productListForImage[2].ImageLoc);
+          for(ProductImage product in _productListForImage) {
+            switch(product.ImageType) {
+              case "Draw":{
+                _Drawing = DrawingPlaceholder(
+                    url: product.ImageLoc.startsWith("/Files")
+                        ? "https://api.gratecrm.com" +
+                        product.ImageLoc
+                        : product.ImageLoc);
+              } break;
+              case "Sign":{
+                _HOSignature = SignaturePlaceholder(
+                    url: product.ImageLoc.startsWith("/Files")
+                        ? "https://api.gratecrm.com" +
+                        product.ImageLoc
+                        : product.ImageLoc);
+              } break;
+
+            }
           }
-          if (_productListForImage.length > 0) {
-            _HOSignature = SignaturePlaceholder(
-                url: _productListForImage[0].ImageLoc.startsWith("/Files")
-                    ? "https://api.gratecrm.com" +
-                        _productListForImage[0].ImageLoc
-                    : _productListForImage[0].ImageLoc);
-          }
+
           formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
           nextDate = formatDate(mapForEditData['Estimate']['DueDate']);
           estimateTaxTotal = mapForEditData['Estimate']['Tax'];

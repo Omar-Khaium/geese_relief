@@ -40,7 +40,10 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
       appBar: AppBar(
         title: Text(_isSearching
             ? "Searching"
-            : "${_list.length} ${_list.length > 1 ? "results" : "result"} found"),
+            : "${_list.length} ${_list.length > 1 ? "results" : "result"} found", style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold),),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        centerTitle: false,
       ),
       backgroundColor: Colors.white,
       body: StreamBuilder(

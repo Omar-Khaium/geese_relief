@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/navigation_model.dart';
@@ -6,7 +5,9 @@ import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:uuid/uuid.dart';
 
+import '../utils.dart';
 import 'collapsing_list_tile.dart';
 import 'drawer_theme.dart';
 
@@ -96,37 +97,14 @@ class SideNavUIState extends State<SideNavUI>
                               height: 28,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(28),
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.cover,
-                                  imageUrl: widget.loggedInUser.ProfilePicture
-                                          .startsWith("/Files")
-                                      ? "https://www.gratecrm.com" +
-                                          widget.loggedInUser.ProfilePicture
-                                      : widget.loggedInUser.ProfilePicture,
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  placeholder: (context, url) =>
-                                      CupertinoActivityIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      CircleAvatar(
-                                    maxRadius: 14,
-                                    minRadius: 14,
-                                    backgroundColor: Colors.black,
-                                    child: Text(
-                                      widget.loggedInUser.UserName
-                                          .substring(0, 1)
-                                          .toUpperCase(),
-                                      style: customButtonTextStyle(),
-                                    ),
-                                  ),
-                                ),
+                                child: FadeInImage.assetNetwork(placeholder: "images/loading.gif", image:  buildCustomerImageUrl(
+                                    widget
+                                        .loggedInUser.UserGUID,
+                                    widget
+                                        .loggedInUser
+                                        .CompanyGUID,
+                                    widget.login
+                                        .username, Uuid().v1()), fit: BoxFit.cover,),
                               ),
                             ),
                       SizedBox(

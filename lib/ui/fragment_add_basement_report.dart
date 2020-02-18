@@ -19,6 +19,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../utils.dart';
 
@@ -148,8 +149,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
   var _key = GlobalKey<FormState>();
 
+
+  ImageCache cache = new ImageCache();
   void initState() {
     super.initState();
+    cache.clear();
     Future.delayed(Duration.zero, () => getDropDownData());
   }
 
@@ -173,7 +177,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                   SizedBox(
                     width: 16,
                   ),
-                  Text("Basement Inspection Report", style: fragmentTitleStyle()),
+                  Text("Basement Inspection Report",
+                      style: fragmentTitleStyle()),
                 ],
               ),
             ),
@@ -213,7 +218,28 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ClipRRect(
                                   borderRadius:
                                       new BorderRadius.all(Radius.circular(12)),
-                                  child: _decideImageView()),
+                                  child: (widget.customer.ProfileImage !=
+                                              null &&
+                                          widget
+                                              .customer.ProfileImage.isNotEmpty
+                                      ? Container(
+                                          height: 140,
+                                          width: 150,
+                                          child:
+                                          FadeInImage.assetNetwork(placeholder: "images/loading.gif", image:  buildCustomerImageUrl(
+                                              widget
+                                                  .customer
+                                                  .CustomerId,
+                                              widget
+                                                  .loggedInUser
+                                                  .CompanyGUID,
+                                              widget.login
+                                                  .username, Uuid().v1()), fit: BoxFit.cover,),
+                                        )
+                                      : Icon(
+                                          Icons.person,
+                                          size: 142,
+                                        ))),
                               SizedBox(
                                 width: 8,
                               ),
@@ -228,12 +254,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   ),
                                   ListRowItem(
                                     icon: Icons.email,
-                                    text: widget.loggedInUser.CompanyEmailAddress,
+                                    text:
+                                        widget.loggedInUser.CompanyEmailAddress,
                                   ),
                                   ListRowItem(
                                     icon: Icons.phone,
-                                    text:
-                                        widget.loggedInUser.CompanyContactNumber,
+                                    text: widget
+                                        .loggedInUser.CompanyContactNumber,
                                   ),
                                   ListRowItem(
                                     icon: MdiIcons.fax,
@@ -320,7 +347,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || CurrentOutsideConditionsSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        CurrentOutsideConditionsSelection ==
+                                            null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Current Outside Conditions*",
                                     labelStyle: customTextStyle(),
@@ -351,7 +382,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               new TextFormField(
                                 controller: _OutsideRelativeHumidityController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+                                validator: (val) =>
+                                    val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.phone,
@@ -370,7 +402,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               new TextFormField(
                                 controller: _OutsideTemperatureController,
-                                validator: (val)=> val.isEmpty ? "Required" : null,
+                                validator: (val) =>
+                                    val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.numberWithOptions(
@@ -431,7 +464,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
                                         "Current Inside Condition",
@@ -448,7 +482,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index)=> index==0 || HeatSelection==null ? "Required" : null,
+                                        validator: (index) =>
+                                            index == 0 || HeatSelection == null
+                                                ? "Required"
+                                                : null,
                                         decoration: new InputDecoration(
                                             labelText: "Heat*",
                                             labelStyle: customTextStyle(),
@@ -460,8 +497,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             (index) {
                                           return DropdownMenuItem(
                                               value: index,
-                                              child: Text(
-                                                  HeatArray[index].DisplayText));
+                                              child: Text(HeatArray[index]
+                                                  .DisplayText));
                                         }),
                                         onChanged: (index) {
                                           FocusScope.of(context)
@@ -477,7 +514,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index)=> index==0 || AirSelection==null ? "Required" : null,
+                                        validator: (index) =>
+                                            index == 0 || AirSelection == null
+                                                ? "Required"
+                                                : null,
                                         decoration: new InputDecoration(
                                             labelText: "Air *",
                                             labelStyle: customTextStyle(),
@@ -549,9 +589,14 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index)=> index==0 || BasementDehumidifierSelection==null ? "Required" : null,
+                                        validator: (index) => index == 0 ||
+                                                BasementDehumidifierSelection ==
+                                                    null
+                                            ? "Required"
+                                            : null,
                                         decoration: new InputDecoration(
-                                            labelText: "Basement Dehumidifier *",
+                                            labelText:
+                                                "Basement Dehumidifier *",
                                             labelStyle: customTextStyle(),
                                             hintText: "e.g. hint",
                                             hintStyle: customHintStyle(),
@@ -563,14 +608,16 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                           return DropdownMenuItem(
                                               value: index,
                                               child: Text(
-                                                  BasementDehumidifierArray[index]
+                                                  BasementDehumidifierArray[
+                                                          index]
                                                       .DisplayText));
                                         }),
                                         onChanged: (index) {
                                           FocusScope.of(context)
                                               .requestFocus(FocusNode());
                                           setState(() {
-                                            BasementDehumidifierSelection = index;
+                                            BasementDehumidifierSelection =
+                                                index;
                                           });
                                         },
                                         value: BasementDehumidifierSelection,
@@ -662,7 +709,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || GroundWaterSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || GroundWaterSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Ground Water *",
                                     labelStyle: customTextStyle(),
@@ -670,10 +720,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -696,7 +748,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(RatingArray.length, (index) {
+                                items:
+                                    List.generate(RatingArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child:
@@ -716,7 +769,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || IronBacteriaSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || IronBacteriaSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Iron Bacteria *",
                                     labelStyle: customTextStyle(),
@@ -724,10 +780,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -750,7 +808,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(RatingArray.length, (index) {
+                                items:
+                                    List.generate(RatingArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child:
@@ -770,7 +829,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || CondensationSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || CondensationSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Condensation *",
                                     labelStyle: customTextStyle(),
@@ -778,10 +840,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -804,7 +868,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(RatingArray.length, (index) {
+                                items:
+                                    List.generate(RatingArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child:
@@ -824,7 +889,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || WallCracksSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || WallCracksSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Wall Cracks *",
                                     labelStyle: customTextStyle(),
@@ -832,10 +900,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -858,7 +928,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(RatingArray.length, (index) {
+                                items:
+                                    List.generate(RatingArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child:
@@ -878,7 +949,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || FloorCracksSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || FloorCracksSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Floor Cracks *",
                                     labelStyle: customTextStyle(),
@@ -886,10 +960,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -912,7 +988,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(RatingArray.length, (index) {
+                                items:
+                                    List.generate(RatingArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
                                       child:
@@ -932,7 +1009,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || ExistingSumpPumpSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        ExistingSumpPumpSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Existing Sump Pump *",
                                     labelStyle: customTextStyle(),
@@ -940,10 +1020,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -959,7 +1041,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || ExistingDrainageSystemSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        ExistingDrainageSystemSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Existing Drainage System *",
                                     labelStyle: customTextStyle(),
@@ -967,10 +1052,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -986,7 +1073,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || ExistingRadonSystemSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        ExistingRadonSystemSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Radon System (existing) *",
                                     labelStyle: customTextStyle(),
@@ -994,10 +1084,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1013,7 +1105,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || DryerVentToCodeSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        DryerVentToCodeSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Dryer Vent To Code? *",
                                     labelStyle: customTextStyle(),
@@ -1021,10 +1116,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1040,7 +1137,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || FoundationTypeSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        FoundationTypeSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Foundation Type? *",
                                     labelStyle: customTextStyle(),
@@ -1069,7 +1169,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || BulkheadSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || BulkheadSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Bulkhead? *",
                                     labelStyle: customTextStyle(),
@@ -1077,10 +1180,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1154,7 +1259,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || NoticedSmellsOrOdorsSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        NoticedSmellsOrOdorsSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "1. Have you ever noticed smells/odors coming from the basement? *",
@@ -1163,10 +1271,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1201,7 +1311,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || NoticedMoldOrMildewSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        NoticedMoldOrMildewSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "2. Have you ever noticed mold/mildew on any item in the basement? *",
@@ -1210,10 +1323,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1248,7 +1363,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || BasementGoDownSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        BasementGoDownSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "3. How often do you go down in the basement? *",
@@ -1276,7 +1394,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || HomeSufferForRespiratoryProblemsSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        HomeSufferForRespiratoryProblemsSelection ==
+                                            null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "4. Does anyone in the home suffer from respiratory problems? *",
@@ -1285,10 +1407,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1298,7 +1422,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                         index;
                                   });
                                 },
-                                value: HomeSufferForRespiratoryProblemsSelection,
+                                value:
+                                    HomeSufferForRespiratoryProblemsSelection,
                               ),
                               SizedBox(
                                 height: 4,
@@ -1325,7 +1450,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || ChildrenPlayInBasementSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        ChildrenPlayInBasementSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "5. Do your children play in the basement? *",
@@ -1334,10 +1462,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1373,7 +1503,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || PetsGoInBasementSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        PetsGoInBasementSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "6. Do you have pets that go in the basement? *",
@@ -1382,10 +1515,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1420,7 +1555,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || NoticedBugsOrRodentsSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        NoticedBugsOrRodentsSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "7. Have you ever noticed bugs/rodents in the basement? *",
@@ -1429,10 +1567,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1467,19 +1607,23 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || GetWaterSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || GetWaterSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
-                                    labelText:
-                                        "8. Do you get water? *",
+                                    labelText: "8. Do you get water? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1502,7 +1646,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
-                                    labelText: "8. How high does the water level get? *",
+                                    labelText:
+                                        "8. How high does the water level get? *",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1543,7 +1688,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || SeeCondensationPipesDrippingSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        SeeCondensationPipesDrippingSelection ==
+                                            null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "10. Do you ever see pipes dripping (condensation)? *",
@@ -1552,16 +1701,19 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
                                       .requestFocus(FocusNode());
                                   setState(() {
-                                    SeeCondensationPipesDrippingSelection = index;
+                                    SeeCondensationPipesDrippingSelection =
+                                        index;
                                   });
                                 },
                                 value: SeeCondensationPipesDrippingSelection,
@@ -1591,7 +1743,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || RepairsTryAndFixSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        RepairsTryAndFixSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "11. Have you done any repairs to try and fix these problems? *",
@@ -1600,10 +1755,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1639,7 +1796,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || LivingPlanSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || LivingPlanSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "12. How long do you plan on living here? *",
@@ -1648,10 +1808,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1667,19 +1829,23 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || SellPlaningSelection==null ? "Required" : null,
+                                validator: (index) =>
+                                    index == 0 || SellPlaningSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
-                                    labelText:
-                                        "12. Are you planning to sell*",
+                                    labelText: "12. Are you planning to sell*",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1703,10 +1869,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1722,7 +1890,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index)=> index==0 || HomeTestedForRadonSelection==null ? "Required" : null,
+                                validator: (index) => index == 0 ||
+                                        HomeTestedForRadonSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "14. Has your home been tested for radon in the past 2 years? *",
@@ -1731,10 +1902,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     hintStyle: customHintStyle(),
                                     alignLabelWithHint: false,
                                     isDense: true),
-                                items: List.generate(YesNoArray.length, (index) {
+                                items:
+                                    List.generate(YesNoArray.length, (index) {
                                   return DropdownMenuItem(
                                       value: index,
-                                      child: Text(YesNoArray[index].DisplayText));
+                                      child:
+                                          Text(YesNoArray[index].DisplayText));
                                 }),
                                 onChanged: (index) {
                                   FocusScope.of(context)
@@ -1774,7 +1947,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   Expanded(
                                     child: DropdownButtonFormField(
                                       isDense: true,
-                                      validator: (index)=> index==0 || LosePowerSelection==null ? "Required" : null,
+                                      validator: (index) => index == 0 ||
+                                              LosePowerSelection == null
+                                          ? "Required"
+                                          : null,
                                       decoration: new InputDecoration(
                                           labelText: "15. Do you lose power? *",
                                           labelStyle: customTextStyle(),
@@ -1782,8 +1958,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                           hintStyle: customHintStyle(),
                                           alignLabelWithHint: false,
                                           isDense: true),
-                                      items: List.generate(LosePowerArray.length,
-                                          (index) {
+                                      items: List.generate(
+                                          LosePowerArray.length, (index) {
                                         return DropdownMenuItem(
                                             value: index,
                                             child: Text(LosePowerArray[index]
@@ -1805,7 +1981,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   Expanded(
                                     child: DropdownButtonFormField(
                                       isDense: true,
-                                      validator: (index)=> index==0 || LosePowerHowOftenSelection==null ? "Required" : null,
+                                      validator: (index) => index == 0 ||
+                                              LosePowerHowOftenSelection == null
+                                          ? "Required"
+                                          : null,
                                       decoration: new InputDecoration(
                                           labelText: "If so how often? *",
                                           labelStyle: customTextStyle(),
@@ -1813,8 +1992,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                           hintStyle: customHintStyle(),
                                           alignLabelWithHint: false,
                                           isDense: true),
-                                      items: List.generate(LosePowerArray.length,
-                                          (index) {
+                                      items: List.generate(
+                                          LosePowerArray.length, (index) {
                                         return DropdownMenuItem(
                                             value: index,
                                             child: Text(LosePowerArray[index]
@@ -1915,14 +2094,17 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                         alignment: Alignment.centerRight,
                         child: InkWell(
                           onTap: () {
-                            if(_key.currentState.validate()) {
-                              showDialog(context: context, builder: (_)=>loadingAlert());
+                            if (_key.currentState.validate()) {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => loadingAlert());
                               _checkConnectivity();
                             }
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(36)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(36)),
                               color: Colors.black,
                               boxShadow: [
                                 BoxShadow(
@@ -1955,92 +2137,6 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
         ),
       ),
     );
-  }
-
-  _openGallery(BuildContext context) async {
-    File pickFromGallery =
-        (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile = pickFromGallery;
-    });
-    Navigator.of(context).pop();
-  }
-
-  _openCamera(BuildContext context) async {
-    File pickFromGallery =
-        (await ImagePicker.pickImage(source: ImageSource.camera));
-    setState(() {
-      _imageFile = pickFromGallery;
-    });
-    Navigator.of(context).pop();
-  }
-
-  Future<void> _showDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Make A choice"),
-            content: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: ListBody(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: GestureDetector(
-                        child: Text("Gallery"),
-                        onTap: () {
-                          _openGallery(context);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: GestureDetector(
-                        child: Text("Camera"),
-                        onTap: () {
-                          _openCamera(context);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
-
-  Widget _decideImageView() {
-    if (widget.customer.ProfileImage != null &&
-        widget.customer.ProfileImage.isNotEmpty) {
-      return GestureDetector(
-        child: Image.network(
-          widget.customer.ProfileImage,
-          height: 140,
-          width: 150,
-          fit: BoxFit.cover,
-        ),
-        onTap: () {
-          _showDialog(context);
-        },
-      );
-    } else {
-      if (_imageFile != null) {
-        return Image.file(
-          _imageFile,
-          width: 150,
-          height: 140,
-          fit: BoxFit.cover,
-        );
-      } else {
-        return Icon(
-          Icons.person,
-          size: 150,
-        );
-      }
-    }
   }
 
   Future getDropDownData() async {
@@ -2105,8 +2201,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       }
     } catch (error) {
       Navigator.of(context).pop();
-      showMessage(context, "Error!", "Something Went Wrong.",
-          Colors.redAccent, Icons.warning);
+      showMessage(context, "Error!", "Something Went Wrong.", Colors.redAccent,
+          Icons.warning);
     }
   }
 

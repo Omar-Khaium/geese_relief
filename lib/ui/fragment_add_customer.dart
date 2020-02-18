@@ -53,7 +53,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
   TextEditingController _lastNameController = new TextEditingController();
   TextEditingController _businessTypeController = new TextEditingController();
   TextEditingController _primaryPhoneController = new TextEditingController();
-  TextEditingController _secondaryPhoneController = new TextEditingController();
   TextEditingController _cellPhoneController = new TextEditingController();
   TextEditingController _emailController = new TextEditingController();
   TextEditingController _streetController = new TextEditingController();
@@ -310,68 +309,35 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                         flex: 2,
                         child: TextFormField(
                           cursorColor: Colors.black87,
-                          controller: _secondaryPhoneController,
+                          style: customTextStyle(),
+                          controller: _cellPhoneController,
+                          keyboardType: TextInputType.number,
+                          textInputAction: TextInputAction.next,
+                          maxLines: 1,
+                          autofocus: false,
                           onChanged: (val) {
                             setState(() {});
                           },
-                          keyboardType: TextInputType.number,
-                          maxLines: 1,
-                          autofocus: false,
-                          textInputAction: TextInputAction.next,
-                          style: customTextStyle(),
                           inputFormatters: <TextInputFormatter>[
                             WhitelistingTextInputFormatter.digitsOnly,
                             _UsNumberTextInputFormatter,
                           ],
                           decoration: new InputDecoration(
-                            labelText: "Secondary Phone",
+                            labelText: "Cell Phone",
                             focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.black87)),
+                                borderSide: BorderSide(color: Colors.black87)),
                             enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.grey)),
                             icon: new Icon(
                               Icons.call,
                               color: Colors.grey,
                             ),
-                            hintStyle: customHintStyle(),
                             isDense: true,
+                            hintStyle: customHintStyle(),
                           ),
                         ),
                       ),
                     ],
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  TextFormField(
-                    cursorColor: Colors.black87,
-                    style: customTextStyle(),
-                    controller: _cellPhoneController,
-                    keyboardType: TextInputType.number,
-                    textInputAction: TextInputAction.next,
-                    maxLines: 1,
-                    autofocus: false,
-                    onChanged: (val) {
-                      setState(() {});
-                    },
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      _UsNumberTextInputFormatter,
-                    ],
-                    decoration: new InputDecoration(
-                      labelText: "Cell Phone",
-                      focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87)),
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
-                      icon: new Icon(
-                        Icons.call,
-                        color: Colors.grey,
-                      ),
-                      isDense: true,
-                      hintStyle: customHintStyle(),
-                    ),
                   ),
                   SizedBox(
                     height: 16,
@@ -441,6 +407,73 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                   ),
                   SizedBox(
                     height: 16,
+                  ),TypeAheadFormField(
+                    validator: (val) {
+                      return _zipController.text.isNotEmpty
+                          ? null
+                          : "* Required";
+                    },
+                    textFieldConfiguration: TextFieldConfiguration(
+                        controller: _zipController,
+                        autofocus: false,
+                        keyboardType: TextInputType.number,
+                        maxLength: 5,
+                        decoration: new InputDecoration(
+                          labelText: "Zip",
+                          hintText: "e.g. - 12345",
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.black87)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.grey)),
+                          icon: new Icon(
+                            MdiIcons.zipBox,
+                            color: Colors.grey,
+                          ),
+                          suffixIcon: _isGettingZipCodes
+                              ? CupertinoActivityIndicator()
+                              : Container(
+                            width: 0,
+                            height: 0,
+                          ),
+                          hintStyle: customHintStyle(),
+                          isDense: true,
+                        )),
+                    suggestionsCallback: (pattern) async {
+                      if (_zipController.text.length >= 3) {
+                        setState(() {
+                          _isGettingZipCodes = true;
+                        });
+                        return await getZipData(pattern);
+                      } else {
+                        return null;
+                      }
+                    },
+                    itemBuilder: (context, suggestion) {
+                      Zip zip = suggestion;
+                      return ListTile(
+                        leading: Icon(MdiIcons.zipBoxOutline),
+                        title: Text(zip.zipCode),
+                        subtitle: Row(
+                          children: <Widget>[
+                            Text(zip.city + ","),
+                            Text(zip.state),
+                          ],
+                        ),
+                      );
+                    },
+                    onSuggestionSelected: (suggestion) {
+                      zipDatas = suggestion;
+
+                      setState(() {
+                        _zipController.text = zipDatas.zipCode;
+                        _cityController.text = zipDatas.city;
+                        _stateController.text = zipDatas.state;
+                      });
+                    },
+                    hideSuggestionsOnKeyboardHide: true,
+                    hideOnError: true,
                   ),
                   TextFormField(
                     cursorColor: Colors.black87,
@@ -475,119 +508,38 @@ class _AddCustomerState extends State<AddCustomerFragment> {
                   SizedBox(
                     height: 16,
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: TextFormField(
-                          style: customTextStyle(),
-                          cursorColor: Colors.black87,
-                          controller: _stateController,
-                          autofocus: false,
-                          textCapitalization: TextCapitalization.characters,
-                          maxLength: 2,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          onChanged: (val) {
-                            setState(() {});
-                          },
-                          maxLines: 1,
-                          validator: (val) {
-                            return _stateController.text.isNotEmpty
-                                ? null
-                                : "* Required";
-                          },
-                          decoration: new InputDecoration(
-                            labelText: "State",
-                            focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.black87)),
-                            enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
-                            icon: new Icon(
-                              MdiIcons.homeCity,
-                              color: Colors.grey,
-                            ),
-                            hintStyle: customHintStyle(),
-                            isDense: true,
-                          ),
-                        ),
+                  TextFormField(
+                    style: customTextStyle(),
+                    cursorColor: Colors.black87,
+                    controller: _stateController,
+                    autofocus: false,
+                    textCapitalization: TextCapitalization.characters,
+                    maxLength: 2,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                    onChanged: (val) {
+                      setState(() {});
+                    },
+                    maxLines: 1,
+                    validator: (val) {
+                      return _stateController.text.isNotEmpty
+                          ? null
+                          : "* Required";
+                    },
+                    decoration: new InputDecoration(
+                      labelText: "State",
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                          BorderSide(color: Colors.black87)),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      icon: new Icon(
+                        MdiIcons.homeCity,
+                        color: Colors.grey,
                       ),
-                      SizedBox(
-                        width: 36,
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: TypeAheadFormField(
-                          validator: (val) {
-                            return _zipController.text.isNotEmpty
-                                ? null
-                                : "* Required";
-                          },
-                          textFieldConfiguration: TextFieldConfiguration(
-                              controller: _zipController,
-                              autofocus: false,
-                              keyboardType: TextInputType.number,
-                              maxLength: 5,
-                              decoration: new InputDecoration(
-                                labelText: "Zip",
-                                hintText: "e.g. - 12345",
-                                focusedBorder: UnderlineInputBorder(
-                                    borderSide:
-                                    BorderSide(color: Colors.black87)),
-                                enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                    BorderSide(color: Colors.grey)),
-                                icon: new Icon(
-                                  MdiIcons.zipBox,
-                                  color: Colors.grey,
-                                ),
-                                suffixIcon: _isGettingZipCodes
-                                    ? CupertinoActivityIndicator()
-                                    : Container(
-                                  width: 0,
-                                  height: 0,
-                                ),
-                                hintStyle: customHintStyle(),
-                                isDense: true,
-                              )),
-                          suggestionsCallback: (pattern) async {
-                            if (_zipController.text.length >= 3) {
-                              setState(() {
-                                _isGettingZipCodes = true;
-                              });
-                              return await getZipData(pattern);
-                            } else {
-                              return null;
-                            }
-                          },
-                          itemBuilder: (context, suggestion) {
-                            Zip zip = suggestion;
-                            return ListTile(
-                              leading: Icon(MdiIcons.zipBoxOutline),
-                              title: Text(zip.zipCode),
-                              subtitle: Row(
-                                children: <Widget>[
-                                  Text(zip.city + ","),
-                                  Text(zip.state),
-                                ],
-                              ),
-                            );
-                          },
-                          onSuggestionSelected: (suggestion) {
-                            zipDatas = suggestion;
-
-                            setState(() {
-                              _zipController.text = zipDatas.zipCode;
-                              _cityController.text = zipDatas.city;
-                              _stateController.text = zipDatas.state;
-                            });
-                          },
-                          hideSuggestionsOnKeyboardHide: true,
-                          hideOnError: true,
-                        ),
-                      ),
-                    ],
+                      hintStyle: customHintStyle(),
+                      isDense: true,
+                    ),
                   ),
                   SizedBox(
                     height: 36,
@@ -881,7 +833,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
         'BusinessName': '${_businessTypeController.text}',
         'Type': TypeArray[TypeDropdown].DataValue,
         'PrimaryPhone': '${_primaryPhoneController.text}',
-        'SecondaryPhone': '${_secondaryPhoneController.text}',
         'CellNo': '${_cellPhoneController.text}',
         'email': '${_emailController.text}',
         'Street': '${_streetController.text}',

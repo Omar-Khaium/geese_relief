@@ -11,6 +11,7 @@ import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 
 import 'package:http/http.dart' as http;
+
 class ChangePasswordFragment extends StatefulWidget {
   ValueChanged<int> backToDashboard;
   Login login;
@@ -230,8 +231,6 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                             if(widget.login.password==_oldPaswordController.text && _oldPaswordController.text!=_newPaswordController.text && _oldPaswordController.text!=_confirmPaswordController.text && _newPaswordController.text==_confirmPaswordController.text) {
                               showDialog(context: context, builder: (_)=>loadingAlert());
                               getPasswordChanged();
-                            } else if (widget.login.password!=_oldPaswordController.text) {
-                              showMessage(context, "Validation Error", "Old Password didn't matched", Colors.red, Icons.error);
                             } else if (_oldPaswordController.text==_newPaswordController.text) {
                               showMessage(context, "Validation Error", "Old Password and new password can't be the same", Colors.red, Icons.error);
                             } else if (_oldPaswordController.text==_confirmPaswordController.text) {

@@ -125,13 +125,15 @@ class _DashboardUIState extends State<DashboardUI>
   _backToCustomerDetailsFromEstimate(CustomerDetails customer) {
     setState(() {
       fragment = new CustomerDetailsFragment(login: widget.login,
+        loggedInUser: widget.loggedInUser,
         backToDashboard: _backToDashboard,
-        customer: customer,
         customerID: customer.Id,
+        customer: customer,
         goToAddEstimate: _goToAddEstimate,
+        goToRecommendedLevel: _goToAddRecommendedLevel,
         goToUpdateEstimate: _goToUpdateEstimate,
-        goToAddBasementReport: _goToBasementInspectionReport,
-        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,);
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
+        goToAddBasementReport: _goToBasementInspectionReport,);
     });
   }
 

@@ -255,6 +255,10 @@ loadingAlert() {
   );
 }
 
-String buildCustomerImageUrl(String customerId, String companyId) {
-  return "https://www.gratecrm.com/CustomerImgShow/W=172/H=172/CustomerId=$customerId/UserName=administrator/CompanyId=$companyId/Image_Preview.jpg";
+String buildCustomerImageUrl(String customerId, String companyId, String username, String guid) {
+  return "https://www.gratecrm.com/CustomerImgShow/W=144/H=144/CustomerId=$customerId/UserName=$username/CompanyId=$companyId/Image_Preview.jpg?$guid";
+}
+
+String buildEstimateImageUrl(String invoiceId, String companyId, String username, String guid) {
+  return "https://www.gratecrm.com/EstimateCameraImgShow/W=144/H=144/InvoiceId=$invoiceId/ImageType=Camera/UserName=$username/CompanyId=$companyId/Image_Preview.jpg?$guid";
 }

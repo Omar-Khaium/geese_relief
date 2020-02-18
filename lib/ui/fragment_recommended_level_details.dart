@@ -51,11 +51,15 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Recommended Level ${widget.index}"),
-        backgroundColor: Colors.black,
+        title: Text("Recommended Level ${widget.index}",style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold),),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: saveDialog,
+        onPressed: (){
+          showDialog(context: context, builder: (_)=> loadingAlert());
+          _save();
+        },
         icon: Icon(Icons.save),
         label: Text("Save"),
         backgroundColor: Colors.black,
@@ -391,52 +395,35 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
     );
   }
 
-  void saveDialog() async {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: AlertDialog(
-            title: Text(
-              "Saving Recommended Level",
-              style: estimateTextStyle(),
-            ),
-            contentTextStyle: estimateTextStyle(),
-          ),
-        );
-      },
-    );
-    bool status = await _save();
-    Navigator.of(context).pop();
-    showAPIResponse(context, status ? "Successful!" : "Failed!",
-        Color(status ? COLOR_SUCCESS : COLOR_DANGER));
-    if(status)
-      widget.backToCustomerDetails(0);
-  }
-
   Future _save() async {
-    Map<String, String> headers = {
-      'Authorization': widget.login.accessToken,
-      'Id': widget.customer.Id,
-      'RecommendedLevel': (widget.index).toString(),
-      'CompanyId': widget.loggedInUser.CompanyGUID,
-    };
+    try {
+      Map<String, String> headers = {
+        'Authorization': widget.login.accessToken,
+        'Id': widget.customer.Id,
+        'RecommendedLevel': (widget.index).toString(),
+        'CompanyId': widget.loggedInUser.CompanyGUID,
+      };
 
-    var result = await http.post(BASE_URL + API_SAVE_RECOMMENDED_LEVEL,
-        headers: headers);
-    if(result.statusCode==200){
+      var result = await http.post(BASE_URL + API_SAVE_RECOMMENDED_LEVEL,
+          headers: headers);
+      if (result.statusCode == 200) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        widget.backToCustomerDetails(0);
+        setState(() {});
+        showMessage(context, "Congratulations!", "Recommended level is saved as \"Level ${widget.index}\"",
+            Colors.green, Icons.warning);
+      }
+      else {
+        Navigator.of(context).pop();
+        showMessage(context, "Error!", "Something went wrong!!!",
+            Colors.redAccent, Icons.warning);
+      }
+    } catch(error) {
       Navigator.of(context).pop();
-      return json.decode(result.body)['result'];
-    }
-    else{
-      showMessage(context, "Network error!", "Something went wrong!!!",
+      showMessage(context, "Error!", "Something went wrong!!!",
           Colors.redAccent, Icons.warning);
     }
-
-
-
   }
 
 }
