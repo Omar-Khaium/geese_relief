@@ -55,7 +55,8 @@ class CustomerDetailsFragment extends StatefulWidget {
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   List<Estimate> _list = [];
   var _base64Image;
-var _future;
+  var _future;
+
   //-------------Image---------------
   File _imageFile;
 
@@ -164,7 +165,9 @@ var _future;
                 SizedBox(
                   width: 16,
                 ),
-                Text("${widget.customer==null?"Loading": "${widget.customer.Name}'s Profile"}", style: fragmentTitleStyle()),
+                Text(
+                    "${widget.customer == null ? "Loading" : "${widget.customer.Name}'s Profile"}",
+                    style: fragmentTitleStyle()),
               ],
             ),
           ),
@@ -204,68 +207,74 @@ var _future;
                                 child: Column(
                                   children: <Widget>[
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Row(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Stack(
                                               children: <Widget>[
                                                 ClipRRect(
                                                     borderRadius:
-                                                    new BorderRadius.all(
-                                                        Radius.circular(12)),
+                                                        new BorderRadius.all(
+                                                            Radius.circular(
+                                                                12)),
                                                     child: Container(
                                                       child: _imageFile != null
                                                           ? Image.file(
-                                                        _imageFile,
-                                                        width: 128,
-                                                        height: 128,
-                                                        fit: BoxFit.cover,
-                                                      )
+                                                              _imageFile,
+                                                              width: 128,
+                                                              height: 128,
+                                                              fit: BoxFit.cover,
+                                                            )
                                                           : (widget.customer
-                                                          .ProfileImage !=
-                                                          null &&
-                                                          widget
-                                                              .customer
-                                                              .ProfileImage
-                                                              .isNotEmpty
-                                                          ? Container(
-                                                        height: 128,
-                                                        width: 128,
-                                                        child: FadeInImage
-                                                            .assetNetwork(
-                                                          placeholder:
-                                                          "images/loading.gif",
-                                                          image: buildCustomerImageUrl(
-                                                              widget
-                                                                  .customer
-                                                                  .CustomerId,
-                                                              widget
-                                                                  .loggedInUser
-                                                                  .CompanyGUID,
-                                                              widget.login
-                                                                  .username,
-                                                              Uuid()
-                                                                  .v1()),
-                                                          fit: BoxFit
-                                                              .cover,
-                                                        ),
-                                                      )
-                                                          : Icon(
-                                                        Icons.person,
-                                                        size: 142,
-                                                      )),
-                                                      color: Colors.grey.shade100,
+                                                                          .ProfileImage !=
+                                                                      null &&
+                                                                  widget
+                                                                      .customer
+                                                                      .ProfileImage
+                                                                      .isNotEmpty
+                                                              ? Container(
+                                                                  height: 128,
+                                                                  width: 128,
+                                                                  child: FadeInImage
+                                                                      .assetNetwork(
+                                                                    placeholder:
+                                                                        "images/loading.gif",
+                                                                    image: buildCustomerImageUrl(
+                                                                        widget
+                                                                            .customer
+                                                                            .CustomerId,
+                                                                        widget
+                                                                            .loggedInUser
+                                                                            .CompanyGUID,
+                                                                        widget
+                                                                            .login
+                                                                            .username,
+                                                                        Uuid()
+                                                                            .v1()),
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                )
+                                                              : Icon(
+                                                                  Icons.person,
+                                                                  size: 142,
+                                                                )),
+                                                      color:
+                                                          Colors.grey.shade100,
                                                     )),
                                                 Positioned(
                                                   top: 4,
                                                   right: 4,
                                                   child: CircleAvatar(
-                                                    backgroundColor: Colors.black54,
+                                                    backgroundColor:
+                                                        Colors.black54,
                                                     child: InkWell(
                                                       child: Icon(
                                                         MdiIcons.pencil,
@@ -286,38 +295,52 @@ var _future;
                                             Column(
                                               mainAxisSize: MainAxisSize.min,
                                               crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
                                                   widget.customer.Name,
                                                   style: new TextStyle(
                                                       fontSize: 26,
-                                                      fontWeight: FontWeight.bold),
+                                                      fontWeight:
+                                                          FontWeight.bold),
                                                 ),
-                                                widget.customer.Type==null || widget.customer.Type.isEmpty ? SizedBox(
-                                                  height: 16,
-                                                ) : Container(),
-                                                widget.customer.Type==null || widget.customer.Type.isEmpty ? Row(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(MdiIcons.bagChecked),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                      widget.customer.Type,
-                                                      style: new TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ) : Container(),
+                                                widget.customer.Type == null ||
+                                                        widget.customer.Type
+                                                            .isEmpty
+                                                    ? Container()
+                                                    : SizedBox(
+                                                        height: 16,
+                                                      ),
+                                                widget.customer.Type == null ||
+                                                        widget.customer.Type
+                                                            .isEmpty
+                                                    ? Container()
+                                                    : Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Icon(MdiIcons
+                                                              .bagChecked),
+                                                          SizedBox(
+                                                            width: 6,
+                                                          ),
+                                                          Text(
+                                                            widget
+                                                                .customer.Type,
+                                                            style:
+                                                                new TextStyle(
+                                                                    fontSize:
+                                                                        16),
+                                                          ),
+                                                        ],
+                                                      ),
                                                 SizedBox(
                                                   height: 16,
                                                 ),
                                                 Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Icon(Icons.email),
                                                     SizedBox(
@@ -335,13 +358,15 @@ var _future;
                                                 ),
                                                 Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Icon(Icons.call),
                                                     SizedBox(
                                                       width: 6,
                                                     ),
-                                                    Text(widget.customer.ContactNum,
+                                                    Text(
+                                                        widget.customer
+                                                            .ContactNum,
                                                         style: new TextStyle(
                                                             fontSize: 16)),
                                                   ],
@@ -351,7 +376,7 @@ var _future;
                                                 ),
                                                 Row(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Icon(Icons.location_on),
                                                     SizedBox(
@@ -361,7 +386,7 @@ var _future;
                                                       widget.customer.Address,
                                                       style: listTextStyle(),
                                                       overflow:
-                                                      TextOverflow.ellipsis,
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ],
                                                 ),
@@ -371,16 +396,33 @@ var _future;
                                         ),
                                         IconButton(
                                           icon: Icon(Icons.edit),
-                                          onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(fullscreenDialog: true, builder: (_)=> EditCustomerFragment(login: widget.login,
-                                            loggedInUser: widget.loggedInUser,
-                                            backToDashboard: widget.backToDashboard,
-                                            customerID: widget.customer.Id,
-                                            customer: widget.customer,
-                                            goToAddEstimate: widget.goToAddEstimate,
-                                            goToRecommendedLevel: widget.goToRecommendedLevel,
-                                            goToUpdateEstimate: widget.goToUpdateEstimate,
-                                            goToUpdateBasementReport: widget.goToUpdateBasementReport,
-                                            goToAddBasementReport: widget.goToAddBasementReport,))),
+                                          onPressed: () => Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                                  fullscreenDialog: true,
+                                                  builder: (_) =>
+                                                      EditCustomerFragment(
+                                                        login: widget.login,
+                                                        loggedInUser:
+                                                            widget.loggedInUser,
+                                                        backToDashboard: widget
+                                                            .backToDashboard,
+                                                        customerID:
+                                                            widget.customer.Id,
+                                                        customer:
+                                                            widget.customer,
+                                                        goToAddEstimate: widget
+                                                            .goToAddEstimate,
+                                                        goToRecommendedLevel: widget
+                                                            .goToRecommendedLevel,
+                                                        goToUpdateEstimate: widget
+                                                            .goToUpdateEstimate,
+                                                        goToUpdateBasementReport:
+                                                            widget
+                                                                .goToUpdateBasementReport,
+                                                        goToAddBasementReport:
+                                                            widget
+                                                                .goToAddBasementReport,
+                                                      ))),
                                         )
                                       ],
                                     ),
@@ -812,9 +854,7 @@ var _future;
         await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
-      setState(() {
-
-      });
+      setState(() {});
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
