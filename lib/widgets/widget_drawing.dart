@@ -20,9 +20,6 @@ class _DrawingDialogState extends State<DrawingDialog> {
   PainterController _controller = new PainterController();
   bool _isLoading = false;
   bool _isErasing = false;
-  bool _isDrawing = false;
-  bool _isUndoing = false;
-  bool _isColorPicking = false;
   Color _lastColor = Colors.black;
   double _lastThickness = 2.0;
 

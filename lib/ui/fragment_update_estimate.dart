@@ -72,7 +72,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
 
   String cameraImageURL = null;
 
-  Widget _PMSignature = Container();
   Widget _HOSignature = Container();
   String base64Drawing = "";
   String base64PMSignature = "";
@@ -109,21 +108,25 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
 
   _openCamera() async {
     File cameraOutput =
-        (await ImagePicker.pickImage(source: ImageSource.camera));
-    setState(() {
-      _imageFile = cameraOutput;
-      uploadCameraImage();
-    });
+    (await ImagePicker.pickImage(source: ImageSource.camera));
+    if(cameraOutput!=null) {
+      setState(() {
+        _imageFile = cameraOutput;
+        uploadCameraImage();
+      });
+    }
     Navigator.of(context).pop();
   }
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
-        (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile = pickFromGallery;
-      uploadCameraImage();
-    });
+    (await ImagePicker.pickImage(source: ImageSource.gallery));
+    if(pickFromGallery!=null) {
+      setState(() {
+        _imageFile = pickFromGallery;
+        uploadCameraImage();
+      });
+    }
     Navigator.of(context).pop();
   }
 
@@ -132,13 +135,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
     picture.toPNG().then((val) {
       base64Drawing = base64.encode(val);
       uploadDrawingImage();
-    });
-  }
-
-  _generatePMSignaturePicture(PictureDetails picture) {
-    _PMSignature = PlaceImageFromPicture(picture);
-    picture.toPNG().then((val) {
-      base64PMSignature = base64.encode(val);
     });
   }
 
@@ -154,7 +150,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
   void initState() {
     _future = getEstimateData();
     _Drawing = DrawingPlaceholder();
-    _PMSignature = SignaturePlaceholder();
     _HOSignature = SignaturePlaceholder();
     nextDate =
         DateFormat('MM/dd/yyyy').format(DateTime.now().add(Duration(days: 15)));
@@ -690,14 +685,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                             fit: BoxFit.cover,
                                           ),
                                         )
-                                      : (_productListForImage.length > 1 &&
-                                              _productListForImage[1]
-                                                      .ImageLoc !=
-                                                  null &&
-                                              _productListForImage[1]
-                                                  .ImageLoc
-                                                  .isNotEmpty)
-                                          ? Container(
+                                      : Container(
                                               height: double.infinity,
                                               width: double.infinity,
                                               child: FadeInImage
@@ -718,10 +706,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                                 fit: BoxFit
                                                     .cover,
                                               ),
-                                            )
-                                          : Icon(
-                                              Icons.person,
-                                              size: 142,
                                             ),
                                   isCameraSaving
                                       ? Center(
@@ -1073,143 +1057,73 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                           SizedBox(
                             height: 8,
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 256,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return SignatureDialog(
-                                                picture:
-                                                    _generatePMSignaturePicture);
-                                          },
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width/4,
+                              height: 256,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return SignatureDialog(
+                                            picture:
+                                                _generateHOSignaturePicture);
+                                      },
+                                      fullscreenDialog: true
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text("Home Owner Signature"),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Expanded(
+                                        child: Stack(
+                                          children: <Widget>[
+                                            _HOSignature,
+                                            isHOSignatureSaving
+                                                ? Center(
+                                                    child:
+                                                        ShimmerUploadIcon(
+                                                            64),
+                                                  )
+                                                : Container(),
+                                          ],
                                         ),
-                                      );
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Text("PM Signature"),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Expanded(
-                                            child: Stack(
-                                              children: <Widget>[
-                                                _PMSignature,
-                                                isPMSignatureSaving
-                                                    ? Center(
-                                                        child:
-                                                            ShimmerUploadIcon(
-                                                                64),
-                                                      )
-                                                    : Container(),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Center(
-                                            child: Container(
-                                              color: Colors.grey.shade100,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: ListRowItem(
-                                                    icon: Icons.event,
-                                                    text:
-                                                        "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
-                                                  ),
-                                                ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Center(
+                                        child: Container(
+                                          color: Colors.grey.shade100,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: ListRowItem(
+                                                icon: Icons.event,
+                                                text:
+                                                    "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
                                               ),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 48,
-                                ),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return SignatureDialog(
-                                                picture:
-                                                    _generateHOSignaturePicture);
-                                          },
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Text("Home Owner Signature"),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Expanded(
-                                            child: Stack(
-                                              children: <Widget>[
-                                                _HOSignature,
-                                                isHOSignatureSaving
-                                                    ? Center(
-                                                        child:
-                                                            ShimmerUploadIcon(
-                                                                64),
-                                                      )
-                                                    : Container(),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Center(
-                                            child: Container(
-                                              color: Colors.grey.shade100,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: ListRowItem(
-                                                    icon: Icons.event,
-                                                    text:
-                                                        "${DateFormat('MM/dd/yyyy').format(DateTime.now())}",
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           )
                         ],

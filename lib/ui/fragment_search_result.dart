@@ -110,6 +110,16 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
                               ],
                             ),
                           ),
+                          Container(
+                            width: 100,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.all(8),
+                            margin: EdgeInsets.only(right: 16),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200
+                            ),
+                            child: Text(customer.CustomerType),
+                          )
                         ],
                       ),
                       SizedBox(

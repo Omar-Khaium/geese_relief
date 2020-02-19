@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/customer_model.dart';
 import 'package:flutter_grate_app/sqflite/database_info.dart';
@@ -41,7 +42,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
   int _totalSize = 0;
 
   DBHelper dbHelper = new DBHelper();
-
+  var _paginationFocus = FocusNode();
   var _future;
 
   @override
@@ -63,7 +64,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
         setState(() {
           _showPaginationShimmer = true;
         });
-
+        _paginationFocus.requestFocus();
         await fetchData();
         setState(() {
           _showPaginationShimmer = false;
@@ -157,6 +158,27 @@ class _DashboardFragmentState extends State<DashboardFragment>
                     fontSize: 16),
               ),
             ],
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: CupertinoSlidingSegmentedControl(
+              children: <int, Widget>{
+                0: Padding(
+                  child: Text("Leads"),
+                  padding: EdgeInsets.all(8),
+                ),
+                1: Padding(
+                  child: Text("Customers"),
+                  padding: EdgeInsets.all(8),
+                ),
+              },
+              onValueChanged: onValueChanged,
+              groupValue: currentSegment,
+              backgroundColor: CupertinoColors.tertiarySystemFill,
+            ),
           ),
           SizedBox(
             height: 16,
@@ -271,49 +293,53 @@ class _DashboardFragmentState extends State<DashboardFragment>
                             },
                           ),
                           _showPaginationShimmer
-                              ? Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              ShimmerItemCustomer(250),
-                                              SizedBox(
-                                                height: 8,
-                                              ),
-                                              ShimmerItemCustomer(125),
-                                              SizedBox(
-                                                height: 8,
-                                              ),
-                                              ShimmerItemCustomer(175),
-                                            ],
+                              ? Focus(
+                            autofocus: false,
+                                focusNode: _paginationFocus,
+                                child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                ShimmerItemCustomer(250),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                ShimmerItemCustomer(125),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                ShimmerItemCustomer(175),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              ShimmerItemMultiLineCustomer(300),
-                                            ],
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                ShimmerItemMultiLineCustomer(300),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                  ],
-                                )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                    ],
+                                  ),
+                              )
                               : Container(),
                           SizedBox(
                             height: 8,
@@ -344,7 +370,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
       'PageSize': '30',
-      'ResultType': 'Customer'
+      'ResultType': currentSegment == 1 ? 'Customer' : 'Lead'
     };
 
     var result =
@@ -370,7 +396,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
       'PageSize': '30',
-      'ResultType': 'Customer'
+      'ResultType': currentSegment == 1 ? 'Customer' : 'Lead'
     };
 
     var result =
@@ -389,6 +415,44 @@ class _DashboardFragmentState extends State<DashboardFragment>
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
       return [];
+    }
+  }
+
+  Future resetData() async {
+    showDialog(context: context, builder: (context) => loadingAlert());
+    try {
+      Map<String, String> headers = {
+        'Authorization': widget.login.accessToken,
+        'PageNo': "1",
+        'PageSize': '30',
+        'ResultType': currentSegment == 1 ? 'Customer' : 'Lead'
+      };
+
+      var result =
+          await http.get(BASE_URL + API_GET_ALL_CUSTOMER, headers: headers);
+      if (result.statusCode == 200) {
+        var map = json.decode(result.body);
+        _totalSize = map['data']['TotalCustomerCount']['Counter'];
+        var _customersMap = map['data']['CustomerList'];
+        List<Customer> _arrayList =
+            List.generate(_customersMap.length, (index) {
+          return Customer.fromMap(_customersMap[index]);
+        });
+
+        setState(() {
+          arrayList.clear();
+          arrayList.addAll(_arrayList);
+        });
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pop();
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+      }
+    } catch (error) {
+      Navigator.of(context).pop();
+      showMessage(context, "Network error!", "Something Went Wrong.",
+          Colors.redAccent, Icons.warning);
     }
   }
 
@@ -804,5 +868,14 @@ class _DashboardFragmentState extends State<DashboardFragment>
 
   redirectToCustomerDetails(Customer customer) {
     widget.goToCustomerDetails(customer.Id);
+  }
+
+  int currentSegment = 0;
+
+  void onValueChanged(int newValue) {
+    setState(() {
+      currentSegment = newValue;
+      resetData();
+    });
   }
 }

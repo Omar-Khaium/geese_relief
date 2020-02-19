@@ -19,8 +19,8 @@ class DrawingPlaceholder extends StatelessWidget {
         height: double.infinity,
             )
           : Text(
-              "Add Drawing",
-              style: defaultTextStyle,
+              "Tap To Draw",
+              style: Theme.of(context).textTheme.subtitle.copyWith(color: Colors.grey),
             ),
     );
   }

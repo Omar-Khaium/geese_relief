@@ -55,10 +55,9 @@ class CustomerDetailsFragment extends StatefulWidget {
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   List<Estimate> _list = [];
   var _base64Image;
-
+var _future;
   //-------------Image---------------
   File _imageFile;
-  ImageCache cache = new ImageCache();
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
@@ -87,7 +86,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   @override
   void initState() {
     super.initState();
-    cache.clear();
+    _future = getData();
   }
 
   Future<void> _showDialog(BuildContext context) {
@@ -165,7 +164,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                 SizedBox(
                   width: 16,
                 ),
-                Text("Customer Details", style: fragmentTitleStyle()),
+                Text("${widget.customer==null?"Loading": "${widget.customer.Name}'s Profile"}", style: fragmentTitleStyle()),
               ],
             ),
           ),
@@ -174,7 +173,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: getData(),
+              future: _future,
               builder: (context, snapshot) {
                 try {
                   if (snapshot.hasData) {
@@ -196,7 +195,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                 elevation: 4,
                                 child: Container(
                                   width: double.infinity,
-                                  height: 220,
+                                  height: 256,
                                   color: Colors.white,
                                 ),
                               ),
@@ -295,6 +294,24 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                       fontSize: 26,
                                                       fontWeight: FontWeight.bold),
                                                 ),
+                                                widget.customer.Type==null || widget.customer.Type.isEmpty ? SizedBox(
+                                                  height: 16,
+                                                ) : Container(),
+                                                widget.customer.Type==null || widget.customer.Type.isEmpty ? Row(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Icon(MdiIcons.bagChecked),
+                                                    SizedBox(
+                                                      width: 6,
+                                                    ),
+                                                    Text(
+                                                      widget.customer.Type,
+                                                      style: new TextStyle(
+                                                          fontSize: 16),
+                                                    ),
+                                                  ],
+                                                ) : Container(),
                                                 SizedBox(
                                                   height: 16,
                                                 ),
@@ -795,6 +812,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
+      setState(() {
+
+      });
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),

@@ -32,6 +32,12 @@ class _SignatureDialogState extends State<SignatureDialog> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(
+          color: Colors.white
+        ),
+      ),
       body: SafeArea(
         child: ModalProgressHUD(
           child: Container(
@@ -66,7 +72,7 @@ class _SignatureDialogState extends State<SignatureDialog> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: CircleAvatar(
-                        backgroundColor: Colors.white24,
+                        backgroundColor: Colors.blue,
                         radius: 32,
                             child: IconButton(
                               onPressed: () {

@@ -861,5 +861,4 @@ class _AddCustomerState extends State<AddCustomerFragment> {
           Colors.redAccent, Icons.warning);
     }
   }
-//-----------------------Offline DB-----------------------
 }

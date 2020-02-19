@@ -37,7 +37,7 @@ void showAPIResponse(BuildContext context, String title, Color color) {
     duration: Duration(seconds: 4),
     boxShadows: [
       BoxShadow(
-        color: color.withOpacity(1),
+        color: color,
         offset: Offset(0.0, 0.0),
         blurRadius: 1.0,
       )

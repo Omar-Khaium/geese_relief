@@ -99,43 +99,44 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
       GoDownBasementArray = [];
 
   DBHelper dbHelper = new DBHelper();
-  int CurrentOutsideConditionsSelection,
-      HeatSelection,
-      AirSelection,
-      BasementDehumidifierSelection,
-      GroundWaterSelection,
-      GroundWaterRatingSelection,
-      IronBacteriaSelection,
-      IronBacteriaRatingSelection,
-      CondensationSelection,
-      CondensationRatingSelection,
-      WallCracksSelection,
-      WallCracksRatingSelection,
-      FloorCracksSelection,
-      FloorCracksRatingSelection,
-      ExistingSumpPumpSelection,
-      ExistingDrainageSystemSelection,
-      ExistingRadonSystemSelection,
-      DryerVentToCodeSelection,
-      FoundationTypeSelection,
-      BulkheadSelection,
-      NoticedSmellsOrOdorsSelection,
-      NoticedMoldOrMildewSelection,
-      BasementGoDownSelection,
-      HomeSufferForRespiratoryProblemsSelection,
-      ChildrenPlayInBasementSelection,
-      PetsGoInBasementSelection,
-      NoticedBugsOrRodentsSelection,
-      GetWaterSelection,
-      RemoveWaterSelection,
-      SeeCondensationPipesDrippingSelection,
-      RepairsTryAndFixSelection,
-      LivingPlanSelection,
-      SellPlaningSelection,
-      PlansForBasementOnceSelection,
-      HomeTestedForRadonSelection,
-      LosePowerSelection,
-      LosePowerHowOftenSelection;
+
+  int CurrentOutsideConditionsSelection = 0,
+      HeatSelection = 0,
+      AirSelection = 0,
+      BasementDehumidifierSelection = 0,
+      GroundWaterSelection = 0,
+      GroundWaterRatingSelection = 0,
+      IronBacteriaSelection = 0,
+      IronBacteriaRatingSelection = 0,
+      CondensationSelection = 0,
+      CondensationRatingSelection = 0,
+      WallCracksSelection = 0,
+      WallCracksRatingSelection = 0,
+      FloorCracksSelection = 0,
+      FloorCracksRatingSelection = 0,
+      ExistingSumpPumpSelection = 0,
+      ExistingDrainageSystemSelection = 0,
+      ExistingRadonSystemSelection = 0,
+      DryerVentToCodeSelection = 0,
+      FoundationTypeSelection = 0,
+      BulkheadSelection = 0,
+      NoticedSmellsOrOdorsSelection = 0,
+      NoticedMoldOrMildewSelection = 0,
+      BasementGoDownSelection = 0,
+      HomeSufferForRespiratoryProblemsSelection = 0,
+      ChildrenPlayInBasementSelection = 0,
+      PetsGoInBasementSelection = 0,
+      NoticedBugsOrRodentsSelection = 0,
+      GetWaterSelection = 0,
+      RemoveWaterSelection = 0,
+      SeeCondensationPipesDrippingSelection = 0,
+      RepairsTryAndFixSelection = 0,
+      LivingPlanSelection = 0,
+      SellPlaningSelection = 0,
+      PlansForBasementOnceSelection = 0,
+      HomeTestedForRadonSelection = 0,
+      LosePowerSelection = 0,
+      LosePowerHowOftenSelection = 0;
 
   String base64Drawing = "";
   String base64PMSignature = "";
@@ -149,8 +150,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
 
   var _key = GlobalKey<FormState>();
 
-
   ImageCache cache = new ImageCache();
+
   void initState() {
     super.initState();
     cache.clear();
@@ -225,16 +226,15 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ? Container(
                                           height: 140,
                                           width: 150,
-                                          child:
-                                          FadeInImage.assetNetwork(placeholder: "images/loading.gif", image:  buildCustomerImageUrl(
-                                              widget
-                                                  .customer
-                                                  .CustomerId,
-                                              widget
-                                                  .loggedInUser
-                                                  .CompanyGUID,
-                                              widget.login
-                                                  .username, Uuid().v1()), fit: BoxFit.cover,),
+                                          child: FadeInImage.assetNetwork(
+                                            placeholder: "images/loading.gif",
+                                            image: buildCustomerImageUrl(
+                                                widget.customer.CustomerId,
+                                                widget.loggedInUser.CompanyGUID,
+                                                widget.login.username,
+                                                Uuid().v1()),
+                                            fit: BoxFit.cover,
+                                          ),
                                         )
                                       : Icon(
                                           Icons.person,
@@ -347,11 +347,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        CurrentOutsideConditionsSelection ==
-                                            null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    CurrentOutsideConditionsSelection == 0 ||
+                                            CurrentOutsideConditionsSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Current Outside Conditions*",
                                     labelStyle: customTextStyle(),
@@ -515,7 +516,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       DropdownButtonFormField(
                                         isDense: true,
                                         validator: (index) =>
-                                            index == 0 || AirSelection == null
+                                            AirSelection == 0 ||
+                                                    AirSelection == null
                                                 ? "Required"
                                                 : null,
                                         decoration: new InputDecoration(
@@ -589,11 +591,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                       ),
                                       DropdownButtonFormField(
                                         isDense: true,
-                                        validator: (index) => index == 0 ||
-                                                BasementDehumidifierSelection ==
-                                                    null
-                                            ? "Required"
-                                            : null,
+                                        validator: (index) =>
+                                            BasementDehumidifierSelection ==
+                                                        0 ||
+                                                    BasementDehumidifierSelection ==
+                                                        null
+                                                ? "Required"
+                                                : null,
                                         decoration: new InputDecoration(
                                             labelText:
                                                 "Basement Dehumidifier *",
@@ -710,7 +714,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || GroundWaterSelection == null
+                                    GroundWaterSelection == 0 ||
+                                            GroundWaterSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -770,7 +775,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || IronBacteriaSelection == null
+                                    IronBacteriaSelection == 0 ||
+                                            IronBacteriaSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -830,7 +836,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || CondensationSelection == null
+                                    CondensationSelection == 0 ||
+                                            CondensationSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -890,7 +897,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || WallCracksSelection == null
+                                    WallCracksSelection == 0 ||
+                                            WallCracksSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -950,7 +958,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || FloorCracksSelection == null
+                                    FloorCracksSelection == 0 ||
+                                            FloorCracksSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -1009,10 +1018,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        ExistingSumpPumpSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    ExistingSumpPumpSelection == 0 ||
+                                            ExistingSumpPumpSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Existing Sump Pump *",
                                     labelStyle: customTextStyle(),
@@ -1041,10 +1051,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        ExistingDrainageSystemSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    ExistingDrainageSystemSelection == 0 ||
+                                            ExistingDrainageSystemSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Existing Drainage System *",
                                     labelStyle: customTextStyle(),
@@ -1073,10 +1085,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        ExistingRadonSystemSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    ExistingRadonSystemSelection == 0 ||
+                                            ExistingRadonSystemSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Radon System (existing) *",
                                     labelStyle: customTextStyle(),
@@ -1105,10 +1118,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        DryerVentToCodeSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    DryerVentToCodeSelection == 0 ||
+                                            DryerVentToCodeSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Dryer Vent To Code? *",
                                     labelStyle: customTextStyle(),
@@ -1137,10 +1151,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        FoundationTypeSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    FoundationTypeSelection == 0 ||
+                                            FoundationTypeSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText: "Foundation Type? *",
                                     labelStyle: customTextStyle(),
@@ -1169,10 +1184,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) =>
-                                    index == 0 || BulkheadSelection == null
-                                        ? "Required"
-                                        : null,
+                                validator: (index) => BulkheadSelection == 0 ||
+                                        BulkheadSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "Bulkhead? *",
                                     labelStyle: customTextStyle(),
@@ -1259,10 +1274,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        NoticedSmellsOrOdorsSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    NoticedSmellsOrOdorsSelection == 0 ||
+                                            NoticedSmellsOrOdorsSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "1. Have you ever noticed smells/odors coming from the basement? *",
@@ -1311,10 +1328,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        NoticedMoldOrMildewSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    NoticedMoldOrMildewSelection == 0 ||
+                                            NoticedMoldOrMildewSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "2. Have you ever noticed mold/mildew on any item in the basement? *",
@@ -1363,10 +1381,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        BasementGoDownSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    BasementGoDownSelection == 0 ||
+                                            BasementGoDownSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "3. How often do you go down in the basement? *",
@@ -1394,11 +1413,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        HomeSufferForRespiratoryProblemsSelection ==
-                                            null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    HomeSufferForRespiratoryProblemsSelection ==
+                                                0 ||
+                                            HomeSufferForRespiratoryProblemsSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "4. Does anyone in the home suffer from respiratory problems? *",
@@ -1450,10 +1471,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        ChildrenPlayInBasementSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    ChildrenPlayInBasementSelection == 0 ||
+                                            ChildrenPlayInBasementSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "5. Do your children play in the basement? *",
@@ -1503,10 +1526,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        PetsGoInBasementSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    PetsGoInBasementSelection == 0 ||
+                                            PetsGoInBasementSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "6. Do you have pets that go in the basement? *",
@@ -1555,10 +1579,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        NoticedBugsOrRodentsSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    NoticedBugsOrRodentsSelection == 0 ||
+                                            NoticedBugsOrRodentsSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "7. Have you ever noticed bugs/rodents in the basement? *",
@@ -1607,10 +1633,10 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) =>
-                                    index == 0 || GetWaterSelection == null
-                                        ? "Required"
-                                        : null,
+                                validator: (index) => GetWaterSelection == 0 ||
+                                        GetWaterSelection == null
+                                    ? "Required"
+                                    : null,
                                 decoration: new InputDecoration(
                                     labelText: "8. Do you get water? *",
                                     labelStyle: customTextStyle(),
@@ -1647,7 +1673,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
                                     labelText:
-                                        "8. How high does the water level get? *",
+                                        "8. How high does the water level get?",
                                     labelStyle: customTextStyle(),
                                     hintText: "e.g. hint",
                                     hintStyle: customHintStyle(),
@@ -1688,11 +1714,13 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        SeeCondensationPipesDrippingSelection ==
-                                            null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    SeeCondensationPipesDrippingSelection ==
+                                                0 ||
+                                            SeeCondensationPipesDrippingSelection ==
+                                                null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "10. Do you ever see pipes dripping (condensation)? *",
@@ -1743,10 +1771,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        RepairsTryAndFixSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    RepairsTryAndFixSelection == 0 ||
+                                            RepairsTryAndFixSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "11. Have you done any repairs to try and fix these problems? *",
@@ -1797,7 +1826,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || LivingPlanSelection == null
+                                    LivingPlanSelection == 0 ||
+                                            LivingPlanSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -1830,7 +1860,8 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               DropdownButtonFormField(
                                 isDense: true,
                                 validator: (index) =>
-                                    index == 0 || SellPlaningSelection == null
+                                    SellPlaningSelection == 0 ||
+                                            SellPlaningSelection == null
                                         ? "Required"
                                         : null,
                                 decoration: new InputDecoration(
@@ -1890,10 +1921,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                               ),
                               DropdownButtonFormField(
                                 isDense: true,
-                                validator: (index) => index == 0 ||
-                                        HomeTestedForRadonSelection == null
-                                    ? "Required"
-                                    : null,
+                                validator: (index) =>
+                                    HomeTestedForRadonSelection == 0 ||
+                                            HomeTestedForRadonSelection == null
+                                        ? "Required"
+                                        : null,
                                 decoration: new InputDecoration(
                                     labelText:
                                         "14. Has your home been tested for radon in the past 2 years? *",
@@ -1947,10 +1979,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   Expanded(
                                     child: DropdownButtonFormField(
                                       isDense: true,
-                                      validator: (index) => index == 0 ||
-                                              LosePowerSelection == null
-                                          ? "Required"
-                                          : null,
+                                      validator: (index) =>
+                                          LosePowerSelection == 0 ||
+                                                  LosePowerSelection == null
+                                              ? "Required"
+                                              : null,
                                       decoration: new InputDecoration(
                                           labelText: "15. Do you lose power? *",
                                           labelStyle: customTextStyle(),
@@ -1981,10 +2014,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                   Expanded(
                                     child: DropdownButtonFormField(
                                       isDense: true,
-                                      validator: (index) => index == 0 ||
-                                              LosePowerHowOftenSelection == null
-                                          ? "Required"
-                                          : null,
+                                      validator: (index) =>
+                                          LosePowerHowOftenSelection == 0 ||
+                                                  LosePowerHowOftenSelection ==
+                                                      null
+                                              ? "Required"
+                                              : null,
                                       decoration: new InputDecoration(
                                           labelText: "If so how often? *",
                                           labelStyle: customTextStyle(),
@@ -2097,7 +2132,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                             if (_key.currentState.validate()) {
                               showDialog(
                                   context: context,
-                                  builder: (_) => loadingAlert());
+                                  builder: (context) => loadingAlert());
                               _checkConnectivity();
                             }
                           },
@@ -2139,8 +2174,12 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     );
   }
 
-  Future getDropDownData() async {
+  showAlert() {
     showDialog(context: context, builder: (_) => loadingAlert());
+  }
+
+  Future getDropDownData() async {
+    showAlert();
     try {
       Map<String, String> headers = {
         'Authorization': widget.login.accessToken,
@@ -2320,20 +2359,19 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
         try {
           if (response.statusCode == 200) {
             Map map = json.decode(response.body);
-            print("Successfully Inserted");
-            Navigator.of(context).pop();
+            Navigator.pop(context);
             showAPIResponse(context, "Inspection Created", Colors.green);
           } else {
-            Navigator.of(context).pop();
+            Navigator.pop(context);
             showAPIResponse(context, "Something Went Wrong", Colors.red);
           }
         } catch (error) {
-          Navigator.of(context).pop();
+          Navigator.pop(context);
           showAPIResponse(context, "Error :" + error.toString(), null);
         }
       });
     } catch (error) {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       showAPIResponse(context, "Error :" + error.toString(), null);
     }
   }
@@ -2468,6 +2506,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
   }
 
   _checkConnectivity() async {
+    showAlert();
     var result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
       await saveToDatabase();

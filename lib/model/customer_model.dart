@@ -3,6 +3,8 @@ class Customer {
   String Id;
   String CustomerId;
   String Title;
+  String Type;
+  String CustomerType;
   String FirstName;
   String LastName;
   String BusinessName;
@@ -14,7 +16,7 @@ class Customer {
   String State;
   String ZipCode;
 
-  Customer(this.Id, this.CustomerId, this.Title, this.FirstName, this.LastName,
+  Customer(this.Id, this.CustomerId, this.Title, this.Type, this.CustomerType, this.FirstName, this.LastName,
       this.BusinessName, this.PrimaryPhone, this.SecondaryPhone,
       this.EmailAddress, this.Street, this.City, this.State, this.ZipCode);
 
@@ -22,6 +24,8 @@ class Customer {
     Id = map['Id'].toString();
     CustomerId = map['CustomerId'];
     Title = map['Title'];
+    Type = map['Type'];
+    CustomerType = map['CustomerType'];
     FirstName = map['FirstName'];
     LastName = map['LastName'];
     BusinessName = map['BusinessName'];
@@ -55,7 +59,7 @@ class Customer {
   }
 
   String _CheckNames(){
-    return _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName);
+    return Type!=null&&Type=="Commercial" ? (BusinessName!=null&&BusinessName.isNotEmpty ? _CheckName(BusinessName) : _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName)) : _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName);
   }
 
   String _CheckName(String val){

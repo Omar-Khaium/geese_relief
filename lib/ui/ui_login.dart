@@ -2,21 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_grate_app/model/organaization_model.dart';
 import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
-import 'package:flutter_grate_app/ui/fragment_organization_list.dart';
+import 'package:flutter_grate_app/ui/ui_dashboard.dart';
 import 'package:flutter_grate_app/ui/ui_forgret_password.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 import 'package:flutter_grate_app/widgets/widget_dark_background.dart';
-import 'package:flutter_grate_app/widgets/widget_image_background.dart';
 import 'package:flutter_grate_app/widgets/widget_left_image.dart';
 import 'package:flutter_grate_app/widgets/widget_text.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../utils.dart';
 
@@ -54,14 +54,163 @@ class _LogInUIState extends State<LogInUI> {
           Icons.error_outline);
     } else {
       await getData(login);
+      await getOrganizationData(login);
 
       Navigator.of(context).pop();
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  new OrganizationListUI(login, loggedInUser)));
+      showDialog(context: context, barrierDismissible: false, builder: (context)=>BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 4,sigmaY: 4),
+        child: WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            content: Container(
+              height: 400,
+              width: 500,
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _list.length,
+                separatorBuilder: (BuildContext context, index) => Divider(),
+                itemBuilder: (BuildContext context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                        color: _list[index].selected
+                            ? Colors.white
+                            : Colors.white),
+                    child: ListTile(
+                      onTap: () {
+                        resetSelection(index);
+                        showDialog(
+                            context: context,
+                            builder: (_) => loadingAlert());
+                  saveOrganization(index, login);
+                      },
+                      trailing: _list[index].selected
+                          ? Icon(MdiIcons.checkDecagram, color: Colors.black,size: 36,)
+                          : SizedBox(width: 4,height: 4,),
+                      title: Text(
+                        _list[index].text,
+                        overflow: TextOverflow.ellipsis,
+                           style: Theme.of(context).textTheme.headline.copyWith(color: Colors.black, ),
+                        textDirection: TextDirection.ltr,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            title: Text("Please Choose A Company :", style: Theme.of(context).textTheme.headline.copyWith(color: Colors.black, fontWeight: FontWeight.bold),),
+            actions: <Widget>[
+              Container(
+                margin: EdgeInsets.all(8),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  ),
+                  onPressed: ()=>Navigator.of(context).pop(),
+                  color: Colors.grey.shade200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text("Close", style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.grey.shade700, fontWeight: FontWeight.bold),),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(8),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  ),
+                  onPressed: (){},
+                  color: Colors.grey.shade900,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text("Logout", style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ));
+    }
+  }
+
+  saveOrganization(index, Login login) async {
+    Map<String, String> headers = {
+      'Authorization': login.accessToken,
+      'Companyid': _list[index].value
+    };
+
+    var url = "https://api.gratecrm.com/ChangeDefaultCompany";
+    var result = await http.post(url, headers: headers);
+    try {
+      if (result.statusCode == 200) {
+        loggedInUser.CompanyGUID = _list[index].value;
+        loggedInUser.CompanyName = _list[index].text;
+        Navigator.of(context).pop();
+
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                new DashboardUI(widget.login, loggedInUser)));
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return null;
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  saveLoggedInUserToDatabase(LoggedInUser loggedInUser) async {
+    await dbHelper.deleteAll(DBInfo.TABLE_CURRENT_USER);
+    await dbHelper.save(loggedInUser, DBInfo.TABLE_CURRENT_USER);
+  }
+
+  resetSelection(index) async {
+    for (Organization item in _list) {
+      setState(() {
+        item.selected = false;
+      });
+    }
+    setState(() {
+      _list[index].selected = true;
+    });
+  }
+  List<Organization> _list = [];
+
+  Future getOrganizationData(Login login) async {
+    try {
+      Map<String, String> headers = {
+        'Authorization': login.accessToken,
+      };
+      var url = "https://api.gratecrm.com/GetOrganizationList";
+      var result = await http.get(url, headers: headers);
+      if (result.statusCode == 200) {
+        Map map = json.decode(result.body);
+        _list = List.generate(map['orglist'].length, (index) {
+          return Organization.fromMap(map['orglist'][index]);
+        });
+        if (_list.length == 1) {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                  new DashboardUI(login, loggedInUser)));
+        }
+        return result;
+      } else {
+        showMessage(context, "Network error!", json.decode(result.body),
+            Colors.redAccent, Icons.warning);
+        return {};
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -385,32 +534,5 @@ class _LogInUIState extends State<LogInUI> {
           Colors.redAccent, Icons.warning);
       return null;
     }
-  }
-
-  getOrganizationData() async {
-    try {
-      Map<String, String> headers = {
-        'Authorization': widget.login.accessToken,
-      };
-
-      var url = "https://api.gratecrm.com/GetOrganizationList";
-      var result = await http.get(url, headers: headers);
-      if (result.statusCode == 200) {
-        Map map = json.decode(result.body);
-        print(map['orglist'][0]['text']);
-        return result;
-      } else {
-        showMessage(context, "Network error!", json.decode(result.body),
-            Colors.redAccent, Icons.warning);
-        return {};
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
-
-  saveLoggedInUserToDatabase(LoggedInUser loggedInUser) async {
-    await dbHelper.deleteAll(DBInfo.TABLE_CURRENT_USER);
-    await dbHelper.save(loggedInUser, DBInfo.TABLE_CURRENT_USER);
   }
 }

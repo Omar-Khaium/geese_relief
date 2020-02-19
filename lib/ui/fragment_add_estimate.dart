@@ -1275,20 +1275,24 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
   _openCamera() async {
     File cameraOutput =
     (await ImagePicker.pickImage(source: ImageSource.camera));
-    setState(() {
-      _imageFile = cameraOutput;
-      uploadCameraImage();
-    });
+    if(cameraOutput!=null) {
+      setState(() {
+        _imageFile = cameraOutput;
+        uploadCameraImage();
+      });
+    }
     Navigator.of(context).pop();
   }
 
   _openGallery(BuildContext context) async {
     File pickFromGallery =
     (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile = pickFromGallery;
-      uploadCameraImage();
-    });
+    if(pickFromGallery!=null) {
+      setState(() {
+        _imageFile = pickFromGallery;
+        uploadCameraImage();
+      });
+    }
     Navigator.of(context).pop();
   }
 

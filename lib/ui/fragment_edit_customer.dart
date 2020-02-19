@@ -845,11 +845,12 @@ class _AddCustomerState extends State<EditCustomerFragment> {
         "Id": "${widget.customer.Id}",
       };
       http.post(BASE_URL + API_SAVE_CUSTOMER, headers: data).then((response) {
+        print(json.encode(data));
         if (response.statusCode == 200) {
           Navigator.of(context).pop();
           Navigator.of(context).pop();
           widget.backToDashboard(0);
-          showMessage(context, "Congratulations!", "New customer added successfully",
+          showMessage(context, "Congratulations!", "${widget.customer.Name}'s profile updated successfully",
               Colors.green, Icons.check);
         } else {
           Navigator.of(context).pop();
