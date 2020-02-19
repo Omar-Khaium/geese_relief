@@ -198,7 +198,9 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                 elevation: 4,
                                 child: Container(
                                   width: double.infinity,
-                                  height: 256,
+                                  height: widget.customer.Type == null ||
+                                      widget.customer.Type
+                                          .isEmpty ? 220 : 256,
                                   color: Colors.white,
                                 ),
                               ),
