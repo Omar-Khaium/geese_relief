@@ -171,7 +171,7 @@ class _DrawingDialogState extends State<DrawingDialog> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: CircleAvatar(
-                            backgroundColor: Colors.white10,
+                            backgroundColor: Colors.blue,
                             radius: 32,
                             child: IconButton(
                               onPressed: () {
