@@ -606,7 +606,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                                                 FontWeight.bold,
                                                             color:
                                                                 Colors.black)),
-                                                    _productList[index].Price.toInt() == 0 ? Container () : 
+                                                    _productList[index].Price.toInt() == 0  || _discountController.text == "0" ? Container () : 
                                                     TextSpan(
                                                         text:
                                                             "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
