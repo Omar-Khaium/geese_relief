@@ -220,6 +220,7 @@ const String API_DELETE_ESTIMATE = "DeleteEstimate";
 const String API_GENERATE_ESTIMATE = "GenerateEstimate";
 const String API_SEND_EMAIL = "SendEmailEstimate";
 const String API_SEARCH = "GlobalSearchCustomerAndLead";
+const int CURRENTSEGMENT = 0;
 
 Future<bool> saveInspectionReport(
     String header, BuildContext context, Login login, int id) async {

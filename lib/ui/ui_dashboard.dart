@@ -25,8 +25,6 @@ import 'fragment_update_estimate.dart';
 class DashboardUI extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
-
-
   DashboardUI(this.login, this.loggedInUser);
 
   @override

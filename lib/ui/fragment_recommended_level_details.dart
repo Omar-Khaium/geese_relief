@@ -120,7 +120,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 6
+                                  decoration: (widget.index) >= 5
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -144,7 +144,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 6
+                                  decoration: (widget.index) >= 5
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -168,7 +168,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 5
+                                  decoration: (widget.index) >= 4
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -192,7 +192,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 4
+                                  decoration: (widget.index) >= 3
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -216,7 +216,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 3
+                                  decoration: (widget.index) >= 2
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
@@ -240,7 +240,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
                                   color: Colors.grey.shade800,
                                   fontSize: 24,
                                   fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 3
+                                  decoration: (widget.index) >= 2
                                       ? TextDecoration.none
                                       : TextDecoration.lineThrough,
                                   decorationThickness: 2,
