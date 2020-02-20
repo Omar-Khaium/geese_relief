@@ -116,20 +116,23 @@ class _LogInUIState extends State<LogInUI> {
                   ),
                 ),
               ),
-              Container(
+              /*Container(
                 margin: EdgeInsets.all(8),
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)
                   ),
-                  onPressed: (){},
+                  onPressed: (){
+                    saveOrganization(index, login);
+
+                  },
                   color: Colors.grey.shade900,
                   child: Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Text("Logout", style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+                    child: Text("Login", style: Theme.of(context).textTheme.subhead.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),

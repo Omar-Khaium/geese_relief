@@ -6,6 +6,7 @@ import 'package:flutter_grate_app/sqflite/database_info.dart';
 import 'package:flutter_grate_app/sqflite/db_helper.dart';
 import 'package:flutter_grate_app/sqflite/model/BasementReport.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/ui/ui_login.dart';
 import 'package:flutter_grate_app/utils.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -261,7 +262,10 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
       builder: (BuildContext context) {
         return AlertDialog(
             backgroundColor: Colors.white,
-            title: Container(
+            contentPadding: EdgeInsets.all(0),
+            content: Container(
+              width: 400,
+              height: 400,
               color: Colors.white,
               child: Stack(
                 children: <Widget>[/*
@@ -297,7 +301,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
@@ -322,6 +326,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                                 },
                               ),
                             ),
+                            SizedBox(width: 24,),
                             Container(
                               width:128,
                               child: RaisedButton(
@@ -373,8 +378,10 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
       builder: (BuildContext context) {
         return AlertDialog(
             backgroundColor: Colors.white,
-            title: Container(
-              width: 300,
+            contentPadding: EdgeInsets.all(0),
+            content: Container(
+              width: 400,
+              height: 400,
               color: Colors.white,
               child: Stack(
                 children: <Widget>[/*
@@ -412,7 +419,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
@@ -437,6 +444,7 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                                 },
                               ),
                             ),
+                            SizedBox(width: 24,),
                             Container(
                               width:132,
                               child: RaisedButton(
@@ -460,6 +468,9 @@ class _ChangePasswordFragmentState extends State<ChangePasswordFragment> {
                                   widget.login.password=_newPaswordController.text;
                                   dbHelper.update(widget.login, DBInfo.TABLE_LOGIN);
                                   Navigator.of(context).pop();
+                                  widget.login.isAuthenticated = false;
+                                  Navigator.push(context,MaterialPageRoute(builder: (context)=>new LogInUI(widget.login)));
+
                                 },
                               ),
                             ),
