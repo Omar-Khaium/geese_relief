@@ -562,44 +562,22 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                           ),
                                           RichText(
                                             text: TextSpan(
-                                              style: Theme
-                                                  .of(context)
+                                              style: Theme.of(context)
                                                   .textTheme
                                                   .body1,
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
-                                                    "${_discountController
-                                                        .text == "0"
-                                                        ? _productList[index]
-                                                        .Price.replaceAllMapped(
-                                                        reg, mathFunc)
-                                                        : "${_productList[index]
-                                                        .Price.replaceAllMapped(
-                                                        reg, mathFunc)}"}",
+                                                    "${_discountController.text == "0.0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}"}",
                                                     style: TextStyle(
                                                         fontWeight:
                                                         FontWeight.bold,
                                                         color:
                                                         Colors.black)),
+                                                _productList[index].Discount == "0.00" ? TextSpan () :
                                                 TextSpan(
                                                     text:
-                                                    "${_discountController
-                                                        .text=="0.0"
-                                                        ?
-                                                   /* _productList[index]
-                                                        .Price.replaceAllMapped(
-                                                        reg, mathFunc)*/
-                                                   ""
-                                                        :
-                                                    " (${_productList[index]
-                                                        .discountAsPercentage
-                                                        ?
-                                                    "${_productList[index]
-                                                        .discount}%"
-                                                        :
-                                                    "\$${_productList[index]
-                                                        .discount}"} off )"}",
+                                                    "${_discountController.text == "0.00" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
                                                     style: TextStyle(
                                                         fontWeight:
                                                         FontWeight.bold,
@@ -1017,6 +995,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                           new TextField(
                             controller: _noteController,
                             obscureText: false,
+                            autofocus: false,
                             cursorColor: Colors.black,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
@@ -1858,19 +1837,24 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       'Content-Type': "application/json",
     };
 
-    Map<String, List> body = {};
-    List<Map<String, dynamic>> map = [];
-    for (Product product in _productList) {
-      map.add(product.toJson());
+    try{
+      Map<String, List> body = {};
+      List<Map<String, dynamic>> map = [];
+      for (Product product in _productList) {
+        map.add(product.toJson());
+      }
+      body['ListEstimate'] = map;
+      var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
+          headers: headers, body: json.encode(body));
+      if (result.statusCode == 200) {
+        return json.decode(result.body);
+      } else {
+        return false;
+      }
+    }catch(error){
+      print(error);
     }
-    body['ListEstimate'] = map;
-    var result = await http.post(BASE_URL + API_CREATE_ESTIMATE,
-        headers: headers, body: json.encode(body));
-    if (result.statusCode == 200) {
-      return json.decode(result.body);
-    } else {
-      return false;
-    }
+
   }
 
   discountColor() {

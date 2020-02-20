@@ -176,7 +176,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
                 ),
               },
               onValueChanged: onValueChanged,
-              groupValue: currentSegment,
+              groupValue: CURRENTSEGMENT,
               backgroundColor: CupertinoColors.tertiarySystemFill,
             ),
           ),
@@ -370,7 +370,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
       'PageSize': '30',
-      'ResultType': currentSegment == 1 ? 'Customer' : 'Lead'
+      'ResultType': CURRENTSEGMENT == 1 ? 'Customer' : 'Lead'
     };
 
     var result =
@@ -396,7 +396,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
       'Authorization': widget.login.accessToken,
       'PageNo': (++_pageNo).toString(),
       'PageSize': '30',
-      'ResultType': currentSegment == 1 ? 'Customer' : 'Lead'
+      'ResultType': CURRENTSEGMENT == 1 ? 'Customer' : 'Lead'
     };
 
     var result =
@@ -425,7 +425,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
         'Authorization': widget.login.accessToken,
         'PageNo': "1",
         'PageSize': '30',
-        'ResultType': currentSegment == 1 ? 'Customer' : 'Lead'
+        'ResultType': CURRENTSEGMENT == 1 ? 'Customer' : 'Lead'
       };
 
       var result =
@@ -870,11 +870,10 @@ class _DashboardFragmentState extends State<DashboardFragment>
     widget.goToCustomerDetails(customer.Id);
   }
 
-  int currentSegment = 0;
 
   void onValueChanged(int newValue) {
     setState(() {
-      currentSegment = newValue;
+      CURRENTSEGMENT = newValue;
       resetData();
     });
   }

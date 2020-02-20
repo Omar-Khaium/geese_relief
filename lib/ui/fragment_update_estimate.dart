@@ -600,16 +600,16 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                                   children: <TextSpan>[
                                                     TextSpan(
                                                         text:
-                                                            "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}"}",
+                                                            "${_discountController.text == "0.0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}"}",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color:
                                                                 Colors.black)),
-                                                    _productList[index].Price.toInt() == 0  || _discountController.text == "0" ? Container () : 
+                                                    _productList[index].Discount == "0.00" ? TextSpan () :
                                                     TextSpan(
                                                         text:
-                                                            "${_discountController.text == "0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
+                                                            "${_discountController.text == "0.00" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,
