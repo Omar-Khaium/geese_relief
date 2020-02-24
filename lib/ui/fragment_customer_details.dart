@@ -166,7 +166,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                   width: 16,
                 ),
                 Text(
-                    "${widget.customer == null ? "Loading" : "${widget.customer.Name}'s Profile"}",
+                    "${widget.customer == null ? "Loading" : "${widget.customer.ProfileName}'s Profile"}",
                     style: fragmentTitleStyle()),
               ],
             ),

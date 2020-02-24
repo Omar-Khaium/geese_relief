@@ -158,7 +158,7 @@ class _LogInUIState extends State<LogInUI> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                new DashboardUI(widget.login, loggedInUser)));
+                new DashboardUI(login, loggedInUser)));
       } else {
         showMessage(context, "Network error!", json.decode(result.body),
             Colors.redAccent, Icons.warning);

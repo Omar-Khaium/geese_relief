@@ -223,7 +223,6 @@ class _DashboardUIState extends State<DashboardUI>
     );
   }
 
-  //-----------------------Offline DB-----------------------
   void _checkBasementData() async {
     List<BasementReport> basementsDatas=await dbHelper.getBasementData();
     if(basementsDatas.isNotEmpty && basementsDatas.length!=0){

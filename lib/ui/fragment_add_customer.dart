@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,10 +71,6 @@ class _AddCustomerState extends State<AddCustomerFragment> {
     _checkBasementData();
     super.initState();
     Future.delayed(Duration.zero, () => getData());
-    if (!widget.login.isAuthenticated) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => LogInUI(widget.login)));
-    }
   }
 
   @override

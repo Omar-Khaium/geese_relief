@@ -46,6 +46,10 @@ class CustomerDetails {
     return _CheckNames().trim();
   }
 
+  String get ProfileName {
+    return _CheckBusinessName().trim();
+  }
+
   String get ProfileImage => _ProfileImage;
 
   set ProfileImage(String value) {
@@ -68,8 +72,12 @@ class CustomerDetails {
     return val == null || val.isEmpty ? false : true;
   }
 
-  String _CheckNames(){
+  String _CheckBusinessName(){
     return Type!=null&&Type=="Commercial" ? (BusinessName!=null&&BusinessName.isNotEmpty ? _CheckName(BusinessName) : _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName)) : _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName);
+  }
+
+  String _CheckNames(){
+    return BusinessName!=null&&BusinessName.isNotEmpty ? _CheckName(BusinessName) : _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName);
   }
 
   String _CheckName(String val) {
