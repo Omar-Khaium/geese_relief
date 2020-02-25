@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_grate_app/model/customer_model.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
+import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_list_shimmer.dart';
 import 'package:flutter_grate_app/widgets/list_row_item.dart';
 import 'package:http/http.dart' as http;
@@ -11,11 +12,12 @@ import 'package:http/http.dart' as http;
 import '../utils.dart';
 
 class SearchResultFragment extends StatefulWidget {
-  final String _searchText;
+  final String searchText;
   final Login login;
-  final ValueChanged<Customer> gotoDetails;
+  final ValueChanged<String> gotoDetails;
+  final ValueChanged<int> backToDashboard;
 
-  SearchResultFragment(this._searchText, this.login, this.gotoDetails);
+  SearchResultFragment({this.searchText, this.login, this.gotoDetails, this.backToDashboard});
 
   @override
   _SearchResultFragmentState createState() => _SearchResultFragmentState();
@@ -36,108 +38,128 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isSearching
-            ? "Searching"
-            : "${_list.length} ${_list.length > 1 ? "results" : "result"} found", style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold),),
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
-        centerTitle: false,
-      ),
-      backgroundColor: Colors.white,
-      body: StreamBuilder(
-        stream: _controller.stream,
-        initialData: _list,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              padding: EdgeInsets.all(16),
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              itemCount: _list.length,
-              itemBuilder: (context, index) {
-                Customer customer = _list[index];
-                return InkWell(
-                  onTap: () {
-                    widget.gotoDetails(_list[index]);
-                    Navigator.of(context).pop();
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: ListView(
+        padding: EdgeInsets.only(left: 32, right: 32, top: 16),
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              child: Row(
+                children: <Widget>[
+                  CustomBackButton(
+                    onTap: () => widget.backToDashboard(0),
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Text(_isSearching
+                      ? "Searching"
+                      : "${_list.length} ${_list.length > 1 ? "results" : "result"} found", style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold),)
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Container(
+            child: Divider(),
+            margin: EdgeInsets.only(left: 32, right: 32),
+          ),
+          StreamBuilder(
+            stream: _controller.stream,
+            initialData: _list,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  padding: EdgeInsets.all(16),
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  itemCount: _list.length,
+                  itemBuilder: (context, index) {
+                    Customer customer = _list[index];
+                    return InkWell(
+                      onTap: () {
+                        widget.gotoDetails(_list[index].Id);
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                ListRowItem(
-                                  icon: Icons.person,
-                                  text: customer.Name,
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                ListRowItem(
-                                  icon: Icons.phone,
-                                  text: customer.ContactNum,
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                ListRowItem(
-                                  icon: Icons.email,
-                                  text: customer.Email,
-                                ),
-                              ],
-                            ),
+                          SizedBox(
+                            height: 8,
                           ),
-                          Expanded(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                ListRowItem(
-                                  icon: Icons.pin_drop,
-                                  text: customer.Address,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    ListRowItem(
+                                      icon: Icons.person,
+                                      text: customer.Name,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    ListRowItem(
+                                      icon: Icons.phone,
+                                      text: customer.ContactNum,
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    ListRowItem(
+                                      icon: Icons.email,
+                                      text: customer.Email,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    ListRowItem(
+                                      icon: Icons.pin_drop,
+                                      text: customer.Address,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(8),
+                                margin: EdgeInsets.only(right: 16),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade200
+                                ),
+                                child: Text(customer.CustomerType),
+                              )
+                            ],
                           ),
-                          Container(
-                            width: 100,
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(8),
-                            margin: EdgeInsets.only(right: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200
-                            ),
-                            child: Text(customer.CustomerType),
-                          )
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Divider(),
                         ],
                       ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Divider(),
-                    ],
-                  ),
+                    );
+                  },
                 );
-              },
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: ShimmerDashboardFragment(),
-            );
-          }
-        },
+              } else {
+                return ShimmerDashboardFragment();
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -146,7 +168,7 @@ class _SearchResultFragmentState extends State<SearchResultFragment> {
     try {
       Map<String, String> headers = {
         'Authorization': widget.login.accessToken,
-        'searchkey': '${widget._searchText}'
+        'searchkey': '${widget.searchText}'
       };
 
       var result = await http.post(BASE_URL + API_SEARCH, headers: headers);

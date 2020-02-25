@@ -77,7 +77,7 @@ class CustomerDetails {
   }
 
   String _CheckNames(){
-    return BusinessName!=null&&BusinessName.isNotEmpty ? _CheckName(BusinessName) : _CheckName(Title) + " " + _CheckName(FirstName) + " " + _CheckName(LastName);
+    return _CheckName(FirstName) + " " + _CheckName(LastName);
   }
 
   String _CheckName(String val) {

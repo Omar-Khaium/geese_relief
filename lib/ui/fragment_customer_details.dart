@@ -10,7 +10,6 @@ import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/estimate.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
-import 'package:flutter_grate_app/ui/fragment_edit_customer.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
 import 'package:flutter_grate_app/widgets/customer_details_shimmer.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
@@ -24,12 +23,16 @@ import '../utils.dart';
 class CustomerDetailsFragment extends StatefulWidget {
   final Login login;
   final String customerID;
+  final String searchText;
   final ValueChanged<int> backToDashboard;
+  final ValueChanged<String> backToSearch;
   final ValueChanged<CustomerDetails> goToAddBasementReport;
   final ValueChanged<CustomerDetails> goToUpdateBasementReport;
   final ValueChanged<CustomerDetails> goToAddEstimate;
   final ValueChanged<CustomerDetails> goToUpdateEstimate;
   final ValueChanged<CustomerDetails> goToRecommendedLevel;
+  final ValueChanged<CustomerDetails> goToEditCustomer;
+  final bool fromSearch;
   CustomerDetails customer;
   LoggedInUser loggedInUser;
 
@@ -37,13 +40,17 @@ class CustomerDetailsFragment extends StatefulWidget {
       {Key key,
       this.login,
       this.customerID,
+      this.searchText,
       this.customer,
       this.backToDashboard,
+      this.backToSearch,
       this.goToAddBasementReport,
       this.goToUpdateBasementReport,
       this.goToAddEstimate,
       this.goToUpdateEstimate,
       this.goToRecommendedLevel,
+      this.goToEditCustomer,
+      this.fromSearch,
       this.loggedInUser})
       : super(key: key);
 
@@ -160,7 +167,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
             child: Row(
               children: <Widget>[
                 CustomBackButton(
-                  onTap: () => widget.backToDashboard(0),
+                  onTap: () => widget.fromSearch ? widget.backToSearch(widget.searchText) : widget.backToDashboard(0),
                 ),
                 SizedBox(
                   width: 16,
@@ -398,33 +405,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                         ),
                                         IconButton(
                                           icon: Icon(Icons.edit),
-                                          onPressed: () => Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                                  fullscreenDialog: true,
-                                                  builder: (_) =>
-                                                      EditCustomerFragment(
-                                                        login: widget.login,
-                                                        loggedInUser:
-                                                            widget.loggedInUser,
-                                                        backToDashboard: widget
-                                                            .backToDashboard,
-                                                        customerID:
-                                                            widget.customer.Id,
-                                                        customer:
-                                                            widget.customer,
-                                                        goToAddEstimate: widget
-                                                            .goToAddEstimate,
-                                                        goToRecommendedLevel: widget
-                                                            .goToRecommendedLevel,
-                                                        goToUpdateEstimate: widget
-                                                            .goToUpdateEstimate,
-                                                        goToUpdateBasementReport:
-                                                            widget
-                                                                .goToUpdateBasementReport,
-                                                        goToAddBasementReport:
-                                                            widget
-                                                                .goToAddBasementReport,
-                                                      ))),
+                                          onPressed: () => widget.goToEditCustomer(widget.customer),
                                         )
                                       ],
                                     ),
@@ -968,25 +949,15 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   void deleteDialog(int index) async {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: AlertDialog(
-            title: Text(
-              "Deleting Estimate",
-              style: estimateTextStyle(),
-            ),
-            contentTextStyle: estimateTextStyle(),
-          ),
-        );
-      },
+      barrierDismissible: false,
+      builder: (_) => loadingAlert(),
     );
     try {
       bool status = await deleteEstimate(index);
       if (status) {
-        _list.removeAt(index);
-        setState(() {});
+        setState(() {
+          _list.removeAt(index);
+        });
       }
       Navigator.of(context).pop();
       showDialog(context: context, builder: (context) => deleteSuccess());
@@ -999,19 +970,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   void duplicateDialog(int index) async {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: AlertDialog(
-            title: Text(
-              "Duplicating Estimate",
-              style: estimateTextStyle(),
-            ),
-            contentTextStyle: estimateTextStyle(),
-          ),
-        );
-      },
+      barrierDismissible: false,
+      builder: (_) => loadingAlert(),
     );
     try {
       bool status = await duplicateEstimate(index);

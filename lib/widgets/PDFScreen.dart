@@ -24,8 +24,8 @@ class SendMailFragment extends StatefulWidget {
   CustomerDetails customerId;
   ValueChanged<int> backToCustomerDetails;
 
-  SendMailFragment(
-      this.map, this.estimateId, this.accessToken, this.customerId, this.backToCustomerDetails);
+  SendMailFragment(this.map, this.estimateId, this.accessToken, this.customerId,
+      this.backToCustomerDetails);
 
   @override
   _SendMailFragmentState createState() => _SendMailFragmentState();
@@ -38,6 +38,7 @@ class _SendMailFragmentState extends State<SendMailFragment> {
   TextEditingController _BodyEmailController = new TextEditingController();
 
   String emailUrl = "";
+
 //
   @override
   void initState() {
@@ -85,7 +86,8 @@ class _SendMailFragmentState extends State<SendMailFragment> {
             padding: EdgeInsets.only(right: 26),
             child: GestureDetector(
               onTap: () {
-                showDialog(context: context, builder: (context)=>loadingAlert());
+                showDialog(
+                    context: context, builder: (context) => loadingAlert());
                 postData();
               },
               child: CircleAvatar(
@@ -116,9 +118,6 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                   enabled: true,
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
-                  onChanged: (val) {
-                    setState(() {});
-                  },
                   style: customTextStyle(),
                   decoration: new InputDecoration(
                     labelText: "To",
@@ -142,19 +141,11 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                   enabled: true,
                   keyboardType: TextInputType.emailAddress,
                   maxLines: 1,
-                  onChanged: (val) {
-                    setState(() {});
-                  },
                   style: customTextStyle(),
                   decoration: new InputDecoration(
                     labelText: "cc",
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black87)),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey)),
-                    errorText: _CCEmailController.text.isNotEmpty
-                        ? null
-                        : "* Required",
                     hintStyle: customHintStyle(),
                     isDense: true,
                   ),
@@ -218,8 +209,11 @@ class _SendMailFragmentState extends State<SendMailFragment> {
                     swipeHorizontal: false,
                     autoSpacing: true,
                     pageFling: false,
-                    onError: (error) {
-                      print(error.toString());
+                    onError: (err) {
+                      print(err);
+                    },
+                    onPageError: (val, err) {
+                      print(err);
                     },
                   )
                 : Center(
@@ -261,7 +255,8 @@ class _SendMailFragmentState extends State<SendMailFragment> {
           });
         } else {
           Navigator.of(context).pop();
-          showAPIResponse(context, json.decode(response.body), Colors.red.shade600);
+          showAPIResponse(
+              context, json.decode(response.body), Colors.red.shade600);
         }
       });
     } catch (error) {

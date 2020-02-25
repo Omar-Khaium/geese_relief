@@ -14,7 +14,9 @@ import 'package:flutter_grate_app/ui/fragment_add_estimate.dart';
 import 'package:flutter_grate_app/ui/fragment_change_password.dart';
 import 'package:flutter_grate_app/ui/fragment_customer_details.dart';
 import 'package:flutter_grate_app/ui/fragment_dashboard.dart';
+import 'package:flutter_grate_app/ui/fragment_edit_customer.dart';
 import 'package:flutter_grate_app/ui/fragment_logout.dart';
+import 'package:flutter_grate_app/ui/fragment_search_result.dart';
 import 'package:flutter_grate_app/ui/fragment_update_basement_report.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -25,6 +27,7 @@ import 'fragment_update_estimate.dart';
 class DashboardUI extends StatefulWidget {
   Login login;
   LoggedInUser loggedInUser;
+
   DashboardUI(this.login, this.loggedInUser);
 
   @override
@@ -34,6 +37,7 @@ class DashboardUI extends StatefulWidget {
 class _DashboardUIState extends State<DashboardUI>
     with SingleTickerProviderStateMixin {
   bool _isLoading = false;
+  String searchKey = "";
   Widget fragment;
   GlobalKey<SideNavUIState> _keySideNav = GlobalKey();
   DBHelper dbHelper = new DBHelper();
@@ -44,7 +48,11 @@ class _DashboardUIState extends State<DashboardUI>
       switch (index) {
         case 0:
           fragment = new DashboardFragment(
-              login: widget.login, goToCustomerDetails: _goToCustomerDetails,loggedInUser: widget.loggedInUser,);
+            login: widget.login,
+            goToCustomerDetails: _goToCustomerDetails,
+            loggedInUser: widget.loggedInUser,
+            goToSearch: _goToSearch,
+          );
           break;
         case 1:
           fragment = AddCustomerFragment(
@@ -81,22 +89,72 @@ class _DashboardUIState extends State<DashboardUI>
     setState(() {
       _keySideNav.currentState.updateSelection(value);
       fragment = new DashboardFragment(
-          login: widget.login, goToCustomerDetails: _goToCustomerDetails, loggedInUser: widget.loggedInUser,);
+        login: widget.login,
+        goToCustomerDetails: _goToCustomerDetails,
+        loggedInUser: widget.loggedInUser,
+        goToSearch: _goToSearch,
+      );
+    });
+  }
+
+  _goToSearch(String searchText) {
+    this.searchKey = searchText;
+    setState(() {
+      fragment = new SearchResultFragment(
+        searchText: searchText,
+        login: widget.login,
+        gotoDetails: _goToCustomerDetailsFromSearch,
+        backToDashboard: _backToDashboard,
+      );
+    });
+  }
+
+  _backToSearch(String searchText) {
+    setState(() {
+      fragment = new SearchResultFragment(
+        searchText: searchText,
+        login: widget.login,
+        gotoDetails: _goToCustomerDetailsFromSearch,
+        backToDashboard: _backToDashboard,
+      );
     });
   }
 
   _backToCustomerDetails(CustomerDetails customer) {
     setState(() {
-      fragment = new CustomerDetailsFragment(login: widget.login,
+      fragment = new CustomerDetailsFragment(
+        login: widget.login,
         loggedInUser: widget.loggedInUser,
         backToDashboard: _backToDashboard,
+        backToSearch: _backToSearch,
+        customerID: customer.Id,
+        searchText: searchKey,
+        customer: customer,
+        goToAddEstimate: _goToAddEstimate,
+        goToRecommendedLevel: _goToAddRecommendedLevel,
+        goToUpdateEstimate: _goToUpdateEstimate,
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
+        goToAddBasementReport: _goToBasementInspectionReport,
+        goToEditCustomer: _goToEditCustomer,
+        fromSearch: false,
+      );
+    });
+  }
+
+  _goToEditCustomer(CustomerDetails customer) {
+    setState(() {
+      fragment = new EditCustomerFragment(
+        login: widget.login,
+        loggedInUser: widget.loggedInUser,
+        backToCustomerDetails: _backToCustomerDetails,
         customerID: customer.Id,
         customer: customer,
         goToAddEstimate: _goToAddEstimate,
         goToRecommendedLevel: _goToAddRecommendedLevel,
         goToUpdateEstimate: _goToUpdateEstimate,
         goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
-        goToAddBasementReport: _goToBasementInspectionReport,);
+        goToAddBasementReport: _goToBasementInspectionReport,
+      );
     });
   }
 
@@ -122,16 +180,22 @@ class _DashboardUIState extends State<DashboardUI>
 
   _backToCustomerDetailsFromEstimate(CustomerDetails customer) {
     setState(() {
-      fragment = new CustomerDetailsFragment(login: widget.login,
+      fragment = new CustomerDetailsFragment(
+        login: widget.login,
         loggedInUser: widget.loggedInUser,
         backToDashboard: _backToDashboard,
+        backToSearch: _backToSearch,
         customerID: customer.Id,
+        searchText: searchKey,
         customer: customer,
         goToAddEstimate: _goToAddEstimate,
         goToRecommendedLevel: _goToAddRecommendedLevel,
         goToUpdateEstimate: _goToUpdateEstimate,
         goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
-        goToAddBasementReport: _goToBasementInspectionReport,);
+        goToAddBasementReport: _goToBasementInspectionReport,
+        goToEditCustomer: _goToEditCustomer,
+        fromSearch: false,
+      );
     });
   }
 
@@ -167,25 +231,56 @@ class _DashboardUIState extends State<DashboardUI>
 
   _goToCustomerDetails(String customerID) {
     setState(() {
-      fragment = new CustomerDetailsFragment(login: widget.login,
+      fragment = new CustomerDetailsFragment(
+        login: widget.login,
+        loggedInUser: widget.loggedInUser,
         backToDashboard: _backToDashboard,
+        backToSearch: _backToSearch,
         customerID: customerID,
-        goToAddBasementReport: _goToBasementInspectionReport,
-        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
+        searchText: searchKey,
+        customer: null,
         goToAddEstimate: _goToAddEstimate,
-        goToUpdateEstimate: _goToUpdateEstimate,
         goToRecommendedLevel: _goToAddRecommendedLevel,
-      loggedInUser: widget.loggedInUser,);
+        goToUpdateEstimate: _goToUpdateEstimate,
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
+        goToAddBasementReport: _goToBasementInspectionReport,
+        goToEditCustomer: _goToEditCustomer,
+        fromSearch: false,
+      );
+    });
+  }
+
+  _goToCustomerDetailsFromSearch(String customerID) {
+    setState(() {
+      fragment = new CustomerDetailsFragment(
+        login: widget.login,
+        loggedInUser: widget.loggedInUser,
+        backToDashboard: _backToDashboard,
+        backToSearch: _backToSearch,
+        customerID: customerID,
+        searchText: searchKey,
+        customer: null,
+        goToAddEstimate: _goToAddEstimate,
+        goToRecommendedLevel: _goToAddRecommendedLevel,
+        goToUpdateEstimate: _goToUpdateEstimate,
+        goToUpdateBasementReport: _goToUpdateBasementInspectionReport,
+        goToAddBasementReport: _goToBasementInspectionReport,
+        goToEditCustomer: _goToEditCustomer,
+        fromSearch: true,
+      );
     });
   }
 
   @override
   void initState() {
     super.initState();
-    fragment = new DashboardFragment(login: widget.login, goToCustomerDetails: _goToCustomerDetails,
-    loggedInUser: widget.loggedInUser,);
-     _checkBasementData();
-
+    fragment = new DashboardFragment(
+      login: widget.login,
+      goToCustomerDetails: _goToCustomerDetails,
+      loggedInUser: widget.loggedInUser,
+      goToSearch: _goToSearch,
+    );
+    _checkBasementData();
   }
 
   @override
@@ -193,7 +288,7 @@ class _DashboardUIState extends State<DashboardUI>
     return Scaffold(
       backgroundColor: Colors.white,
       body: WillPopScope(
-        onWillPop: (){},
+        onWillPop: ()async=>false,
         child: ModalProgressHUD(
           child: SafeArea(
             child: Row(
@@ -224,15 +319,14 @@ class _DashboardUIState extends State<DashboardUI>
   }
 
   void _checkBasementData() async {
-    List<BasementReport> basementsDatas=await dbHelper.getBasementData();
-    if(basementsDatas.isNotEmpty && basementsDatas.length!=0){
-      showPopup(basementsDatas[0].header.replaceAll("\n", ""),basementsDatas[0].id);
-    }
-    else{
-
-    }
+    List<BasementReport> basementsDatas = await dbHelper.getBasementData();
+    if (basementsDatas.isNotEmpty && basementsDatas.length != 0) {
+      showPopup(
+          basementsDatas[0].header.replaceAll("\n", ""), basementsDatas[0].id);
+    } else {}
   }
-  void showPopup( String header,int id){
+
+  void showPopup(String header, int id) {
     showDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -240,14 +334,15 @@ class _DashboardUIState extends State<DashboardUI>
         return AlertDialog(
             backgroundColor: Colors.white,
             contentPadding: EdgeInsets.all(0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             content: Container(
               width: 600,
               height: 600,
               color: Colors.white,
               child: Stack(
                 children: <Widget>[
-                  Image.asset('images/no_internet.gif',fit: BoxFit.cover),
+                  Image.asset('images/no_internet.gif', fit: BoxFit.cover),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
@@ -257,7 +352,7 @@ class _DashboardUIState extends State<DashboardUI>
                         Expanded(
                           flex: 2,
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 64,
                             child: OutlineButton(
                               highlightElevation: 2,
@@ -272,8 +367,9 @@ class _DashboardUIState extends State<DashboardUI>
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                DBHelper dbHelper=new DBHelper();
-                                 dbHelper.delete(id, DBInfo.TABLE_BASEMENT_INSPECTION);
+                                DBHelper dbHelper = new DBHelper();
+                                dbHelper.delete(
+                                    id, DBInfo.TABLE_BASEMENT_INSPECTION);
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -282,7 +378,7 @@ class _DashboardUIState extends State<DashboardUI>
                         Expanded(
                           flex: 2,
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 64,
                             child: RaisedButton(
                               highlightElevation: 2,
@@ -299,7 +395,7 @@ class _DashboardUIState extends State<DashboardUI>
                                     fontFamily: "Roboto"),
                               ),
                               onPressed: () {
-                                _syncBaseData(header,id);
+                                _syncBaseData(header, id);
                               },
                             ),
                           ),
@@ -309,16 +405,17 @@ class _DashboardUIState extends State<DashboardUI>
                   ),
                 ],
               ),
-            )
-        );
+            ));
       },
     );
   }
-  _syncBaseData(String header,id) async{
+
+  _syncBaseData(String header, id) async {
     Navigator.of(context).pop();
     showDialog(context: context, builder: (context) => alertLoading());
-    await saveInspectionReport(header,context, widget.login,id);
+    await saveInspectionReport(header, context, widget.login, id);
   }
+
   alertLoading() {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),

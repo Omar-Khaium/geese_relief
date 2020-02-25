@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,9 +5,10 @@ import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/video_preview.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
-import 'package:flutter_grate_app/widgets/MediaPlayer.dart';
-import 'package:flutter_grate_app/widgets/text_style.dart';
+import 'package:flutter_grate_app/widgets/widget_media_player.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../utils.dart';
 
@@ -19,20 +19,33 @@ class RecommendedLevelDetails extends StatefulWidget {
   final CustomerDetails customer;
   final int index;
 
-  RecommendedLevelDetails(
-      {Key key,
-      this.login,
-      this.loggedInUser,
-      this.index,
-      this.customer,
-      this.backToCustomerDetails,})
-      : super(key: key);
+  RecommendedLevelDetails({
+    Key key,
+    this.login,
+    this.loggedInUser,
+    this.index,
+    this.customer,
+    this.backToCustomerDetails,
+  }) : super(key: key);
 
   @override
   _RecommendedLevelDetails createState() => _RecommendedLevelDetails();
 }
 
-class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
+class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
+  List<String> _videoLinks = [
+    "Eb5QhpcRHVg",
+    "3HIV1Q8Oxsw",
+    "xDPM7n0M9Yw",
+    "gat8ZT7nP8s",
+    "dwYzWVMLQ_k",
+    "bBCM6G5Jvpk",
+  ];
+
+  bool isLoading = false;
+
+  var key = GlobalKey();
+
   List<VideoPreview> _list = [
     new VideoPreview(
         "images/video.mp4", "images/peach_of_mind.jpg", "Peace Of Mind"),
@@ -47,17 +60,28 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text("Recommended Level ${widget.index}",style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold),),
+        title: Text(
+          "Recommended Level ${widget.index}",
+          style: Theme.of(context)
+              .textTheme
+              .title
+              .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){
-          showDialog(context: context, builder: (_)=> loadingAlert());
+        onPressed: () {
+          showDialog(context: context, builder: (_) => loadingAlert());
           _save();
         },
         icon: Icon(Icons.save),
@@ -65,332 +89,313 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
         backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                child: Card(
-                  semanticContainer: true,
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  elevation: 4,
-                  child: ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    children: <Widget>[
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Maintencane",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 6
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+      body: OrientationBuilder(
+        builder: (context, orientation){
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Card(
+                      semanticContainer: true,
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      elevation: 4,
+                      child: ListView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        children: <Widget>[
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Carbon Monoxide Detector",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 5
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Maintencane",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 6
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Moisture Control",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 5
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Full Wall Protection",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 4
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Carbon Monoxide Detector",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 5
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Full Perimerter GD System",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 3
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "FastSump Perimeter Inverter & Battery",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 2
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Moisture Control",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 5
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Secondary Pump",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: (widget.index) >= 2
-                                      ? TextDecoration.none
-                                      : TextDecoration.lineThrough,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Secondary Fast Sump Liner",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: TextDecoration.none,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Full Wall Protection",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 4
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Primary FastSump",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: TextDecoration.none,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
                             ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        dense: true,
-                        leading: Icon(
-                          Icons.fiber_manual_record,
-                          color: Colors.grey.shade800,
-                          size: 16,
-                        ),
-                        title: Wrap(
-                          children: <Widget>[
-                            Text(
-                              "Pump Geek / Radon Test Kit",
-                              style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.normal,
-                                  decoration: TextDecoration.none,
-                                  decorationThickness: 2,
-                                  decorationColor: Colors.redAccent),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Full Perimerter GD System",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 3
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
+                            ),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "FastSump Perimeter Inverter & Battery",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 2
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
+                            ),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Secondary Pump",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: (widget.index) >= 2
+                                          ? TextDecoration.none
+                                          : TextDecoration.lineThrough,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
+                            ),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Secondary Fast Sump Liner",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: TextDecoration.none,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
+                            ),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Primary FastSump",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: TextDecoration.none,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ListTile(
+                            dense: true,
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.grey.shade800,
+                              size: 16,
+                            ),
+                            title: Wrap(
+                              children: <Widget>[
+                                Text(
+                                  "Pump Geek / Radon Test Kit",
+                                  style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.normal,
+                                      decoration: TextDecoration.none,
+                                      decorationThickness: 2,
+                                      decorationColor: Colors.redAccent),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              flex: 2,
-              child: new GridView.count(
-                crossAxisCount: 3,
-                children: new List<Widget>.generate(6, (index) {
-                  return new GridTile(
-                      child: Container(
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: new Card(
-                        elevation: 4,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => new VideoPlayerScreen(
-                                    url: _list[index].url,
+                SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Center(
+                    child: Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                      child: Stack(
+                        children: <Widget>[
+                          InkWell(
+                            onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VideoPlayerScreen(url: _videoLinks[widget.index - 1],),fullscreenDialog: true)),
+                            child: Image.network(
+                              "https://img.youtube.com/vi/${_videoLinks[widget.index - 1]}/maxresdefault.jpg",
+                              fit: BoxFit.contain,
+                              loadingBuilder: (BuildContext context, Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) {
+                                  isLoading = false;
+                                  return child;
+                                }
+                                isLoading = true;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes
+                                        : null,
                                   ),
-                                  fullscreenDialog: true
-                                ));
-
-                          },
-                          child: Stack(
-                            children: <Widget>[
-                              Image.asset(
-                                _list[index].thumbnail,
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.fill,
-                              ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration:
-                                      BoxDecoration(color: Colors.black87),
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            _list[index].title,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Icon(
-                                            Icons.play_arrow,
-                                            color: Colors.red,
-                                            size: 36,
-                                          )
-                                        ],
-                                      )),
-                                ),
-                              ),
-                            ],
+                                );
+                              },
+                            ),
                           ),
-                        )),
-                  ));
-                }),
-              ),
+                          isLoading ? Container() : Positioned(
+                            left: 0,
+                            right: 0,
+                            top: orientation == Orientation.landscape ? 144 : 72,
+                            child: IconButton(icon: Icon(MdiIcons.youtube, color: Color(0xFFff0000), size: 144,),onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>VideoPlayerScreen(url: _videoLinks[widget.index - 1],),fullscreenDialog: true)),),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -411,19 +416,21 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails>{
         Navigator.of(context).pop();
         widget.backToCustomerDetails(0);
         setState(() {});
-        showMessage(context, "Congratulations!", "Recommended level is saved as \"Level ${widget.index}\"",
-            Colors.green, Icons.warning);
-      }
-      else {
+        showMessage(
+            context,
+            "Congratulations!",
+            "Recommended level is saved as \"Level ${widget.index}\"",
+            Colors.green,
+            Icons.warning);
+      } else {
         Navigator.of(context).pop();
         showMessage(context, "Error!", "Something went wrong!!!",
             Colors.redAccent, Icons.warning);
       }
-    } catch(error) {
+    } catch (error) {
       Navigator.of(context).pop();
       showMessage(context, "Error!", "Something went wrong!!!",
           Colors.redAccent, Icons.warning);
     }
   }
-
 }

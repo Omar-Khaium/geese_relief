@@ -4,7 +4,6 @@ import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/sqflite/model/Login.dart';
 import 'package:flutter_grate_app/sqflite/model/user.dart';
 import 'package:flutter_grate_app/widgets/custome_back_button.dart';
-import 'package:flutter_grate_app/widgets/data.dart';
 import 'package:flutter_grate_app/widgets/text_style.dart';
 
 import 'fragment_recommended_level_details.dart';
@@ -44,12 +43,16 @@ class _RecommendedLevelState extends State<RecommendedLevel>
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       margin: EdgeInsets.only(top: 16, left: 32, right: 32),
+      decoration: BoxDecoration(
+        color: Colors.white
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Align(
             alignment: Alignment.centerLeft,
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 CustomBackButton(
                   onTap: () => widget.backToCustomerDetails(widget.customer),
@@ -74,396 +77,177 @@ class _RecommendedLevelState extends State<RecommendedLevel>
               ],
             ),
           ),
-          SizedBox(
-            height: 24,
-          ),
           Expanded(
-              child:
-              Container(
-                margin: EdgeInsets.only(top: 24, left: 0, right: 0),
-                alignment: Alignment.topCenter,
-                child: Column(
+              child: Center(
+                child: Row(
                   children: <Widget>[
-                    Text(
-                      "Step towards a " +
-                          widget.loggedInUser.CompanyName +
-                          " and a nationally backend warranty",
-                      style: listTextStyle(),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "All of our  " +
-                          widget.loggedInUser.CompanyName +
-                          " /Crawl space Contractors are trained and certified",
-                      style: Theme.of(context).textTheme.subhead.copyWith(
-                          color: Colors.grey.shade700,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(0),
-                      child: Table(
-                        border: TableBorder.all(width: .5, color: Colors.black),
-                        children: [
-                          TableRow(children: [
-                            TableCell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color:  widget.customer.RecommendedLevel
-                                      .toInt() ==
-                                      1
-                                      ?
-                                  Color(0xFF182848) : Colors.white
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Level One",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                              color: widget.customer.RecommendedLevel
-                                                  .toInt() ==
-                                                  1
-                                                  ? Colors.white : Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                        ))),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color:  widget.customer.RecommendedLevel
-                                        .toInt() ==
-                                        2
-                                        ?
-                                    Color(0xFF182848) : Colors.white
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Level Two",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                              color: widget.customer.RecommendedLevel
-                                                  .toInt() ==
-                                                  2
-                                                  ? Colors.white : Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                        ))),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color:  widget.customer.RecommendedLevel
-                                        .toInt() ==
-                                        3
-                                        ?
-                                    Color(0xFF182848) : Colors.white
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Level Three",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                              color: widget.customer.RecommendedLevel
-                                                  .toInt() ==
-                                                  3
-                                                  ? Colors.white : Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                        ))),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color:  widget.customer.RecommendedLevel
-                                        .toInt() ==
-                                        4
-                                        ?
-                                    Color(0xFF182848) : Colors.white
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Level Four",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                              color: widget.customer.RecommendedLevel
-                                                  .toInt() ==
-                                                  4
-                                                  ? Colors.white : Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                        ))),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color:  widget.customer.RecommendedLevel
-                                        .toInt() ==
-                                        5
-                                        ?
-                                    Color(0xFF182848) : Colors.white
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Level Five",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                              color: widget.customer.RecommendedLevel
-                                                  .toInt() ==
-                                                  5
-                                                  ? Colors.white : Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                        ))),
-                              ),
-                            ),
-                            TableCell(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color:  widget.customer.RecommendedLevel
-                                        .toInt() ==
-                                        6
-                                        ?
-                                    Color(0xFF182848) : Colors.white
-                                ),
-                                child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          "Level Six",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead
-                                              .copyWith(
-                                              color: widget.customer.RecommendedLevel
-                                                  .toInt() ==
-                                                  6
-                                                  ? Colors.white : Colors.grey.shade700,
-                                              fontWeight: FontWeight.bold),
-                                        ))),
-                              ),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          goToRecommendedLevelDetails(1);
+                        },
+                        child: Container(
+                          decoration: new BoxDecoration(boxShadow: [
+                            widget.customer.RecommendedLevel==1 ? BoxShadow(
+                              color: Colors.red.shade200.withOpacity(.5),
+                                blurRadius: 4,
+                                spreadRadius: 2
+                            ) :  BoxShadow(
+                              color: Colors.transparent,
                             ),
                           ]),
-                          TableRow(children: [
-                            TableCell(
-                                child: InkWell(
-                                  onTap: () {
-                                    goToRecommendedLevelDetails(1);
-                                  },
-                                  child: Container(
-                                      height: MediaQuery.of(context).size.height-284,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          gradient: widget.customer.RecommendedLevel
-                                              .toInt() ==
-                                              1
-                                              ? LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Color(0xFF182848),
-                                                Color(0xFF182848),
-                                              ])
-                                              : LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.white,
-                                                Colors.white,
-                                              ])),
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Image.asset('images/level_1.png',fit: BoxFit.fitWidth,width: MediaQuery.of(context).size.width,),
-                                      ),),
-                                )),
-                            TableCell(
-                                child: InkWell(
-                                  onTap: () {
-                                    goToRecommendedLevelDetails(2);
-                                  },
-                                  child: Container(
-                                      height: MediaQuery.of(context).size.height-284,
-                                      alignment: Alignment.topCenter,
-                                      decoration: BoxDecoration(
-                                          gradient: widget.customer.RecommendedLevel
-                                              .toInt() ==
-                                              2
-                                              ? LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Color(0xFF182848),
-                                                Color(0xFF182848),
-                                              ])
-                                              : LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.white,
-                                                Colors.white,
-                                              ])),
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Image.asset('images/level_2.png',fit: BoxFit.fitWidth,width: MediaQuery.of(context).size.width),
-                                      ),),
-                                )),
-                            TableCell(
-                                child: InkWell(
-                                  onTap: () {
-                                    goToRecommendedLevelDetails(3);
-                                  },
-                                  child: Container(
-                                      height: MediaQuery.of(context).size.height-284,
-                                      alignment: Alignment.topCenter,
-                                      decoration: BoxDecoration(
-                                          gradient: widget.customer.RecommendedLevel
-                                              .toInt() ==
-                                              3
-                                              ? LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Color(0xFF182848),
-                                                Color(0xFF182848),
-                                              ])
-                                              : LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.white,
-                                                Colors.white,
-                                              ])),
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Image.asset('images/level_3.png',fit: BoxFit.fitWidth,width: MediaQuery.of(context).size.width),
-                                      ),),
-                                )),
-                            TableCell(
-                                child: InkWell(
-                                  onTap: () {
-                                    goToRecommendedLevelDetails(4);
-                                  },
-                                  child: Container(
-                                      height: MediaQuery.of(context).size.height-284,
-                                      alignment: Alignment.topCenter,
-                                      decoration: BoxDecoration(
-                                          gradient: widget.customer.RecommendedLevel
-                                              .toInt() ==
-                                              4
-                                              ? LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Color(0xFF182848),
-                                                Color(0xFF182848),
-                                              ])
-                                              : LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.white,
-                                                Colors.white,
-                                              ])),
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Image.asset('images/level_4.png',fit: BoxFit.fitWidth,width: MediaQuery.of(context).size.width),
-                                      ),),
-                                )),
-                            TableCell(
-                                child: InkWell(
-                                  onTap: () {
-                                    goToRecommendedLevelDetails(5);
-                                  },
-                                  child: Container(
-                                      height: MediaQuery.of(context).size.height-284,
-                                      alignment: Alignment.topCenter,
-                                      decoration: BoxDecoration(
-                                          gradient: widget.customer.RecommendedLevel
-                                              .toInt() ==
-                                              5
-                                              ? LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Color(0xFF182848),
-                                                Color(0xFF182848),
-                                              ])
-                                              : LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.white,
-                                                Colors.white,
-                                              ])),
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Image.asset('images/level_5.png',fit: BoxFit.fitWidth,width: MediaQuery.of(context).size.width),
-                                      ),),
-                                )),
-                            TableCell(
-                                child: InkWell(
-                                  onTap: () {
-                                    goToRecommendedLevelDetails(6);
-                                  },
-                                  child: Container(
-                                      height: MediaQuery.of(context).size.height-284,
-                                      alignment: Alignment.topCenter,
-                                      decoration: BoxDecoration(
-                                          gradient: widget.customer.RecommendedLevel
-                                              .toInt() ==
-                                              6
-                                              ? LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Color(0xFF182848),
-                                                Color(0xFF182848),
-                                              ])
-                                              : LinearGradient(
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                              colors: [
-                                                Colors.white,
-                                                Colors.white,
-                                              ])),
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Image.asset('images/level_6.png',fit: BoxFit.cover,width: MediaQuery.of(context).size.width),
-                                      ),),
-                                )),
-                          ]),
-                        ],
+                          child: Card(
+                            elevation: widget.customer.RecommendedLevel==1 ? 16 : 0,
+                            child: Image.asset(
+                              'images/level_1.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          goToRecommendedLevelDetails(2);
+                        },
+                        child: Container(
+                          decoration: new BoxDecoration(boxShadow: [
+                            widget.customer.RecommendedLevel==2 ? BoxShadow(
+                                color: Colors.green.shade200.withOpacity(.5),
+                                blurRadius: 4,
+                                spreadRadius: 2
+                            ) :  BoxShadow(
+                              color: Colors.transparent,
+                            ),
+                          ]),
+                          child: Card(
+                            elevation: widget.customer.RecommendedLevel==2 ? 16 : 0,
+                            child: Image.asset(
+                              'images/level_2.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          goToRecommendedLevelDetails(3);
+                        },
+                        child: Container(
+                          decoration: new BoxDecoration(boxShadow: [
+                            widget.customer.RecommendedLevel==3 ? BoxShadow(
+                                color: Colors.lightBlue.shade200.withOpacity(.5),
+                                blurRadius: 4,
+                                spreadRadius: 2
+                            ) :  BoxShadow(
+                              color: Colors.transparent,
+                            ),
+                          ]),
+                          child: Card(
+                            elevation: widget.customer.RecommendedLevel==3 ? 16 : 0,
+                            child: Image.asset(
+                              'images/level_3.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          goToRecommendedLevelDetails(4);
+                        },
+                        child: Container(
+                          decoration: new BoxDecoration(boxShadow: [
+                            widget.customer.RecommendedLevel==4 ? BoxShadow(
+                                color: Colors.blueAccent.shade100.withOpacity(.5),
+                                blurRadius: 4,
+                                spreadRadius: 2
+                            ) :  BoxShadow(
+                              color: Colors.transparent,
+                            ),
+                          ]),
+                          child: Card(
+                            elevation: widget.customer.RecommendedLevel==4 ? 16 : 0,
+                            child: Image.asset('images/level_4.png',
+                                fit: BoxFit.fitWidth),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          goToRecommendedLevelDetails(5);
+                        },
+                        child: Container(
+                          decoration: new BoxDecoration(boxShadow: [
+                            widget.customer.RecommendedLevel==5 ? BoxShadow(
+                                color: Colors.brown.shade400.withOpacity(.5),
+                                blurRadius: 4,
+                                spreadRadius: 2
+                            ) :  BoxShadow(
+                              color: Colors.transparent,
+                            ),
+                          ]),
+                          child: Card(
+                            elevation: widget.customer.RecommendedLevel==5 ? 16 : 0,
+                            child: Image.asset(
+                              'images/level_5.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 4,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          goToRecommendedLevelDetails(6);
+                        },
+                        child: Container(
+                          decoration: new BoxDecoration(boxShadow: [
+                            widget.customer.RecommendedLevel==6 ? BoxShadow(
+                                color: Colors.brown.shade700.withOpacity(.5),
+                                blurRadius: 4,
+                                spreadRadius: 2
+                            ) :  BoxShadow(
+                              color: Colors.transparent,
+                            ),
+                          ]),
+                          child: Card(
+                            elevation: widget.customer.RecommendedLevel==6 ? 16 : 0,
+                            child: Image.asset('images/level_6.png',
+                                fit: BoxFit.fitWidth),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ))

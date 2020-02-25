@@ -33,6 +33,7 @@ dependencies:
   flutter_html:
   url_launcher:
   flutter_pdfview:
+  youtube_player_flutter:
 
 dev_dependencies:
   flutter_test:

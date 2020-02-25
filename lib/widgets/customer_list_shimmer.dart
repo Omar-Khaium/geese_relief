@@ -7,6 +7,7 @@ class ShimmerDashboardFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      shrinkWrap: true,
       scrollDirection: Axis.vertical,
       children: <Widget>[
         Column(

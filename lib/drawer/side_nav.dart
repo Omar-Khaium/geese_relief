@@ -75,7 +75,7 @@ class SideNavUIState extends State<SideNavUI>
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
+                    color: Colors.lightBlue.shade50.withOpacity(.5),
                   ),
                   child: Row(
                     children: <Widget>[

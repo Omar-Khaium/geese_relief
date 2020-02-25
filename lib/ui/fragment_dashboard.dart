@@ -20,11 +20,12 @@ import 'package:http/http.dart' as http;
 
 class DashboardFragment extends StatefulWidget {
   final ValueChanged<String> goToCustomerDetails;
+  final ValueChanged<String> goToSearch;
   final Login login;
   final LoggedInUser loggedInUser;
 
   DashboardFragment(
-      {Key key, this.login, this.goToCustomerDetails, this.loggedInUser})
+      {Key key, this.login, this.goToCustomerDetails, this.goToSearch, this.loggedInUser})
       : super(key: key);
 
   @override
@@ -109,11 +110,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
                       onChanged: (val) {},
                       onSubmitted: (val) {
                         if (val.isNotEmpty) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (context) => SearchResultFragment(
-                                  val, widget.login, redirectToCustomerDetails),
-                              maintainState: true));
+                          widget.goToSearch(val);
                         }
                       },
                       decoration: InputDecoration(
@@ -670,22 +667,7 @@ class _DashboardFragmentState extends State<DashboardFragment>
   }
 
   void deleteDialog(int index) async {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return new BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-          child: AlertDialog(
-            title: Text(
-              "Deleting Customer",
-              style: estimateTextStyle(),
-            ),
-            contentTextStyle: estimateTextStyle(),
-          ),
-        );
-      },
-    );
+    showDialog<void>(context: context, builder: (_)=>loadingAlert());
     bool status = await deleteCustomer(index);
     Navigator.of(context).pop();
     if (status) {
@@ -864,10 +846,6 @@ class _DashboardFragmentState extends State<DashboardFragment>
         ],
       ),
     );
-  }
-
-  redirectToCustomerDetails(Customer customer) {
-    widget.goToCustomerDetails(customer.Id);
   }
 
 
