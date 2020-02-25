@@ -80,6 +80,7 @@ class _RecommendedLevelDetails extends State<RecommendedLevelDetails> {
         backgroundColor: Colors.white,
       ),
       floatingActionButton: FloatingActionButton.extended(
+        elevation: 8,
         onPressed: () {
           showDialog(context: context, builder: (_) => loadingAlert());
           _save();

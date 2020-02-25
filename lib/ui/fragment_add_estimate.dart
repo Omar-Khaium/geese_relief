@@ -633,8 +633,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Container(
-                            width: 150,
-                            height: 150,
+                            width: 172,
+                            height: 172,
                             decoration: new BoxDecoration(
                                 color: Colors.grey.shade200,
                                 shape: BoxShape.rectangle,
@@ -650,6 +650,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                 fit: BoxFit.cover,
                               ),
                               onTap: () {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
                                 _showDialog(context);
                               },
                             ),
@@ -657,7 +659,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                         ],
                       ),
                       SizedBox(
-                        width: 360,
+                        width: 420,
                         child: Table(
                           defaultVerticalAlignment:
                           TableCellVerticalAlignment.middle,
@@ -911,11 +913,11 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                             style: cardTitleStyle(),
                           ),
                           Container(
-                            width: 200,
+                            width: 220,
                             margin: EdgeInsets.only(top: 8, bottom: 8),
                             child: Divider(
-                              color: Colors.grey,
-                              thickness: .5,
+                              color: Colors.black,
+                              thickness: 2,
                             ),
                           ),
                           Container(
@@ -923,7 +925,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                 .of(context)
                                 .size
                                 .width,
-                            height: 500,
+                            height: 564,
                             color: Colors.grey.shade100,
                             child: InkWell(
                               child: Stack(
@@ -985,11 +987,11 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                             style: cardTitleStyle(),
                           ),
                           Container(
-                            width: 200,
+                            width: 128,
                             margin: EdgeInsets.only(top: 8, bottom: 8),
                             child: Divider(
-                              color: Colors.grey,
-                              thickness: .5,
+                              color: Colors.black,
+                              thickness: 2,
                             ),
                           ),
                           new TextField(
@@ -997,11 +999,15 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                             obscureText: false,
                             autofocus: false,
                             cursorColor: Colors.black,
+                            maxLength: 1000,
+                            maxLengthEnforced: true,
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
-                            minLines: 3,
+                            minLines: 10,
                             style: customTextStyle(),
                             decoration: new InputDecoration(
+                              fillColor: Colors.grey.shade200,
+                                filled: true,
                                 labelText: "Notes",
                                 labelStyle: customTextStyle(),
                                 hintText: "e.g. hint",
@@ -1012,72 +1018,72 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                           SizedBox(
                             height: 8,
                           ),
-                          Container(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            height: 256,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return SignatureDialog(
-                                          picture:
-                                          _generateHOSignaturePicture);
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 8,
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              width: 256*1.25,
+                              height: 256,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return SignatureDialog(
+                                            picture:
+                                            _generateHOSignaturePicture);
+                                      },
                                     ),
-                                    Text("Home Owner Signature"),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Expanded(
-                                      child: Stack(
-                                        children: <Widget>[
-                                          _HOSignature,
-                                          isHOSignatureSaving
-                                              ? Center(
-                                            child:
-                                            ShimmerUploadIcon(
-                                                64),
-                                          )
-                                              : Container(),
-                                        ],
+                                  );
+                                },
+                                child: Container(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 8,
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Center(
-                                      child: Container(
-                                        color: Colors.grey.shade100,
-                                        child: Padding(
-                                          padding:
-                                          const EdgeInsets.all(8.0),
-                                          child: Center(
-                                            child: ListRowItem(
-                                              icon: Icons.event,
-                                              text:
-                                              "${DateFormat('MM/dd/yyyy')
-                                                  .format(
-                                                  DateTime.now())}",
+                                      Text("Home Owner Signature"),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Expanded(
+                                        child: Stack(
+                                          children: <Widget>[
+                                            _HOSignature,
+                                            isHOSignatureSaving
+                                                ? Center(
+                                              child:
+                                              ShimmerUploadIcon(
+                                                  64),
+                                            )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Center(
+                                        child: Container(
+                                          color: Colors.grey.shade100,
+                                          child: Padding(
+                                            padding:
+                                            const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: ListRowItem(
+                                                icon: Icons.event,
+                                                text:
+                                                "${DateFormat('MM/dd/yyyy')
+                                                    .format(
+                                                    DateTime.now())}",
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -1212,13 +1218,6 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
     });
   }
 
-  _generatePMSignaturePicture(PictureDetails picture) {
-    _PMSignature = PlaceImageFromPicture(picture);
-    picture.toPNG().then((val) {
-      base64PMSignature = base64.encode(val);
-    });
-  }
-
   _generateHOSignaturePicture(PictureDetails picture) {
     _HOSignature = PlaceImageFromPicture(picture);
     picture.toPNG().then((val) {
@@ -1247,6 +1246,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                     ),
                     InkWell(
                       onTap: () {
+                        FocusScope.of(context)
+                            .requestFocus(FocusNode());
                         showFavouriteList();
                       },
                       child: Row(
@@ -1949,32 +1950,29 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
           return AlertDialog(
             title: Text("Make A choice"),
             content: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: ListBody(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: GestureDetector(
-                        child: Text("Gallery"),
-                        onTap: () {
-                          widget.customer.ProfileImage = null;
-                          _openGallery(context);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16),
-                      child: GestureDetector(
-                        child: Text("Camera"),
-                        onTap: () {
-                          widget.customer.ProfileImage = null;
-                          _openCamera();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              child: ListBody(
+                children: <Widget>[
+                  ListTile(
+                    onTap: (){
+                      FocusScope.of(context)
+                          .requestFocus(FocusNode());
+                      widget.customer.ProfileImage = null;
+                      _openGallery(context);
+                    },
+                    leading: Icon(Icons.photo_album),
+                    title: Text("Gallery"),
+                  ),
+                  ListTile(
+                    onTap: (){
+                      FocusScope.of(context)
+                          .requestFocus(FocusNode());
+                      widget.customer.ProfileImage = null;
+                      _openCamera();
+                    },
+                    leading: Icon(Icons.camera_enhance),
+                    title: Text("Camera"),
+                  ),
+                ],
               ),
             ),
           );
