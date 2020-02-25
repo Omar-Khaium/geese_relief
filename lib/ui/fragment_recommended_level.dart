@@ -90,15 +90,15 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                         child: Container(
                           decoration: new BoxDecoration(boxShadow: [
                             widget.customer.RecommendedLevel==1 ? BoxShadow(
-                              color: Colors.red.shade200.withOpacity(.5),
-                                blurRadius: 4,
+                              color: Color(0xFFB33A3A).withOpacity(.5),
+                                blurRadius: 8,
                                 spreadRadius: 2
                             ) :  BoxShadow(
                               color: Colors.transparent,
                             ),
                           ]),
                           child: Card(
-                            elevation: widget.customer.RecommendedLevel==1 ? 16 : 0,
+                            elevation: widget.customer.RecommendedLevel==1 ? 4 : 0,
                             child: Image.asset(
                               'images/level_1.png',
                               fit: BoxFit.fitWidth,
@@ -119,15 +119,15 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                         child: Container(
                           decoration: new BoxDecoration(boxShadow: [
                             widget.customer.RecommendedLevel==2 ? BoxShadow(
-                                color: Colors.green.shade200.withOpacity(.5),
-                                blurRadius: 4,
+                                color: Color(0xFF88934F).withOpacity(.5),
+                                blurRadius: 8,
                                 spreadRadius: 2
                             ) :  BoxShadow(
                               color: Colors.transparent,
                             ),
                           ]),
                           child: Card(
-                            elevation: widget.customer.RecommendedLevel==2 ? 16 : 0,
+                            elevation: widget.customer.RecommendedLevel==2 ? 4 : 0,
                             child: Image.asset(
                               'images/level_2.png',
                               fit: BoxFit.fitWidth,
@@ -148,15 +148,15 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                         child: Container(
                           decoration: new BoxDecoration(boxShadow: [
                             widget.customer.RecommendedLevel==3 ? BoxShadow(
-                                color: Colors.lightBlue.shade200.withOpacity(.5),
-                                blurRadius: 4,
+                                color: Color(0xFF5D85B8).withOpacity(.5),
+                                blurRadius: 8,
                                 spreadRadius: 2
                             ) :  BoxShadow(
                               color: Colors.transparent,
                             ),
                           ]),
                           child: Card(
-                            elevation: widget.customer.RecommendedLevel==3 ? 16 : 0,
+                            elevation: widget.customer.RecommendedLevel==3 ? 4 : 0,
                             child: Image.asset(
                               'images/level_3.png',
                               fit: BoxFit.fitWidth,
@@ -177,15 +177,15 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                         child: Container(
                           decoration: new BoxDecoration(boxShadow: [
                             widget.customer.RecommendedLevel==4 ? BoxShadow(
-                                color: Colors.blueAccent.shade100.withOpacity(.5),
-                                blurRadius: 4,
+                                color: Color(0xFF75849B).withOpacity(.5),
+                                blurRadius: 8,
                                 spreadRadius: 2
                             ) :  BoxShadow(
                               color: Colors.transparent,
                             ),
                           ]),
                           child: Card(
-                            elevation: widget.customer.RecommendedLevel==4 ? 16 : 0,
+                            elevation: widget.customer.RecommendedLevel==4 ? 4 : 0,
                             child: Image.asset('images/level_4.png',
                                 fit: BoxFit.fitWidth),
                           ),
@@ -204,15 +204,15 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                         child: Container(
                           decoration: new BoxDecoration(boxShadow: [
                             widget.customer.RecommendedLevel==5 ? BoxShadow(
-                                color: Colors.brown.shade400.withOpacity(.5),
-                                blurRadius: 4,
+                                color: Color(0xFF8E7147).withOpacity(.5),
+                                blurRadius: 8,
                                 spreadRadius: 2
                             ) :  BoxShadow(
                               color: Colors.transparent,
                             ),
                           ]),
                           child: Card(
-                            elevation: widget.customer.RecommendedLevel==5 ? 16 : 0,
+                            elevation: widget.customer.RecommendedLevel==5 ? 4 : 0,
                             child: Image.asset(
                               'images/level_5.png',
                               fit: BoxFit.fitWidth,
@@ -233,15 +233,15 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                         child: Container(
                           decoration: new BoxDecoration(boxShadow: [
                             widget.customer.RecommendedLevel==6 ? BoxShadow(
-                                color: Colors.brown.shade700.withOpacity(.5),
-                                blurRadius: 4,
+                                color: Color(0xFF764537).withOpacity(.5),
+                                blurRadius: 8,
                                 spreadRadius: 2
                             ) :  BoxShadow(
                               color: Colors.transparent,
                             ),
                           ]),
                           child: Card(
-                            elevation: widget.customer.RecommendedLevel==6 ? 16 : 0,
+                            elevation: widget.customer.RecommendedLevel==6 ? 4 : 0,
                             child: Image.asset('images/level_6.png',
                                 fit: BoxFit.fitWidth),
                           ),
