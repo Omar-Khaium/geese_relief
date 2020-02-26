@@ -62,7 +62,6 @@ class CustomerDetailsFragment extends StatefulWidget {
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   List<Estimate> _list = [];
   var _base64Image;
-  var _future;
 
   //-------------Image---------------
   File _imageFile;
@@ -94,7 +93,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   @override
   void initState() {
     super.initState();
-    _future = getData();
   }
 
   Future<void> _showDialog(BuildContext context) {
@@ -156,366 +154,312 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      margin: EdgeInsets.only(top: 16, left: 32, right: 32),
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: <Widget>[
-                CustomBackButton(
-                  onTap: () => widget.fromSearch ? widget.backToSearch(widget.searchText) : widget.backToDashboard(0),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Text(
-                    "${widget.customer == null ? "Loading" : "${widget.customer.ProfileName}'s Profile"}",
-                    style: fragmentTitleStyle()),
-              ],
+    return OrientationBuilder(
+      builder: (context, orientation)=> Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        margin: EdgeInsets.only(top: 16, left: 32, right: 32),
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: <Widget>[
+                  CustomBackButton(
+                    onTap: () => widget.fromSearch ? widget.backToSearch(widget.searchText) : widget.backToDashboard(0),
+                  ),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  Text(
+                      "${widget.customer == null ? "Loading" : "${widget.customer.ProfileName}'s Profile"}",
+                      style: fragmentTitleStyle()),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          Expanded(
-            child: FutureBuilder(
-              future: _future,
-              builder: (context, snapshot) {
-                try {
-                  if (snapshot.hasData) {
-                    var map = json.decode(snapshot.data.body);
-                    var estimateMap = map['EstimateList']['EstimateList'];
-                    if (estimateMap == null) {
-                      _list = [];
-                    } else {
-                      _list = List.generate(estimateMap.length, (index) {
-                        return Estimate.fromMap(estimateMap[index]);
-                      });
-                    }
-                    try {
-                      return Column(
-                        children: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              Material(
-                                elevation: 4,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: widget.customer.Type == null ||
-                                      widget.customer.Type
-                                          .isEmpty ? 220 : 256,
-                                  color: Colors.white,
+            SizedBox(
+              height: 24,
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: getData(),
+                builder: (context, snapshot) {
+                  try {
+                    if (snapshot.hasData) {
+                      var map = json.decode(snapshot.data.body);
+                      var estimateMap = map['EstimateList']['EstimateList'];
+                      if (estimateMap == null) {
+                        _list = [];
+                      } else {
+                        _list = List.generate(estimateMap.length, (index) {
+                          return Estimate.fromMap(estimateMap[index]);
+                        });
+                      }
+                      try {
+                        return Column(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                Material(
+                                  elevation: 4,
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: widget.customer.Type == null ||
+                                        widget.customer.Type
+                                            .isEmpty ? 220 : 256,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(left: 16, right: 16),
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Stack(
-                                              children: <Widget>[
-                                                ClipRRect(
-                                                    borderRadius:
-                                                        new BorderRadius.all(
-                                                            Radius.circular(
-                                                                12)),
-                                                    child: Container(
-                                                      child: _imageFile != null
-                                                          ? Image.file(
-                                                              _imageFile,
-                                                              width: 128,
-                                                              height: 128,
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          : (widget.customer
-                                                                          .ProfileImage !=
-                                                                      null &&
-                                                                  widget
-                                                                      .customer
-                                                                      .ProfileImage
-                                                                      .isNotEmpty
-                                                              ? Container(
-                                                                  height: 128,
-                                                                  width: 128,
-                                                                  child: FadeInImage
-                                                                      .assetNetwork(
-                                                                    placeholder:
-                                                                        "images/loading.gif",
-                                                                    image: buildCustomerImageUrl(
-                                                                        widget
-                                                                            .customer
-                                                                            .CustomerId,
-                                                                        widget
-                                                                            .loggedInUser
-                                                                            .CompanyGUID,
-                                                                        widget
-                                                                            .login
-                                                                            .username,
-                                                                        Uuid()
-                                                                            .v1()),
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                )
-                                                              : Icon(
-                                                                  Icons.person,
-                                                                  size: 142,
-                                                                )),
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                    )),
-                                                Positioned(
-                                                  top: 4,
-                                                  right: 4,
-                                                  child: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.black54,
-                                                    child: InkWell(
-                                                      child: Icon(
-                                                        MdiIcons.pencil,
-                                                        size: 18,
-                                                        color: Colors.white,
-                                                      ),
-                                                      onTap: () {
-                                                        _showDialog(context);
-                                                      },
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              width: 26,
-                                            ),
-                                            Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  widget.customer.Name,
-                                                  style: new TextStyle(
-                                                      fontSize: 26,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                widget.customer.Type == null ||
-                                                        widget.customer.Type
-                                                            .isEmpty
-                                                    ? Container()
-                                                    : SizedBox(
-                                                        height: 16,
-                                                      ),
-                                                widget.customer.Type == null ||
-                                                        widget.customer.Type
-                                                            .isEmpty
-                                                    ? Container()
-                                                    : Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: <Widget>[
-                                                          Icon(MdiIcons
-                                                              .bagChecked),
-                                                          SizedBox(
-                                                            width: 6,
-                                                          ),
-                                                          Text(
-                                                            widget
-                                                                .customer.Type,
-                                                            style:
-                                                                new TextStyle(
-                                                                    fontSize:
-                                                                        16),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                SizedBox(
-                                                  height: 16,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.email),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                      widget.customer.Email,
-                                                      style: new TextStyle(
-                                                          fontSize: 16),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.call),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                        widget.customer
-                                                            .ContactNum,
-                                                        style: new TextStyle(
-                                                            fontSize: 16)),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 8,
-                                                ),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Icon(Icons.location_on),
-                                                    SizedBox(
-                                                      width: 6,
-                                                    ),
-                                                    Text(
-                                                      widget.customer.Address,
-                                                      style: listTextStyle(),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.edit),
-                                          onPressed: () => widget.goToEditCustomer(widget.customer),
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(top: 10),
-                                      child: Row(
+                                Container(
+                                  margin: EdgeInsets.only(left: 16, right: 16),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Expanded(
-                                            child: RaisedButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              elevation: 8,
-                                              onPressed: () {
-                                                if (widget.customer
-                                                    .HasInspectionReport) {
-                                                  widget
-                                                      .goToUpdateBasementReport(
-                                                          widget.customer);
-                                                } else {
-                                                  widget.goToAddBasementReport(
-                                                      widget.customer);
-                                                }
-                                              },
-                                              color: Colors.black,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(18),
-                                                child: Center(
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(
-                                                          widget.customer
-                                                                  .HasInspectionReport
-                                                              ? MdiIcons
-                                                                  .fileDocumentBoxMultiple
-                                                              : MdiIcons
-                                                                  .plusBoxMultiple,
+                                          Row(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Stack(
+                                                children: <Widget>[
+                                                  ClipRRect(
+                                                      borderRadius:
+                                                      new BorderRadius.all(
+                                                          Radius.circular(
+                                                              12)),
+                                                      child: Container(
+                                                        child: _imageFile != null
+                                                            ? Image.file(
+                                                          _imageFile,
+                                                          width: 128,
+                                                          height: 128,
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                            : (widget.customer
+                                                            .ProfileImage !=
+                                                            null &&
+                                                            widget
+                                                                .customer
+                                                                .ProfileImage
+                                                                .isNotEmpty
+                                                            ? Container(
+                                                          height: 128,
+                                                          width: 128,
+                                                          child: FadeInImage
+                                                              .assetNetwork(
+                                                            placeholder:
+                                                            "images/loading.gif",
+                                                            image: buildCustomerImageUrl(
+                                                                widget
+                                                                    .customer
+                                                                    .CustomerId,
+                                                                widget
+                                                                    .loggedInUser
+                                                                    .CompanyGUID,
+                                                                widget
+                                                                    .login
+                                                                    .username,
+                                                                Uuid()
+                                                                    .v1()),
+                                                            fit: BoxFit
+                                                                .cover,
+                                                          ),
+                                                        )
+                                                            : Icon(
+                                                          Icons.person,
+                                                          size: 142,
+                                                        )),
+                                                        color:
+                                                        Colors.grey.shade100,
+                                                      )),
+                                                  Positioned(
+                                                    top: 4,
+                                                    right: 4,
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                      Colors.black54,
+                                                      child: InkWell(
+                                                        child: Icon(
+                                                          MdiIcons.pencil,
+                                                          size: 18,
                                                           color: Colors.white,
-                                                          size: 42),
+                                                        ),
+                                                        onTap: () {
+                                                          _showDialog(context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: 26,
+                                              ),
+                                              Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    widget.customer.Name,
+                                                    style: new TextStyle(
+                                                        fontSize: 26,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                  widget.customer.Type == null ||
+                                                      widget.customer.Type
+                                                          .isEmpty
+                                                      ? Container()
+                                                      : SizedBox(
+                                                    height: 16,
+                                                  ),
+                                                  widget.customer.Type == null ||
+                                                      widget.customer.Type
+                                                          .isEmpty
+                                                      ? Container()
+                                                      : Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment
+                                                        .start,
+                                                    children: <Widget>[
+                                                      Icon(MdiIcons
+                                                          .bagChecked),
                                                       SizedBox(
-                                                        height: 16,
+                                                        width: 6,
                                                       ),
                                                       Text(
-                                                        "${widget.customer.HasInspectionReport ? "View" : "Add"} Basement Report",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .body1
-                                                            .copyWith(
-                                                                color: Colors
-                                                                    .white),
-                                                      )
+                                                        widget
+                                                            .customer.Type,
+                                                        style:
+                                                        new TextStyle(
+                                                            fontSize:
+                                                            16),
+                                                      ),
                                                     ],
                                                   ),
+                                                  SizedBox(
+                                                    height: 16,
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Icon(Icons.email),
+                                                      SizedBox(
+                                                        width: 6,
+                                                      ),
+                                                      Text(
+                                                        widget.customer.Email,
+                                                        style: new TextStyle(
+                                                            fontSize: 16),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Icon(Icons.call),
+                                                      SizedBox(
+                                                        width: 6,
+                                                      ),
+                                                      Text(
+                                                          widget.customer
+                                                              .ContactNum,
+                                                          style: new TextStyle(
+                                                              fontSize: 16)),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 8,
+                                                  ),
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Icon(Icons.location_on),
+                                                      SizedBox(
+                                                        width: 6,
+                                                      ),
+                                                      Text(
+                                                        widget.customer.Address,
+                                                        style: listTextStyle(),
+                                                        overflow:
+                                                        TextOverflow.ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.edit),
+                                            onPressed: () => widget.goToEditCustomer(widget.customer),
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        height: orientation==Orientation.landscape ? 136 : 144,
+                                        margin: EdgeInsets.only(top: 10),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: RaisedButton(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(10),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Expanded(
-                                            child: RaisedButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              elevation: 8,
-                                              onPressed: () {
-                                                widget.goToRecommendedLevel(
-                                                    widget.customer);
-                                              },
-                                              color: Colors.black,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(18),
-                                                child: Center(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      widget
-                                                          .goToRecommendedLevel(
-                                                              widget.customer);
-                                                    },
+                                                elevation: 8,
+                                                onPressed: () {
+                                                  if (widget.customer
+                                                      .HasInspectionReport) {
+                                                    widget
+                                                        .goToUpdateBasementReport(
+                                                        widget.customer);
+                                                  } else {
+                                                    widget.goToAddBasementReport(
+                                                        widget.customer);
+                                                  }
+                                                },
+                                                color: Colors.black,
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.all(18),
+                                                  child: Center(
                                                     child: Column(
                                                       mainAxisSize:
-                                                          MainAxisSize.min,
+                                                      MainAxisSize.min,
                                                       children: <Widget>[
                                                         Icon(
-                                                          getRecommendedLevelIcon(
-                                                              widget.customer
-                                                                  .RecommendedLevel
-                                                                  .toInt()),
-                                                          color: Colors.white,
-                                                          size: 42,
-                                                        ),
+                                                            widget.customer
+                                                                .HasInspectionReport
+                                                                ? MdiIcons
+                                                                .fileDocumentBoxMultiple
+                                                                : MdiIcons
+                                                                .plusBoxMultiple,
+                                                            color: Colors.white,
+                                                            size: 42),
                                                         SizedBox(
                                                           height: 16,
                                                         ),
                                                         Text(
-                                                          "Recommended Level",
-                                                          style: Theme.of(
-                                                                  context)
+                                                          "${widget.customer.HasInspectionReport ? "View" : "Add"} Basement Report",
+                                                          style: Theme.of(context)
                                                               .textTheme
                                                               .body1
                                                               .copyWith(
-                                                                  color: Colors
-                                                                      .white),
+                                                              color: Colors
+                                                                  .white),
                                                         )
                                                       ],
                                                     ),
@@ -523,304 +467,363 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: 16,
-                                          ),
-                                          Expanded(
-                                            child: RaisedButton(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              elevation: 8,
-                                              onPressed: () {
-                                                widget.goToAddEstimate(
-                                                    widget.customer);
-                                              },
-                                              color: Colors.black,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(18),
-                                                child: Center(
-                                                  child: Column(
-                                                    mainAxisSize:
+                                            SizedBox(
+                                              width: 16,
+                                            ),
+                                            Expanded(
+                                              child: RaisedButton(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(10),
+                                                ),
+                                                elevation: 8,
+                                                onPressed: () {
+                                                  widget.goToRecommendedLevel(
+                                                      widget.customer);
+                                                },
+                                                color: Colors.black,
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.all(18),
+                                                  child: Center(
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        widget
+                                                            .goToRecommendedLevel(
+                                                            widget.customer);
+                                                      },
+                                                      child: Column(
+                                                        mainAxisSize:
                                                         MainAxisSize.min,
-                                                    children: <Widget>[
-                                                      Icon(Icons.pie_chart,
-                                                          color: Colors.white,
-                                                          size: 42),
-                                                      SizedBox(
-                                                        height: 16,
-                                                      ),
-                                                      Text(
-                                                        "Add Estimate",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .body1
-                                                            .copyWith(
+                                                        children: <Widget>[
+                                                          Icon(
+                                                            getRecommendedLevelIcon(
+                                                                widget.customer
+                                                                    .RecommendedLevel
+                                                                    .toInt()),
+                                                            color: Colors.white,
+                                                            size: 42,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          Text(
+                                                            "Recommended Level",
+                                                            style: Theme.of(
+                                                                context)
+                                                                .textTheme
+                                                                .body1
+                                                                .copyWith(
                                                                 color: Colors
                                                                     .white),
-                                                      )
-                                                    ],
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Expanded(
-                            child: _list.length == 0
-                                ? Image.asset(
-                                    "images/no_data.png",
-                                    fit: BoxFit.cover,
-                                  )
-                                : ListView.builder(
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      return InkWell(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
                                             SizedBox(
-                                              height: 8,
+                                              width: 16,
                                             ),
-                                            Table(
-                                              columnWidths: {
-                                                0: FlexColumnWidth(3),
-                                                1: FlexColumnWidth(1.5),
-                                                2: FlexColumnWidth(.5),
-                                              },
-                                              defaultVerticalAlignment:
-                                                  TableCellVerticalAlignment
-                                                      .middle,
-                                              children: [
-                                                TableRow(children: [
-                                                  TableCell(
+                                            Expanded(
+                                              child: RaisedButton(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(10),
+                                                ),
+                                                elevation: 8,
+                                                onPressed: () {
+                                                  widget.goToAddEstimate(
+                                                      widget.customer);
+                                                },
+                                                color: Colors.black,
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets.all(18),
+                                                  child: Center(
                                                     child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      mainAxisSize:
+                                                      MainAxisSize.min,
                                                       children: <Widget>[
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Icon(MdiIcons
-                                                                .identifier),
-                                                            SizedBox(
-                                                              width: 16,
-                                                            ),
-                                                            Text(
-                                                              _list[index]
-                                                                  .InvoiceId,
-                                                              style:
-                                                                  listTextStyle(),
-                                                            )
-                                                          ],
-                                                        ),
+                                                        Icon(Icons.pie_chart,
+                                                            color: Colors.white,
+                                                            size: 42),
                                                         SizedBox(
-                                                          height: 8,
+                                                          height: 16,
                                                         ),
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Icon(MdiIcons.text),
-                                                            SizedBox(
-                                                              width: 16,
-                                                            ),
-                                                            Flexible(
-                                                              child: Text(
-                                                                _list[index]
-                                                                    .Description,
-                                                                style:
-                                                                    listTextStyle(),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Icon(MdiIcons
-                                                                .calendarClock),
-                                                            SizedBox(
-                                                              width: 16,
-                                                            ),
-                                                            Text(
-                                                              _list[index]
-                                                                  .CreatedDate,
-                                                              style:
-                                                                  listTextStyle(),
-                                                            )
-                                                          ],
-                                                        ),
+                                                        Text(
+                                                          "Add Estimate",
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .body1
+                                                              .copyWith(
+                                                              color: Colors
+                                                                  .white),
+                                                        )
                                                       ],
                                                     ),
                                                   ),
-                                                  TableCell(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: <Widget>[
-                                                            Icon(MdiIcons
-                                                                .layers),
-                                                            SizedBox(
-                                                              width: 16,
-                                                            ),
-                                                            Text(
-                                                              _list[index]
-                                                                  .Quantity,
-                                                              style:
-                                                                  listTextStyle(),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: <Widget>[
-                                                            Icon(MdiIcons
-                                                                .cashUsdOutline),
-                                                            SizedBox(
-                                                              width: 16,
-                                                            ),
-                                                            Text(
-                                                              "${_list[index].Price == null || _list[index].Price == "0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}",
-                                                              style:
-                                                                  listTextStyle(),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  TableCell(
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        CircleAvatar(
-                                                          backgroundColor:
-                                                              Colors.grey
-                                                                  .shade300,
-                                                          child: InkWell(
-                                                            child: Icon(
-                                                              Icons
-                                                                  .content_copy,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 18,
-                                                            ),
-                                                            onTap: () {
-                                                              setState(() {
-                                                                duplicateDialog(
-                                                                    index);
-                                                              });
-                                                            },
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 8,
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder: (context) =>
-                                                                    deleteMessage(
-                                                                        index));
-                                                          },
-                                                          child: CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors.grey
-                                                                    .shade300,
-                                                            child: Icon(
-                                                              Icons.delete,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 18,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ])
-                                              ],
+                                                ),
+                                              ),
                                             ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Divider(),
                                           ],
                                         ),
-                                        onTap: () {
-                                          widget.customer.EstimateId =
-                                              _list[index].InvoiceId;
-                                          widget.customer.EstimateIntId =
-                                              int.parse(_list[index].Id);
-                                          widget.goToUpdateEstimate(
-                                              widget.customer);
-                                        },
-                                      );
-                                    },
-                                    itemCount: _list.length,
+                                      ),
+                                    ],
                                   ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Expanded(
+                              child: _list.length == 0
+                                  ? Image.asset(
+                                "images/no_data.png",
+                                fit: BoxFit.cover,
+                              )
+                                  : ListView.builder(
+                                physics:
+                                const AlwaysScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Table(
+                                          columnWidths: {
+                                            0: FlexColumnWidth(3.25),
+                                            1: FlexColumnWidth(1.75),
+                                            2: FlexColumnWidth(1),
+                                          },
+                                          defaultVerticalAlignment:
+                                          TableCellVerticalAlignment
+                                              .middle,
+                                          children: [
+                                            TableRow(children: [
+                                              TableCell(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .start,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .identifier),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          _list[index]
+                                                              .InvoiceId,
+                                                          style:
+                                                          listTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons.text),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Flexible(
+                                                          child: Text(
+                                                            _list[index]
+                                                                .Description,
+                                                            style:
+                                                            listTextStyle(),
+                                                            overflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .calendarClock),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          _list[index]
+                                                              .CreatedDate,
+                                                          style:
+                                                          listTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TableCell(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .start,
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: <Widget>[
+                                                    Row(
+                                                      mainAxisSize:
+                                                      MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .layers),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          _list[index]
+                                                              .Quantity,
+                                                          style:
+                                                          listTextStyle(),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize:
+                                                      MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        Icon(MdiIcons
+                                                            .cashUsdOutline),
+                                                        SizedBox(
+                                                          width: 16,
+                                                        ),
+                                                        Text(
+                                                          "${_list[index].Price == null || _list[index].Price == "0.0" ? 0.0 : currencyFormat.format(double.parse(_list[index].Price))}",
+                                                          style:
+                                                          listTextStyle(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              TableCell(
+                                                child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      CircleAvatar(
+                                                        backgroundColor:
+                                                        Colors.grey
+                                                            .shade300,
+                                                        child: InkWell(
+                                                          child: Icon(
+                                                            Icons
+                                                                .content_copy,
+                                                            color:
+                                                            Colors.black,
+                                                            size: 18,
+                                                          ),
+                                                          onTap: () {
+                                                            duplicateDialog(
+                                                                index);
+                                                          },
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          showDialog(
+                                                              context:
+                                                              context,
+                                                              builder: (context) =>
+                                                                  deleteMessage(
+                                                                      index));
+                                                        },
+                                                        child: CircleAvatar(
+                                                          backgroundColor:
+                                                          Colors.grey
+                                                              .shade300,
+                                                          child: Icon(
+                                                            Icons.delete,
+                                                            color:
+                                                            Colors.black,
+                                                            size: 18,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ])
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        Divider(),
+                                      ],
+                                    ),
+                                    onTap: () {
+                                      widget.customer.EstimateId =
+                                          _list[index].InvoiceId;
+                                      widget.customer.EstimateIntId =
+                                          int.parse(_list[index].Id);
+                                      widget.goToUpdateEstimate(
+                                          widget.customer);
+                                    },
+                                  );
+                                },
+                                itemCount: _list.length,
+                              ),
+                            ),
+                          ],
+                        );
+                      } catch (error) {
+                        return Center(
+                          child: Text(
+                            "Something went wrong...",
+                            style: listTextStyle(),
                           ),
-                        ],
-                      );
-                    } catch (error) {
-                      return Center(
-                        child: Text(
-                          "Something went wrong...",
-                          style: listTextStyle(),
-                        ),
-                      );
+                        );
+                      }
+                    } else {
+                      return ShimmerCustomerDetailsFragment();
                     }
-                  } else {
-                    return ShimmerCustomerDetailsFragment();
+                  } catch (error) {
+                    return Center(
+                      child: Text(
+                        "Something went wrong...",
+                        style: listTextStyle(),
+                      ),
+                    );
                   }
-                } catch (error) {
-                  return Center(
-                    child: Text(
-                      "Something went wrong...",
-                      style: listTextStyle(),
-                    ),
-                  );
-                }
-              },
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -975,9 +978,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     );
     try {
       bool status = await duplicateEstimate(index);
-      if (status) {
-        setState(() {});
-      }
+      await getData();
+      setState(() {});
       Navigator.of(context).pop();
       showAPIResponse(
           context,
@@ -1088,6 +1090,7 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
       child: SimpleDialog(
+        backgroundColor: Color(0xFF12C06A),
         contentPadding: EdgeInsets.all(0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         children: <Widget>[

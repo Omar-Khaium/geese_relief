@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_grate_app/model/BasementInspection.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
@@ -393,6 +394,7 @@ class _UpdateBasementReportFragmentState
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.phone,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
@@ -412,8 +414,8 @@ class _UpdateBasementReportFragmentState
                                     val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false, signed: false),
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
@@ -431,8 +433,8 @@ class _UpdateBasementReportFragmentState
                                 controller: _1stFloorRelativeHumidityController,
                                 obscureText: false,
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false, signed: false),
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
@@ -450,8 +452,8 @@ class _UpdateBasementReportFragmentState
                                 controller: _1stFloorTemperatureController,
                                 obscureText: false,
                                 cursorColor: Colors.black,
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: false, signed: false),
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
@@ -555,9 +557,8 @@ class _UpdateBasementReportFragmentState
                                             _BasementRelativeHumidityController,
                                         obscureText: false,
                                         cursorColor: Colors.black,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                decimal: false, signed: false),
+                                        keyboardType: TextInputType.phone,
+                                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                         maxLines: 1,
                                         style: customTextStyle(),
                                         decoration: new InputDecoration(
@@ -577,9 +578,8 @@ class _UpdateBasementReportFragmentState
                                             _BasementTemperatureController,
                                         obscureText: false,
                                         cursorColor: Colors.black,
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                decimal: false, signed: false),
+                                        keyboardType: TextInputType.phone,
+                                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                         maxLines: 1,
                                         style: customTextStyle(),
                                         decoration: new InputDecoration(

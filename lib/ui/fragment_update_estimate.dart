@@ -156,7 +156,6 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
     super.initState();
   }
 
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _future,
@@ -589,6 +588,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                                 .replaceAllMapped(
                                                 reg, mathFunc)}",
                                             style: listTextStyle(),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
@@ -610,22 +610,23 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                               children: <TextSpan>[
                                                 TextSpan(
                                                     text:
-                                                    "${_discountController.text == "0.0" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}"}",
+                                                    "${_productList[index].Price.replaceAllMapped(reg, mathFunc)}",
                                                     style: TextStyle(
                                                         fontWeight:
                                                         FontWeight.bold,
                                                         color:
                                                         Colors.black)),
-                                                _productList[index].Discount == "0.00" ? TextSpan () :
+                                                (_productList[index].discountAsPercentage ? _productList[index].discountPercent==0.0 : _productList[index].discount==0.0) ? TextSpan () :
                                                 TextSpan(
                                                     text:
-                                                    "${_discountController.text == "0.00" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discount}%" : "\$${_productList[index].discount}"} off )"}",
+                                                    "${_discountController.text == "0.00" ? _productList[index].Price.replaceAllMapped(reg, mathFunc) : " ( ${_productList[index].discountAsPercentage ? "${_productList[index].discountPercent}%" : "\$${_productList[index].discount}"} off )"}",
                                                     style: TextStyle(
                                                         fontWeight:
                                                         FontWeight.bold,
-                                                        color: Colors.red)),
+                                                        color: Colors.red),),
                                               ],
                                             ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
@@ -962,35 +963,33 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                               thickness: 2,
                             ),
                           ),
-                          Container(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            height: 564,
-                            color: Colors.grey.shade100,
-                            child: InkWell(
-                              child: Stack(
-                                children: <Widget>[
-                                  _Drawing,
-                                  isDrawingSaving
-                                      ? Center(
-                                    child: ShimmerUploadIcon(200),
-                                  )
-                                      : Container(),
-                                ],
+                          AspectRatio(
+                            aspectRatio: MediaQuery.of(context).size.aspectRatio,
+                            child: Container(
+                              color: Colors.grey.shade100,
+                              child: InkWell(
+                                child: Stack(
+                                  children: <Widget>[
+                                    _Drawing,
+                                    isDrawingSaving
+                                        ? Center(
+                                      child: ShimmerUploadIcon(200),
+                                    )
+                                        : Container(),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) {
+                                          return DrawingDialog(
+                                              picture: _generateDrawingPicture);
+                                        },
+                                        fullscreenDialog: true),
+                                  );
+                                },
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) {
-                                        return DrawingDialog(
-                                            picture: _generateDrawingPicture);
-                                      },
-                                      fullscreenDialog: true),
-                                );
-                              },
                             ),
                           )
                         ],
@@ -1063,8 +1062,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                           Align(
                             alignment: Alignment.centerRight,
                             child: Container(
-                              width: 256*1.25,
-                              height: 256,
+                              width: MediaQuery.of(context).size.width/3.15,
+                              height: MediaQuery.of(context).size.width/3.75,
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -1078,54 +1077,52 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                                     ),
                                   );
                                 },
-                                child: Container(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 8,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text("Home Owner Signature"),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Expanded(
+                                      child: Stack(
+                                        children: <Widget>[
+                                          _HOSignature,
+                                          isHOSignatureSaving
+                                              ? Center(
+                                            child:
+                                            ShimmerUploadIcon(
+                                                64),
+                                          )
+                                              : Container(),
+                                        ],
                                       ),
-                                      Text("Home Owner Signature"),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Expanded(
-                                        child: Stack(
-                                          children: <Widget>[
-                                            _HOSignature,
-                                            isHOSignatureSaving
-                                                ? Center(
-                                              child:
-                                              ShimmerUploadIcon(
-                                                  64),
-                                            )
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Center(
-                                        child: Container(
-                                          color: Colors.grey.shade100,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: ListRowItem(
-                                                icon: Icons.event,
-                                                text:
-                                                "${DateFormat('MM/dd/yyyy')
-                                                    .format(
-                                                    DateTime.now())}",
-                                              ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        color: Colors.grey.shade100,
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.all(8.0),
+                                          child: Center(
+                                            child: ListRowItem(
+                                              icon: Icons.event,
+                                              text:
+                                              "${DateFormat('MM/dd/yyyy')
+                                                  .format(
+                                                  DateTime.now())}",
                                             ),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
@@ -1670,10 +1667,12 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                             int.parse(_quantityController.text);
                         selectedProduct.rate =
                             double.parse(_rateController.text);
-                        selectedProduct.discount =
-                            double.parse(_discountController.text);
                         selectedProduct.discountAsPercentage =
                             _discountModeIsPercentage;
+                        selectedProduct.discount =
+                        selectedProduct.discountAsPercentage ? 0.0 : double.parse(_discountController.text);
+                        selectedProduct.discountPercent =
+                        selectedProduct.discountAsPercentage ? double.parse(_discountController.text) :  0.0;
                         selectedProduct.price =
                             double.parse(_priceController.text);
                         Navigator.of(context).pop();
@@ -1811,7 +1810,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
       estimateTaxTotal = (estimateMainSubtotal *
               (_TaxTypeSelectedValue == _TaxType[0] ? 8.25 : 0)) /
           100;
-      estimateTotalAmount = estimateMainSubtotal - estimateTaxTotal;
+      estimateTotalAmount = estimateMainSubtotal + estimateTaxTotal;
     });
   }
 
@@ -1982,8 +1981,8 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
                         product.ImageLoc
                         : product.ImageLoc);
               } break;
-
             }
+
           }
 
           formattedDate = formatDate(mapForEditData['Estimate']['CreatedDate']);
@@ -1992,7 +1991,7 @@ class _UpdateEstimateFragmentState extends State<UpdateEstimateFragment>
           estimateDiscountTotal = mapForEditData['Estimate']['DiscountAmount'];
           estimateBaseSubTotal = mapForEditData['Estimate']['Amount'];
           _noteController.text = mapForEditData['Estimate']['Description'];
-          estimateTotalAmount = estimateBaseSubTotal - estimateDiscountTotal;
+          estimateTotalAmount = mapForEditData['Estimate']['TotalAmount'];
           estimateMainSubtotal = estimateTotalAmount - estimateTaxTotal;
           _EstimateDiscountModeIsPercentage =
               mapForEditData['Estimate']['DiscountType'] == 'amount'
