@@ -42,9 +42,14 @@ class _RecommendedLevelState extends State<RecommendedLevel>
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      margin: EdgeInsets.only(top: 16, left: 32, right: 32),
+      padding: EdgeInsets.only(top: 16, left: 32, right: 32),
+      margin: EdgeInsets.only(left: 4),
       decoration: BoxDecoration(
-        color: Colors.white
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Colors.white,Colors.white12, Colors.blue.shade50, Colors.blue.shade100]
+        )
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,6 +82,30 @@ class _RecommendedLevelState extends State<RecommendedLevel>
               ],
             ),
           ),
+          SizedBox(
+            height: 24,
+          ),
+          Text(
+            "Step towards a " +
+                widget.loggedInUser.CompanyName +
+                " and a nationally backend warranty",
+            style: Theme.of(context).textTheme.body1.copyWith(
+                color: Colors.black,),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            "All of our  " +
+                widget.loggedInUser.CompanyName +
+                " /Crawl space Contractors are trained and certified",
+            style: Theme.of(context).textTheme.body1.copyWith(
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 16,
+          ),
           Expanded(
               child: Center(
                 child: Row(
@@ -98,6 +127,7 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                             ),
                           ]),
                           child: Card(
+                            color: widget.customer.RecommendedLevel==1 ? Colors. white : Colors.transparent,
                             elevation: widget.customer.RecommendedLevel==1 ? 4 : 0,
                             child: Image.asset(
                               'images/level_1.png',
@@ -127,6 +157,7 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                             ),
                           ]),
                           child: Card(
+                            color: widget.customer.RecommendedLevel==2 ? Colors. white : Colors.transparent,
                             elevation: widget.customer.RecommendedLevel==2 ? 4 : 0,
                             child: Image.asset(
                               'images/level_2.png',
@@ -156,6 +187,7 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                             ),
                           ]),
                           child: Card(
+                            color: widget.customer.RecommendedLevel==3 ? Colors. white : Colors.transparent,
                             elevation: widget.customer.RecommendedLevel==3 ? 4 : 0,
                             child: Image.asset(
                               'images/level_3.png',
@@ -185,6 +217,7 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                             ),
                           ]),
                           child: Card(
+                            color: widget.customer.RecommendedLevel==4 ? Colors. white : Colors.transparent,
                             elevation: widget.customer.RecommendedLevel==4 ? 4 : 0,
                             child: Image.asset('images/level_4.png',
                                 fit: BoxFit.fitWidth),
@@ -212,6 +245,7 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                             ),
                           ]),
                           child: Card(
+                            color: widget.customer.RecommendedLevel==5 ? Colors. white : Colors.transparent,
                             elevation: widget.customer.RecommendedLevel==5 ? 4 : 0,
                             child: Image.asset(
                               'images/level_5.png',
@@ -241,6 +275,7 @@ class _RecommendedLevelState extends State<RecommendedLevel>
                             ),
                           ]),
                           child: Card(
+                            color: widget.customer.RecommendedLevel==6 ? Colors. white : Colors.transparent,
                             elevation: widget.customer.RecommendedLevel==6 ? 4 : 0,
                             child: Image.asset('images/level_6.png',
                                 fit: BoxFit.fitWidth),

@@ -920,35 +920,33 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                               thickness: 2,
                             ),
                           ),
-                          Container(
-                            width: MediaQuery
-                                .of(context)
-                                .size
-                                .width,
-                            height: 564,
-                            color: Colors.grey.shade100,
-                            child: InkWell(
-                              child: Stack(
-                                children: <Widget>[
-                                  _Drawing,
-                                  isDrawingSaving
-                                      ? Center(
-                                    child: ShimmerUploadIcon(200),
-                                  )
-                                      : Container(),
-                                ],
+                          AspectRatio(
+                            aspectRatio: MediaQuery.of(context).size.aspectRatio,
+                            child: Container(
+                              color: Colors.grey.shade100,
+                              child: InkWell(
+                                child: Stack(
+                                  children: <Widget>[
+                                    _Drawing,
+                                    isDrawingSaving
+                                        ? Center(
+                                      child: ShimmerUploadIcon(200),
+                                    )
+                                        : Container(),
+                                  ],
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) {
+                                          return DrawingDialog(
+                                              picture: _generateDrawingPicture);
+                                        },
+                                        fullscreenDialog: true),
+                                  );
+                                },
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) {
-                                        return DrawingDialog(
-                                            picture: _generateDrawingPicture);
-                                      },
-                                      fullscreenDialog: true),
-                                );
-                              },
                             ),
                           )
                         ],
@@ -1021,8 +1019,8 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: Container(
-                              width: 256*1.25,
-                              height: 256,
+                              width: MediaQuery.of(context).size.width/3.15,
+                              height: MediaQuery.of(context).size.width/3.75,
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -1036,54 +1034,52 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
                                     ),
                                   );
                                 },
-                                child: Container(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 8,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text("Home Owner Signature"),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Expanded(
+                                      child: Stack(
+                                        children: <Widget>[
+                                          _HOSignature,
+                                          isHOSignatureSaving
+                                              ? Center(
+                                            child:
+                                            ShimmerUploadIcon(
+                                                64),
+                                          )
+                                              : Container(),
+                                        ],
                                       ),
-                                      Text("Home Owner Signature"),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Expanded(
-                                        child: Stack(
-                                          children: <Widget>[
-                                            _HOSignature,
-                                            isHOSignatureSaving
-                                                ? Center(
-                                              child:
-                                              ShimmerUploadIcon(
-                                                  64),
-                                            )
-                                                : Container(),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 8,
-                                      ),
-                                      Center(
-                                        child: Container(
-                                          color: Colors.grey.shade100,
-                                          child: Padding(
-                                            padding:
-                                            const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: ListRowItem(
-                                                icon: Icons.event,
-                                                text:
-                                                "${DateFormat('MM/dd/yyyy')
-                                                    .format(
-                                                    DateTime.now())}",
-                                              ),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        color: Colors.grey.shade100,
+                                        child: Padding(
+                                          padding:
+                                          const EdgeInsets.all(8.0),
+                                          child: Center(
+                                            child: ListRowItem(
+                                              icon: Icons.event,
+                                              text:
+                                              "${DateFormat('MM/dd/yyyy')
+                                                  .format(
+                                                  DateTime.now())}",
                                             ),
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
