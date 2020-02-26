@@ -1771,7 +1771,7 @@ class _AddEstimateFragmentState extends State<AddEstimateFragment> {
       estimateTaxTotal = (estimateMainSubtotal *
           (_TaxTypeSelectedValue == _TaxType[0] ? 8.25 : 0)) /
           100;
-      estimateTotalAmount = estimateMainSubtotal - estimateTaxTotal;
+      estimateTotalAmount = estimateMainSubtotal + estimateTaxTotal;
     });
   }
 

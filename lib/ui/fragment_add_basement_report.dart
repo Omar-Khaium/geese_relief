@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_grate_app/model/BasementInspection.dart';
 import 'package:flutter_grate_app/model/customer_details.dart';
 import 'package:flutter_grate_app/model/dropdown_item.dart';
@@ -388,6 +389,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 obscureText: false,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.phone,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 maxLines: 1,
                                 style: customTextStyle(),
                                 decoration: new InputDecoration(
@@ -407,6 +409,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                     val.isEmpty ? "Required" : null,
                                 obscureText: false,
                                 cursorColor: Colors.black,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: false, signed: false),
                                 maxLines: 1,
@@ -426,6 +429,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 controller: _1stFloorRelativeHumidityController,
                                 obscureText: false,
                                 cursorColor: Colors.black,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: false, signed: false),
                                 maxLines: 1,
@@ -445,6 +449,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                 controller: _1stFloorTemperatureController,
                                 obscureText: false,
                                 cursorColor: Colors.black,
+                                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: false, signed: false),
                                 maxLines: 1,
@@ -551,6 +556,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             _BasementRelativeHumidityController,
                                         obscureText: false,
                                         cursorColor: Colors.black,
+                                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                         keyboardType:
                                             TextInputType.numberWithOptions(
                                                 decimal: false, signed: false),
@@ -573,6 +579,7 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
                                             _BasementTemperatureController,
                                         obscureText: false,
                                         cursorColor: Colors.black,
+                                        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                                         keyboardType:
                                             TextInputType.numberWithOptions(
                                                 decimal: false, signed: false),
@@ -2358,7 +2365,6 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
           .then((response) {
         try {
           if (response.statusCode == 200) {
-            Map map = json.decode(response.body);
             Navigator.pop(context);
             showAPIResponse(context, "Inspection Created", Colors.green);
           } else {
@@ -2511,9 +2517,11 @@ class _AddBasementReportFragmentState extends State<AddBasementReportFragment> {
     if (result == ConnectivityResult.none) {
       await saveToDatabase();
       Navigator.pop(context);
+      widget.backToCustomerDetails(widget.customer);
     } else {
       await saveInspectionReport();
       Navigator.pop(context);
+      widget.backToCustomerDetails(widget.customer);
     }
   }
 }
