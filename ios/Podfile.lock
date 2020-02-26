@@ -26,6 +26,8 @@ PODS:
     - Flutter
   - video_player (0.0.1):
     - Flutter
+  - webview_media (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
@@ -39,6 +41,7 @@ DEPENDENCIES:
   - url_launcher_macos (from `.symlinks/plugins/url_launcher_macos/ios`)
   - url_launcher_web (from `.symlinks/plugins/url_launcher_web/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
+  - webview_media (from `.symlinks/plugins/webview_media/ios`)
 
 SPEC REPOS:
   trunk:
@@ -68,6 +71,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_web/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
+  webview_media:
+    :path: ".symlinks/plugins/webview_media/ios"
 
 SPEC CHECKSUMS:
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
@@ -83,6 +88,7 @@ SPEC CHECKSUMS:
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
+  webview_media: 33604c2c1805f41bd0c6749c4d7de24b8cb4d81d
 
 PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
