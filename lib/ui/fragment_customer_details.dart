@@ -66,30 +66,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
   //-------------Image---------------
   File _imageFile;
 
-  _openGallery(BuildContext context) async {
-    File pickFromGallery =
-        (await ImagePicker.pickImage(source: ImageSource.gallery));
-    setState(() {
-      _imageFile = pickFromGallery;
-      _base64Image = base64Encode(_imageFile.readAsBytesSync());
-    });
-    Navigator.of(context).pop();
-    showDialog(context: context, builder: (_) => loadingAlert());
-    uploadCustomerImage();
-  }
-
-  _openCamera(BuildContext context) async {
-    File pickFromCamera =
-        (await ImagePicker.pickImage(source: ImageSource.camera));
-    setState(() {
-      _imageFile = pickFromCamera;
-      _base64Image = base64Encode(_imageFile.readAsBytesSync());
-    });
-    Navigator.of(context).pop();
-    showDialog(context: context, builder: (_) => loadingAlert());
-    uploadCustomerImage();
-  }
-
   @override
   void initState() {
     super.initState();
@@ -828,6 +804,30 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     );
   }
 
+  _openGallery(BuildContext context) async {
+    File pickFromGallery =
+    (await ImagePicker.pickImage(source: ImageSource.gallery));
+    setState(() {
+      _imageFile = pickFromGallery;
+      _base64Image = base64Encode(_imageFile.readAsBytesSync());
+    });
+    Navigator.of(context).pop();
+    showDialog(context: context, builder: (_) => loadingAlert());
+    uploadCustomerImage();
+  }
+
+  _openCamera(BuildContext context) async {
+    File pickFromCamera =
+    (await ImagePicker.pickImage(source: ImageSource.camera));
+    setState(() {
+      _imageFile = pickFromCamera;
+      _base64Image = base64Encode(_imageFile.readAsBytesSync());
+    });
+    Navigator.of(context).pop();
+    showDialog(context: context, builder: (_) => loadingAlert());
+    uploadCustomerImage();
+  }
+
   Future getData() async {
     Map<String, String> headers = {
       'Authorization': widget.login.accessToken,
@@ -840,7 +840,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
-      setState(() {});
+      _list.clear();
+      _list.addAll(widget.customer.estimates);
       return result;
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
