@@ -60,15 +60,17 @@ class CustomerDetailsFragment extends StatefulWidget {
 }
 
 class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
-  List<Estimate> _list = [];
+  List<Estimate> _list;
   var _base64Image;
 
-  //-------------Image---------------
+  StreamController<List<Estimate>> _controller =
+  StreamController<List<Estimate>>();
   File _imageFile;
 
   @override
   void initState() {
     super.initState();
+    getData();
   }
 
   Future<void> _showDialog(BuildContext context) {
@@ -157,20 +159,13 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
               height: 24,
             ),
             Expanded(
-              child: FutureBuilder(
-                future: getData(),
+              child:
+              StreamBuilder(
+                stream: _controller.stream,
+                initialData: _list,
                 builder: (context, snapshot) {
                   try {
                     if (snapshot.hasData) {
-                      var map = json.decode(snapshot.data.body);
-                      var estimateMap = map['EstimateList']['EstimateList'];
-                      if (estimateMap == null) {
-                        _list = [];
-                      } else {
-                        _list = List.generate(estimateMap.length, (index) {
-                          return Estimate.fromMap(estimateMap[index]);
-                        });
-                      }
                       try {
                         return Column(
                           children: <Widget>[
@@ -840,13 +835,13 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         await http.get(BASE_URL + API_UPDATE_CUSTOMER, headers: headers);
     if (result.statusCode == 200) {
       widget.customer = CustomerDetails.fromMap(json.decode(result.body));
-      _list.clear();
+      _list = [];
       _list.addAll(widget.customer.estimates);
-      return result;
+      _controller.sink.add(_list);
     } else {
       showMessage(context, "Network error!", json.decode(result.body),
           Colors.redAccent, Icons.warning);
-      return {};
+      _controller.sink.add([]);
     }
   }
 
@@ -959,9 +954,8 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     try {
       bool status = await deleteEstimate(index);
       if (status) {
-        setState(() {
-          _list.removeAt(index);
-        });
+        _list.removeAt(index);
+        _controller.sink.add(_list);
       }
       Navigator.of(context).pop();
       showDialog(context: context, builder: (context) => deleteSuccess());
@@ -980,7 +974,6 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
     try {
       bool status = await duplicateEstimate(index);
       await getData();
-      setState(() {});
       Navigator.of(context).pop();
       showAPIResponse(
           context,
@@ -1196,5 +1189,11 @@ class _CustomerDetailsFragmentState extends State<CustomerDetailsFragment> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
   }
 }
