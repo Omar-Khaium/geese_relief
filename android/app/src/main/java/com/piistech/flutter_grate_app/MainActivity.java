@@ -1,4 +1,4 @@
-package com.piistech.flutter_grate_app;
+package com.piistech.geese_relief;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

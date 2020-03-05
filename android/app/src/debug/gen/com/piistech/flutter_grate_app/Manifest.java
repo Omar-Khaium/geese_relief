@@ -1,6 +1,6 @@
 /*___Generated_by_IDEA___*/
 
-package com.piistech.flutter_grate_app;
+package com.piistech.geese_relief;
 
 /* This stub is only used by the IDE. It is NOT the Manifest class actually packed into the APK */
 public final class Manifest {
