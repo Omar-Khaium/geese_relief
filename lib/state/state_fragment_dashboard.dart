@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:geese_relief/model/DashboardListItem.dart';
+import 'package:geese_relief/utils/widget_dashboard_list_tile.dart';
+import 'package:geese_relief/utils/widget_stat_item.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DashboardFragmentState extends StatefulWidget {
@@ -7,6 +10,19 @@ class DashboardFragmentState extends StatefulWidget {
 }
 
 class _DashboardFragmentStateState extends State<DashboardFragmentState> {
+  List<DashboardListItem> _list = [
+    new DashboardListItem(
+        "Ryan Marut", "Route 1 - Ryan Marut", 3, "6:37:13 AM", "7:37:14 AM"),
+    new DashboardListItem(
+        "Ryan Marut", "Route 1 - Ryan Marut", 3, "6:37:13 AM", "7:37:14 AM"),
+    new DashboardListItem(
+        "Ryan Marut", "Route 1 - Ryan Marut", 3, "6:37:13 AM", "7:37:14 AM"),
+    new DashboardListItem(
+        "Ryan Marut", "Route 1 - Ryan Marut", 3, "6:37:13 AM", "7:37:14 AM"),
+    new DashboardListItem(
+        "Ryan Marut", "Route 1 - Ryan Marut", 3, "6:37:13 AM", "7:37:14 AM"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -16,230 +32,59 @@ class _DashboardFragmentStateState extends State<DashboardFragmentState> {
       bottom: true,
       child: Scaffold(
         backgroundColor: Color(0xFFECEEF8),
-        body: ListView(
-          padding: EdgeInsets.all(16),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          physics: ScrollPhysics(),
-          children: <Widget>[
-            GridView.count(
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+        body: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(8),
+            child: GridView.count(
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
               crossAxisCount: 3,
-              childAspectRatio: 4 / 3,
+              childAspectRatio: 1,
               addAutomaticKeepAlives: true,
               shrinkWrap: true,
               physics: ScrollPhysics(),
               scrollDirection: Axis.vertical,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 2,
-                            spreadRadius: 2,
-                            color: Colors.white30,
-                          )
-                        ]),
-                    child: UserAccountsDrawerHeader(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              offset: Offset(0, 0),
-                              blurRadius: 2,
-                              spreadRadius: 2,
-                              color: Colors.white30,
-                            )
-                          ]),
-                      currentAccountPicture: Icon(MdiIcons.accountBadge, color: Colors.blue),
-                      accountName: Text("Open Customers", style: Theme.of(context).textTheme.caption.copyWith(color: Colors.blue),),
-                    ),
-                  ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  child: StatItem(Icons.group, "Total Users", 29, 1),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 4,
-                            spreadRadius: 2,
-                            color: Colors.black12.withOpacity(.075),
-                          )
-                        ]),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(MdiIcons.fileTree, color: Colors.blue.shade400),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            "সামগ্রিক প্রশ্ন",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                color: Colors.blue.shade400, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  child: StatItem(
+                      Icons.person, "Open Customers", 19, .5),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 4,
-                            spreadRadius: 2,
-                            color: Colors.black12.withOpacity(.075),
-                          )
-                        ]),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(MdiIcons.cloudQuestion,
-                              color: Colors.blue.shade400),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            "প্রশ্ন ব্যাংক",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                color: Colors.blue.shade400, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  child: StatItem(Icons.map, "Total Routes", 9, 1),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 4,
-                            spreadRadius: 2,
-                            color: Colors.black12.withOpacity(.075),
-                          )
-                        ]),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(MdiIcons.library, color: Colors.blue.shade400),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            "অনুশীলন",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                color: Colors.blue.shade400, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  child: StatItem(MdiIcons.locationEnter, "Checkins", 4808, .5),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 4,
-                            spreadRadius: 2,
-                            color: Colors.black12.withOpacity(.075),
-                          )
-                        ]),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(MdiIcons.file, color: Colors.blue.shade400),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            "কুইজ কুইজ",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                color: Colors.blue.shade400, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  child: StatItem(MdiIcons.emailOpen, "Geese Seen", 16349, .5),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 4,
-                            spreadRadius: 2,
-                            color: Colors.black12.withOpacity(.075),
-                          )
-                        ]),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            MdiIcons.clipboardCheckOutline,
-                            color: Colors.blue.shade400,
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            "মার্ক করা প্রশ্ন",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                color: Colors.blue.shade400, fontSize: 11),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  child: StatItem(
+                      Icons.person_outline, "Closed Customers", 0, .5),
                 ),
               ],
             ),
-          ],
+          ),
+          SizedBox(height: 16,),
+          Container(child: Text("Checkin Logs in the last 24 hours", style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.left,), alignment: Alignment.centerLeft, margin: EdgeInsets.only(left: 16),),
+          Expanded(child: Container(child: ListView.builder(itemBuilder: (context, index)=>DashboardListTile(_list[index]), itemCount: _list.length, shrinkWrap: true, scrollDirection: Axis.vertical, physics: ScrollPhysics(),),padding: EdgeInsets.all(8),))
+        ]
         ),
       ),
     );
