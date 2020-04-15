@@ -24,7 +24,7 @@ class DashboardListTile extends StatelessWidget {
                 children: <Widget>[
                   Icon(Icons.person, size: 18, color: Colors.grey,),
                   SizedBox(width: 16,),
-                  Text(item.name, style: Theme.of(context).textTheme.bodyText1,)
+                  Text(item.name, style: Theme.of(context).textTheme.body1,)
                 ],
               ),
             ),
@@ -32,9 +32,9 @@ class DashboardListTile extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 8),
               child: Row(
                 children: <Widget>[
-                  Icon(Icons.map, size: 18, color: Colors.grey,),
+                  Icon(MdiIcons.mapMarker, size: 18, color: Colors.grey,),
                   SizedBox(width: 16,),
-                  Text(item.route, style: Theme.of(context).textTheme.bodyText1,)
+                  Text(item.route, style: Theme.of(context).textTheme.body1,)
                 ],
               ),
             ),
@@ -44,7 +44,7 @@ class DashboardListTile extends StatelessWidget {
                 children: <Widget>[
                   Icon(Icons.equalizer, size: 18, color: Colors.grey,),
                   SizedBox(width: 16,),
-                  Text(item.count.toString(), style: Theme.of(context).textTheme.bodyText1,)
+                  Text(item.count.toString(), style: Theme.of(context).textTheme.body1,)
                 ],
               ),
             ),
@@ -56,6 +56,7 @@ class DashboardListTile extends StatelessWidget {
                     avatar: Icon(MdiIcons.locationEnter, size: 18,),
                     backgroundColor: Colors.grey.shade200,
                     label: Text(item.checkIn),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width-330,
@@ -70,6 +71,7 @@ class DashboardListTile extends StatelessWidget {
                         transform: Matrix4.rotationY(pi),child: Icon(MdiIcons.locationExit, size: 18,)),
                     backgroundColor: Colors.grey.shade200,
                     label: Text(item.checkOut),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ],
               ),

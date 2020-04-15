@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:geese_relief/state/state_fragment_customer.dart';
-import 'package:geese_relief/state/state_fragment_dashboard.dart';
-import 'package:geese_relief/state/state_fragment_more.dart';
-import 'package:geese_relief/state/state_fragment_route.dart';
-import 'package:geese_relief/state/state_fragment_user.dart';
+import 'package:geese_relief/ui/fragment_customer.dart';
+import 'package:geese_relief/ui/fragment_dashboard.dart';
+import 'package:geese_relief/ui/fragment_more.dart';
+import 'package:geese_relief/ui/fragment_route.dart';
+import 'package:geese_relief/ui/fragment_user.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class DashboardState extends StatefulWidget {
@@ -26,7 +26,7 @@ class _DashboardStateState extends State<DashboardState> {
       title: Text("Dashboard")
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.map),
+      icon: Icon(MdiIcons.mapMarker),
       title: Text("Route")
     ),
     BottomNavigationBarItem(
@@ -56,10 +56,13 @@ class _DashboardStateState extends State<DashboardState> {
         child: Scaffold(
           backgroundColor: Colors.grey.shade100,
           bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.blue,
+            backgroundColor: Theme.of(context).primaryColor,
             selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white30,
             currentIndex: _currentIndex,
+            unselectedLabelStyle: Theme.of(context).textTheme.caption,
+            selectedLabelStyle: Theme.of(context).textTheme.caption,
+            iconSize: 20,
             items: _bottomNavItems,
             type: BottomNavigationBarType.fixed,
             onTap: (index) {

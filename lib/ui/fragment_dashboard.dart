@@ -31,7 +31,7 @@ class _DashboardFragmentStateState extends State<DashboardFragmentState> {
       left: true,
       bottom: true,
       child: Scaffold(
-        backgroundColor: Color(0xFFECEEF8),
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Column(
         children: <Widget>[
           Container(
@@ -60,7 +60,7 @@ class _DashboardFragmentStateState extends State<DashboardFragmentState> {
                 Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(Icons.map, "Total Routes", 9, 1),
+                  child: StatItem(MdiIcons.mapMarker, "Total Routes", 9, 1),
                 ),
                 Card(
                   shape: RoundedRectangleBorder(
@@ -82,7 +82,7 @@ class _DashboardFragmentStateState extends State<DashboardFragmentState> {
             ),
           ),
           SizedBox(height: 16,),
-          Container(child: Text("Checkin Logs in the last 24 hours", style: Theme.of(context).textTheme.headline6.copyWith(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.left,), alignment: Alignment.centerLeft, margin: EdgeInsets.only(left: 16),),
+          Container(child: Text("Checkin Logs in the last 24 hours", style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.left,), alignment: Alignment.centerLeft, margin: EdgeInsets.only(left: 16),),
           Expanded(child: Container(child: ListView.builder(itemBuilder: (context, index)=>DashboardListTile(_list[index]), itemCount: _list.length, shrinkWrap: true, scrollDirection: Axis.vertical, physics: ScrollPhysics(),),padding: EdgeInsets.all(8),))
         ]
         ),

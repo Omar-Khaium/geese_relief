@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geese_relief/state/state_forget_password.dart';
+import 'package:geese_relief/ui/ui_forget_password.dart';
 
 class LoginForm extends StatefulWidget {
   @override
