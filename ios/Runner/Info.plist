@@ -38,13 +38,17 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<true/>
 	<key>UIBackgroundModes</key>
-	<array/>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDarkContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

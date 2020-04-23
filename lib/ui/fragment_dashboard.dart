@@ -93,9 +93,6 @@ class _DashboardFragmentStateState extends State<DashboardFragmentState> {
         Expanded(
             child: Container(
               alignment: Alignment.topCenter,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey
-              ),
               child: ListView.builder(
                 itemBuilder: (context, index) => DashboardListTile(_list[index]),
                 itemCount: _list.length,

@@ -20,8 +20,8 @@ class QuickMenuBadge extends StatelessWidget {
           Positioned(
             child: ConstrainedBox(
               constraints: new BoxConstraints(
-                minWidth: 32,
-                maxWidth: 48,
+                minWidth: 36,
+                maxWidth: 54,
               ),
               child: Container(
                 padding: EdgeInsets.all(4),
