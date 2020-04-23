@@ -10,10 +10,10 @@ class ForgetPasswordState extends StatelessWidget {
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue.shade400,
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0,
           leading: IconButton(
-            icon: CircleAvatar(child: Icon(Icons.arrow_back, color: Colors.white,), backgroundColor: Colors.white24,),
+            icon: CircleAvatar(child: Icon(Icons.arrow_back, color: Colors.white,), backgroundColor: Colors.white10,),
             onPressed: ()=> Navigator.of(context).pop(),
           ),
           title: Text("Forget Password", style: Theme.of(context).textTheme.headline.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
@@ -21,7 +21,7 @@ class ForgetPasswordState extends StatelessWidget {
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blue.shade400, Colors.blue.shade200],
+              colors: [Theme.of(context).primaryColor, Colors.blueGrey],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter
             )

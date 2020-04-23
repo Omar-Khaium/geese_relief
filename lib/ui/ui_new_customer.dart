@@ -28,6 +28,7 @@ class _NewCustomerUIState extends State<NewCustomerUI> {
       body: Form(
         key: _formKey,
         child: ListView(
+          physics: ScrollPhysics(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           padding: EdgeInsets.all(16),

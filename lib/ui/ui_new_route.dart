@@ -24,6 +24,7 @@ class _NewRouteUIState extends State<NewRouteUI> {
         child: ListView(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
+          physics: ScrollPhysics(),
           padding: EdgeInsets.all(16),
           children: <Widget>[
             TextFormField(

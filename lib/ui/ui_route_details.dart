@@ -4,6 +4,7 @@ import 'package:geese_relief/model/route.dart' as model;
 import 'package:geese_relief/ui/ui_edit_route.dart';
 import 'package:geese_relief/ui/ui_show_route.dart';
 import 'package:geese_relief/ui/ui_route_customer.dart';
+import 'package:geese_relief/utils/widget_google_map.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RouteDetails extends StatefulWidget {
@@ -82,7 +83,7 @@ class _RouteDetailsState extends State<RouteDetails> {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    child: Image.asset("images/route.png", fit: BoxFit.cover,),
+                    child: GoogleMapWidget(),
                   ),
                   Positioned(
                     top: 0,
@@ -165,7 +166,7 @@ class _RouteDetailsState extends State<RouteDetails> {
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(MdiIcons.mapMarker,
+                        child: Icon(MdiIcons.accountGroup,
                             size: 16, color: Colors.cyan.shade700),
                       ),
                     ),
@@ -189,7 +190,7 @@ class _RouteDetailsState extends State<RouteDetails> {
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(MdiIcons.mapMarker,
+                        child: Icon(MdiIcons.mapMarkerPath,
                             size: 16, color: Colors.purple.shade700),
                       ),
                     ),

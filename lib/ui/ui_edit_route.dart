@@ -30,6 +30,7 @@ class _EditRouteUIState extends State<EditRouteUI> {
       body: Form(
         key: _formKey,
         child: ListView(
+          physics: ScrollPhysics(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           padding: EdgeInsets.all(16),

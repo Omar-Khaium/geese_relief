@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:geese_relief/model/route.dart' as model;
 import 'package:geese_relief/ui/ui_new_route.dart';
 import 'package:geese_relief/utils/widget_route_list_tile.dart';
+import 'package:geese_relief/utils/widget_search.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import '../constraints.dart';
 
 class RouteFragmentState extends StatefulWidget {
   @override
@@ -26,7 +29,13 @@ class _RouteFragmentStateState extends State<RouteFragmentState> {
         icon: Icon(MdiIcons.mapMarkerPlus),
         backgroundColor: Theme.of(context).primaryColor,
       ),
+      appBar: AppBar(
+        title: Text("Routes"),
+        automaticallyImplyLeading: false,
+        centerTitle: false,
+      ),
       body: ListView.builder(
+        physics: ScrollPhysics(),
         itemBuilder: (context, index) {
           model.Route route = routes[index];
           return RouteListTile(route);

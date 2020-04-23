@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geese_relief/model/customer.dart';
 import 'package:geese_relief/model/user.dart';
+import 'package:geese_relief/ui/ui_edit_user.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class UserDetails extends StatefulWidget {
@@ -27,7 +28,9 @@ class _UserDetailsState extends State<UserDetails> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: (){},
+            onPressed: () => Navigator.of(context).push(new MaterialPageRoute(
+                builder: (context) => EditUserUI(widget.user), fullscreenDialog: true),
+            ),
             icon: Icon(Icons.edit, size: 18, color: Theme.of(context).primaryColor,),
           )
         ],
@@ -92,18 +95,17 @@ class _UserDetailsState extends State<UserDetails> {
           SizedBox(
             height: 16,
           ),
-          ActionChip(
-            onPressed: (){},
+          Chip(
             avatar: Icon(
               MdiIcons.medal,
               size: 18,
-              color: Colors.blue.shade600,
+              color: Colors.grey.shade700,
             ),
-            backgroundColor: Colors.blue.shade100,
+            backgroundColor: Colors.grey.shade300,
             label: Text(
               widget.user.role,
               style: Theme.of(context).textTheme.subhead.copyWith(
-                  color: Colors.blue.shade600, fontWeight: FontWeight.bold),
+                  color: Colors.grey.shade700, fontWeight: FontWeight.bold),
             ),
             padding: EdgeInsets.symmetric(vertical: 0, horizontal: 8),
             labelPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 4),

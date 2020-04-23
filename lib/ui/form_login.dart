@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geese_relief/ui/ui_dashboard.dart';
 import 'package:geese_relief/ui/ui_forget_password.dart';
 
 class LoginForm extends StatefulWidget {
@@ -26,6 +27,7 @@ class _LoginFormState extends State<LoginForm> {
             child: Container(
               height: 292,
               child: Card(
+                color: Colors.white,
                 elevation: 8,
                 child: Center(
                   child: ListView(
@@ -57,11 +59,20 @@ class _LoginFormState extends State<LoginForm> {
                             isDense: true,
                             hasFloatingPlaceholder: true,
                             border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1),
+                            ),
                             focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue)),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 2),
+                            ),
                             enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey)),
+                              borderSide: BorderSide(
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1),
+                            ),
                           ),
                         ),
                       ),
@@ -90,11 +101,20 @@ class _LoginFormState extends State<LoginForm> {
                               isDense: true,
                               hasFloatingPlaceholder: true,
                               border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey)),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 1),
+                              ),
                               focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue)),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 2),
+                              ),
                               enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey)),
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor,
+                                    width: 1),
+                              ),
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   isObscure
@@ -112,7 +132,7 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                       ),
                       CheckboxListTile(
-                        controlAffinity: ListTileControlAffinity.leading,
+                        controlAffinity: ListTileControlAffinity.trailing,
                         onChanged: (flag) {
                           setState(() {
                             isRemembered = flag;
@@ -123,19 +143,27 @@ class _LoginFormState extends State<LoginForm> {
                         dense: true,
                         title: Text(
                           "Remember Me",
-                          style: Theme.of(context).textTheme.body1,
+                          style: Theme.of(context)
+                              .textTheme
+                              .body1
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       Container(
                         margin:
                             EdgeInsets.only(left: 16, right: 16, bottom: 16),
                         child: InkWell(
-                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ForgetPasswordState())),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ForgetPasswordState())),
                           child: Padding(
-                            padding: EdgeInsets.all(8),
+                            padding: EdgeInsets.only(top: 8, bottom: 8),
                             child: Text(
                               "Forget Password",
-                              style: Theme.of(context).textTheme.body1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .body1
+                                  .copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -151,10 +179,17 @@ class _LoginFormState extends State<LoginForm> {
             right: 64,
             bottom: 0,
             child: MaterialButton(
+              elevation: 8,
               onPressed: () {
-                if (_formKey.currentState.validate()) {}
+                if (_formKey.currentState.validate()) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DashboardState(),
+                    ),
+                  );
+                }
               },
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(72),
               ),

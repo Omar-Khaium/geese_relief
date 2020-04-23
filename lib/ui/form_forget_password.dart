@@ -75,7 +75,8 @@ class _ForgetPasswordFormState extends State<ForgetPasswordForm> {
                   });
                 }
               },
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
+              elevation: 8,
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(72),
               ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geese_relief/model/route.dart' as model;
-import 'package:geese_relief/ui/ui_show_route.dart';
 import 'package:geese_relief/ui/ui_route_customer.dart';
 import 'package:geese_relief/ui/ui_route_details.dart';
+import 'package:geese_relief/ui/ui_show_route.dart';
+import 'package:geese_relief/utils/widget_delete_confirmation.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RouteListTile extends StatelessWidget {
@@ -28,7 +29,19 @@ class RouteListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => DeleteConfirmation(
+                      onPositive: () {
+                        Navigator.of(context).pop();
+                      },
+                      onNegative: () {
+                        Navigator.of(context).pop();
+                      },
+                      title: "Delete Route?",
+                      name: item.name,
+                    ),
+                  ),
                   icon: CircleAvatar(
                     backgroundColor: Colors.grey.shade200,
                     child: Icon(
@@ -44,7 +57,7 @@ class RouteListTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(bottom: 12,top: 8),
+                  margin: EdgeInsets.only(bottom: 12, top: 8),
                   child: Row(
                     children: <Widget>[
                       Icon(
@@ -94,15 +107,25 @@ class RouteListTile extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.start,
               children: <Widget>[
                 ActionChip(
-                  onPressed: ()=> Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>RouteCustomers(item.name))),
-                  avatar: Icon(MdiIcons.cogs, size: 18,),
+                  onPressed: () => Navigator.of(context).push(
+                      new MaterialPageRoute(
+                          builder: (context) => RouteCustomers(item.name))),
+                  avatar: Icon(
+                    MdiIcons.cogs,
+                    size: 18,
+                  ),
                   backgroundColor: Colors.grey.shade200,
                   label: Text("Manage Customers"),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 ActionChip(
-                  onPressed: ()=> Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>ShowRoute(item.name))),
-                  avatar: Icon(MdiIcons.mapMarkerPath, size: 18,),
+                  onPressed: () => Navigator.of(context).push(
+                      new MaterialPageRoute(
+                          builder: (context) => ShowRoute(item.name))),
+                  avatar: Icon(
+                    MdiIcons.mapMarkerPath,
+                    size: 18,
+                  ),
                   backgroundColor: Colors.grey.shade200,
                   label: Text("Show Route"),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

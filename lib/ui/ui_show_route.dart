@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:geese_relief/utils/widget_route_map.dart';
 
 class ShowRoute extends StatelessWidget {
   final String route;
@@ -14,9 +13,7 @@ class ShowRoute extends StatelessWidget {
         title: Text(route),
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
-        child: Image.asset("images/route.png", fit: BoxFit.cover,),
-      ),
+      body: RouteMapWidget(),
     );
   }
 }

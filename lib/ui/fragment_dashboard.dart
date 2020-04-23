@@ -25,68 +25,88 @@ class _DashboardFragmentStateState extends State<DashboardFragmentState> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      right: true,
-      left: true,
-      bottom: true,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(8),
-            child: GridView.count(
-              crossAxisSpacing: 4,
-              mainAxisSpacing: 4,
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-              addAutomaticKeepAlives: true,
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              children: <Widget>[
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(Icons.group, "Total Users", 29, 1),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(
-                      Icons.person, "Open Customers", 19, .5),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(MdiIcons.mapMarker, "Total Routes", 9, 1),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(MdiIcons.locationEnter, "Checkins", 4808, .5),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(MdiIcons.emailOpen, "Geese Seen", 16349, .5),
-                ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  child: StatItem(
-                      Icons.person_outline, "Closed Customers", 0, .5),
-                ),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Column(children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(8),
+          margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top - 16),
+          child: GridView.count(
+            crossAxisSpacing: 4,
+            mainAxisSpacing: 4,
+            crossAxisCount: 3,
+            childAspectRatio: 1,
+            addAutomaticKeepAlives: true,
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            scrollDirection: Axis.vertical,
+            children: <Widget>[
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                child: StatItem(Icons.group, "Total Users", 29, 1),
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                child: StatItem(Icons.person, "Open Customers", 19, .5),
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                child: StatItem(MdiIcons.mapMarker, "Total Routes", 9, 1),
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                child: StatItem(MdiIcons.locationEnter, "Checkins", 4808, .5),
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                child: StatItem(MdiIcons.emailOpen, "Geese Seen", 16349, .5),
+              ),
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+                child:
+                StatItem(Icons.person_outline, "Closed Customers", 0, .5),
+              ),
+            ],
           ),
-          SizedBox(height: 16,),
-          Container(child: Text("Checkin Logs in the last 24 hours", style: Theme.of(context).textTheme.title.copyWith(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.left,), alignment: Alignment.centerLeft, margin: EdgeInsets.only(left: 16),),
-          Expanded(child: Container(child: ListView.builder(itemBuilder: (context, index)=>DashboardListTile(_list[index]), itemCount: _list.length, shrinkWrap: true, scrollDirection: Axis.vertical, physics: ScrollPhysics(),),padding: EdgeInsets.all(8),))
-        ]
         ),
-      ),
+        SizedBox(
+          height: 24,
+        ),
+        Container(
+          child: Text(
+            "Checkin Logs in the last 24 hours",
+            style: Theme.of(context)
+                .textTheme
+                .title
+                .copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.left,
+          ),
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(left: 8),
+        ),
+        Expanded(
+            child: Container(
+              alignment: Alignment.topCenter,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey
+              ),
+              child: ListView.builder(
+                itemBuilder: (context, index) => DashboardListTile(_list[index]),
+                itemCount: _list.length,
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 8),
+            ),
+        )
+      ]),
     );
   }
 }

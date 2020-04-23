@@ -41,6 +41,7 @@ class _EditCustomerUIState extends State<EditCustomerUI> {
       body: Form(
         key: _formKey,
         child: ListView(
+          physics: ScrollPhysics(),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: <Widget>[

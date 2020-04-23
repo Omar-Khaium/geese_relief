@@ -14,7 +14,7 @@ class CommentItem extends StatelessWidget {
       margin: EdgeInsets.only(top: 12, right: 16, left: 64),
       child: Bubble(
         nip: BubbleNip.leftTop,
-        padding: BubbleEdges.all(16),
+        padding: BubbleEdges.symmetric(horizontal: 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

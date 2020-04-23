@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:geese_relief/constraints.dart';
 import 'package:geese_relief/model/customer.dart';
 import 'package:geese_relief/ui/ui_new_customer.dart';
 import 'package:geese_relief/utils/widget_customer_list_tile.dart';
+import 'package:geese_relief/utils/widget_search.dart';
 
 class CustomerFragmentState extends StatefulWidget {
   @override
@@ -25,7 +27,21 @@ class _CustomerFragmentStateState extends State<CustomerFragmentState> {
         icon: Icon(Icons.person_add),
         backgroundColor: Theme.of(context).primaryColor,
       ),
+      appBar: AppBar(
+        title: Text("Customers"),
+        automaticallyImplyLeading: false,
+        centerTitle: false,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: (){
+              showSearch(context: context, delegate: SearchWidget(SearchType.none));
+            },
+          )
+        ],
+      ),
       body: ListView.builder(
+        physics: ScrollPhysics(),
         itemBuilder: (context, index) {
           Customer customer = customers[index];
           return CustomerListTile(customer);

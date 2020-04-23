@@ -22,10 +22,19 @@ dependencies:
   dotted_border:
   bubble:
   flutter_staggered_grid_view:
+  google_maps_flutter:
+  google_map_polyline:
+  google_maps_webservice:
+  flutter_google_places:
+  geolocator:
+  hive:
+  hive_flutter:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator:
+  build_runner:
 
 flutter:
 
